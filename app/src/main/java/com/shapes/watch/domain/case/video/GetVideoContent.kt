@@ -6,16 +6,17 @@ import com.shapes.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
-import javax.inject.Inject
 
-class GetVideoContent @Inject constructor(
+class GetVideoContent(
     private val repository: VideoRepository
 ) {
-    operator fun invoke(videoId: String): Flow<Resource<VideoContent>> = flow {
+    operator fun invoke(contentUrl: String): Flow<Resource<VideoContent>> = flow {
         emit(Resource.Loading())
 
         try {
-            val content = repository.getContent(videoId).toNormal()
+            val contentDto = repository.getContent(contentUrl)
+            val content = contentDto.toNormal()
+
             emit(Resource.Success(content))
         } catch (e: IOException) {
             emit(Resource.Error(e))

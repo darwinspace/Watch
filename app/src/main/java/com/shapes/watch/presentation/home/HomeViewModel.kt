@@ -6,14 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shapes.watch.common.Resource
 import com.shapes.watch.domain.case.home.GetHomeContent
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getHomeContent: GetHomeContent
+open class HomeViewModel(
+    private val getHomeContent: GetHomeContent = GetHomeContent()
 ) : ViewModel() {
     private val _state = mutableStateOf<HomeState>(HomeState.Empty)
     val state: State<HomeState> = _state
@@ -24,10 +21,10 @@ class HomeViewModel @Inject constructor(
 
     private fun getContent() {
         getHomeContent().onEach {
-            when (it) {
-                is Resource.Success -> _state.value = HomeState.Content(it.data)
-                is Resource.Loading -> _state.value = HomeState.Loading
-                is Resource.Error -> _state.value = HomeState.Error(it.exception)
+            _state.value = when (it) {
+                is Resource.Success -> HomeState.Content(it.data)
+                is Resource.Loading -> HomeState.Loading
+                is Resource.Error -> HomeState.Error(it.exception)
             }
         }.launchIn(viewModelScope)
     }

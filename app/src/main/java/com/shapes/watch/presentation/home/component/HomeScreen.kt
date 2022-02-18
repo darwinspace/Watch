@@ -20,11 +20,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.shapes.watch.R
 import com.shapes.watch.domain.model.HomeContent
-import com.shapes.watch.domain.model.Video
+import com.shapes.watch.domain.model.VideoInformation
 import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
@@ -67,7 +67,7 @@ private fun UserPhoto() {
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = viewModel()
 ) {
     val state = viewModel.state.value
     Scaffold(
@@ -94,38 +94,35 @@ fun HomeScreen(
 
 @ExperimentalMaterialApi
 @Composable
-fun Video(video: Video, onClick: () -> Unit) {
+fun Video(video: VideoInformation, onClick: () -> Unit) {
     Card(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
         elevation = 0.dp
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            VideoThumbnail(video.thumbnailUrl)
+            VideoThumbnail(video.video.thumbnailUrl)
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            VideoDataContainer(video.title, video.creatorPhotoUrl)
+            VideoDataContainer(video)
         }
     }
 }
 
 @Composable
-private fun VideoDataContainer(
-    title: String,
-    creatorPhotoUrl: String
-) {
+private fun VideoDataContainer(video: VideoInformation) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            VideoCreatorPhoto(url = creatorPhotoUrl, onClick = { /* TODO */ })
+            VideoCreatorPhoto(url = video.creator.photoUrl, onClick = { /* TODO */ })
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            VideoTitle(title)
+            VideoTitle(video.video.title)
         }
 
         val t = 2.minutes + 184.seconds

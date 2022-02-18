@@ -1,5 +1,7 @@
 package com.shapes.watch.domain.model
 
-data class VideoContent(
-    val title: String
-)
+class VideoContent {
+//    fun toNormal(): VideoContent {
+//        return VideoContent(title = title)
+//    }
+}
