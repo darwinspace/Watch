@@ -1,4 +1,4 @@
-package com.shapes.watch.ui
+package com.shapes.watch.presentation.creator
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -13,22 +13,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.shapes.watch.R
 import com.shapes.watch.presentation.ui.WatchDescription
 import com.shapes.watch.presentation.ui.WatchIconButton
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
+@ExperimentalMaterialApi
 @Composable
-fun CreatorScreen() {
+fun CreatorScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
-    Box {
+    Scaffold {
         CreatorScreenContent(scrollState)
 
         Box(modifier = Modifier.padding(24.dp)) {
-            WatchIconButton(borderWidth = 1.dp, onClick = { /* TODO */ }) {
+            WatchIconButton(borderWidth = 1.dp, onClick = { navController.popBackStack() }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }
         }
@@ -93,10 +93,10 @@ private fun CreatorData() {
     }
 }
 
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun CreatorScreenPreview() {
-    WatchTheme {
-        CreatorScreen()
-    }
-}
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun CreatorScreenPreview() {
+//    WatchTheme {
+//        CreatorScreen(navController)
+//    }
+//}

@@ -16,12 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
+import coil.size.Scale
 import com.shapes.watch.R
 import com.shapes.watch.domain.model.HomeContent
 import com.shapes.watch.domain.model.VideoInformation
@@ -29,20 +32,19 @@ import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
 import com.shapes.watch.presentation.ui.WatchTopBar
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun WatchScreenTopBar() {
+private fun HomeScreenTopBar(onSearchClick: () -> Unit, onProfileClick: () -> Unit) {
     WatchTopBar(text = stringResource(id = R.string.app_name)) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onSearchClick) {
             Icon(imageVector = Icons.Default.Search, contentDescription = null)
         }
 
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onProfileClick) {
             UserPhoto()
         }
     }
@@ -67,25 +69,44 @@ private fun UserPhoto() {
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    navController: NavHostController
 ) {
     val state = viewModel.state.value
     Scaffold(
         topBar = {
             Column {
-                WatchScreenTopBar()
+                HomeScreenTopBar(
+                    onSearchClick = {
+                        navController.navigate("search")
+                    },
+                    onProfileClick = {
+                        navController.navigate("profile")
+                    }
+                )
+
                 Divider()
             }
         },
         floatingActionButton = {
-            WatchFloatingActionButton(onClick = { /* TODO */ }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            Box(modifier = Modifier.padding(8.dp)) {
+                WatchFloatingActionButton(
+                    onClick = {
+                        navController.navigate("create")
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                }
             }
         }
     ) { contentPadding ->
         when (state) {
             is HomeState.Content -> {
-                WatchContent(state.homeContent, contentPadding)
+                WatchContent(
+                    navController = navController,
+                    homeContent = state.homeContent,
+                    contentPadding = contentPadding
+                )
             }
             else -> Unit
         }
@@ -94,31 +115,44 @@ fun HomeScreen(
 
 @ExperimentalMaterialApi
 @Composable
-fun Video(video: VideoInformation, onClick: () -> Unit) {
+fun Video(
+    navController: NavHostController,
+    video: VideoInformation
+) {
     Card(
-        onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        elevation = 0.dp
+        elevation = 0.dp,
+        onClick = {
+            navController.navigate("video")
+        }
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             VideoThumbnail(video.video.thumbnailUrl)
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            VideoDataContainer(video)
+            VideoDataContainer(navController, video)
         }
     }
 }
 
 @Composable
-private fun VideoDataContainer(video: VideoInformation) {
+private fun VideoDataContainer(
+    navController: NavHostController,
+    video: VideoInformation
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            VideoCreatorPhoto(url = video.creator.photoUrl, onClick = { /* TODO */ })
+            VideoCreatorPhoto(
+                url = video.creator.photoUrl,
+                onClick = {
+                    navController.navigate("creator")
+                }
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -178,16 +212,29 @@ private fun VideoThumbnail(videoThumbnailUrl: String) {
                 shape = MaterialTheme.shapes.medium
             )
             .clip(MaterialTheme.shapes.medium)
-            .aspectRatio(16f / 9f)
             .background(MaterialTheme.colors.onSurfaceCarbon)
     ) {
-        Image(painter = rememberImagePainter(videoThumbnailUrl), contentDescription = null)
+        Image(
+            painter = rememberImagePainter(
+                data = videoThumbnailUrl,
+                builder = {
+                    size(OriginalSize)
+                    scale(Scale.FIT)
+                },
+            ),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 96.dp),
+            contentScale = ContentScale.FillWidth
+        )
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
 fun WatchContent(
+    navController: NavHostController,
     homeContent: HomeContent,
     contentPadding: PaddingValues
 ) {
@@ -200,18 +247,18 @@ fun WatchContent(
             items(homeContent.videos) { video ->
                 Video(
                     video = video,
-                    onClick = { /* TODO */ }
+                    navController = navController
                 )
             }
         }
     }
 }
 
-@ExperimentalMaterialApi
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun DefaultPreview() {
-    WatchTheme {
-        HomeScreen()
-    }
-}
+//@ExperimentalMaterialApi
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun DefaultPreview() {
+//    WatchTheme {
+//        HomeScreen()
+//    }
+//}

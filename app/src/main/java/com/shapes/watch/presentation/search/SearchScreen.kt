@@ -16,7 +16,7 @@ import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @Composable
-fun SearchTopBar(text: String, onTextChange: (String) -> Unit, onSearchButtonClick: () -> Unit) {
+fun SearchTopBar(text: String, onTextChange: (String) -> Unit, onSearchClick: () -> Unit) {
     Surface {
         Row(
             modifier = Modifier.padding(end = 16.dp, start = 24.dp, top = 16.dp, bottom = 16.dp),
@@ -32,7 +32,7 @@ fun SearchTopBar(text: String, onTextChange: (String) -> Unit, onSearchButtonCli
 
             IconButton(
                 enabled = text.isNotBlank(),
-                onClick = onSearchButtonClick
+                onClick = onSearchClick
             ) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = null)
             }
@@ -49,10 +49,9 @@ fun SearchScreen() {
                 SearchTopBar(
                     text = text,
                     onTextChange = { text = it },
-                    onSearchButtonClick = {
-                        /* TODO */
-                    }
+                    onSearchClick = { /* TODO */ }
                 )
+
                 Divider(color = MaterialTheme.colors.onSurfaceCarbon)
             }
         }

@@ -10,32 +10,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.shapes.watch.R
 import com.shapes.watch.presentation.ui.WatchDescription
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
 @Composable
-fun VideoScreen() {
+fun VideoScreen(navController: NavHostController) {
     val scrollState = rememberScrollState()
-    Surface {
+    Scaffold {
         Column(
             modifier = Modifier.verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Video()
 
-            VideoData()
+            VideoData(
+                onCreatorClick = {
+                    navController.navigate("creator")
+                }
+            )
         }
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun VideoData() {
+private fun VideoData(onCreatorClick: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(24.dp)
@@ -46,7 +49,7 @@ private fun VideoData() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        VideoCreator(onClick = { /* TODO */ })
+        VideoCreator(onClick = onCreatorClick)
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -99,12 +102,11 @@ private fun Video() {
     )
 }
 
-@ExperimentalMaterialApi
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun VideScreenPreview() {
-    WatchTheme {
-        VideoScreen()
-    }
-}
-
+//@ExperimentalMaterialApi
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun VideScreenPreview() {
+//    WatchTheme {
+//        VideoScreen(navController)
+//    }
+//}

@@ -1,4 +1,4 @@
-package com.shapes.watch.ui
+package com.shapes.watch.presentation.create
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,27 +11,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun CreateScreenPreview() {
-    WatchTheme {
-        CreateScreen()
-    }
-}
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun CreateScreenPreview() {
+//    WatchTheme {
+//        CreateScreen()
+//    }
+//}
 
 @Composable
-fun CreateScreenTopBar(uploadButtonEnabled: Boolean, onUploadButtonClick: () -> Unit) {
+fun CreateScreenTopBar(uploadButtonEnabled: Boolean, onUploadClick: () -> Unit) {
     WatchTopBar(text = "Create") {
         Button(
-            onClick = onUploadButtonClick,
+            onClick = onUploadClick,
             enabled = uploadButtonEnabled,
             contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
         ) {
@@ -42,6 +40,7 @@ fun CreateScreenTopBar(uploadButtonEnabled: Boolean, onUploadButtonClick: () -> 
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun CreateScreen() {
     var uploadButtonEnabled by remember { mutableStateOf(false) }
@@ -51,7 +50,7 @@ fun CreateScreen() {
             Column {
                 CreateScreenTopBar(
                     uploadButtonEnabled = uploadButtonEnabled,
-                    onUploadButtonClick = { /* TODO */ }
+                    onUploadClick = { /* TODO */ }
                 )
 
                 Divider()
@@ -62,6 +61,7 @@ fun CreateScreen() {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun CreateScreenContent(contentPadding: PaddingValues) {
     Surface(modifier = Modifier.padding(contentPadding)) {
@@ -83,6 +83,7 @@ private fun CreateScreenContent(contentPadding: PaddingValues) {
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun CreateVideo() {
     Box(

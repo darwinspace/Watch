@@ -1,40 +1,66 @@
 package com.shapes.watch.presentation.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.FloatingActionButtonDefaults
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.material.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WatchIconButton(borderWidth: Dp = 0.dp, onClick: () -> Unit, content: @Composable () -> Unit) {
-    IconButton(
+fun WatchIconButton(
+    borderWidth: Dp = 0.dp,
+    onClick: () -> Unit,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    shape: Shape = MaterialTheme.shapes.small,
+    elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(0.dp),
+    content: @Composable () -> Unit
+) {
+    Surface(
         modifier = Modifier
             .border(
                 width = borderWidth,
                 color = MaterialTheme.colors.onSurfaceCarbon,
-                shape = MaterialTheme.shapes.small
+                shape = shape
             )
-            .clip(MaterialTheme.shapes.small)
-            .background(MaterialTheme.colors.surface),
+            .clip(shape),
+        shape = shape,
+        elevation = elevation.elevation(interactionSource).value,
         onClick = onClick,
-        content = content
-    )
+        role = Role.Button,
+        interactionSource = interactionSource,
+        indication = rememberRipple()
+    ) {
+        val size = 48.dp
+        Box(
+            modifier = Modifier
+                .defaultMinSize(
+                    minWidth = size,
+                    minHeight = size
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable
 fun WatchFloatingActionButton(onClick: () -> Unit, content: @Composable () -> Unit) {
     FloatingActionButton(
         modifier = Modifier
-            .padding(8.dp)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,

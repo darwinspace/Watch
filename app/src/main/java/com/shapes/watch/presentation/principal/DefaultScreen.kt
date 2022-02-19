@@ -1,6 +1,5 @@
 package com.shapes.watch.presentation.principal
 
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.outlinedButtonColors
@@ -10,18 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.shapes.watch.R
-import com.shapes.watch.presentation.GoogleAuthenticationContract
 import com.shapes.watch.presentation.ui.WatchTopBarNameText
-import com.shapes.watch.ui.theme.WatchTheme
 
 @Composable
-fun DefaultScreen() {
-    rememberLauncherForActivityResult(contract = GoogleAuthenticationContract()) {
-
-    }
+fun DefaultScreen(navController: NavHostController) {
+//    rememberLauncherForActivityResult(contract = GoogleAuthenticationContract()) {}
 
     Surface {
         Box(
@@ -38,7 +33,7 @@ fun DefaultScreen() {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                SignInButton(onClick = { /* TODO */ })
+                SignInButton(onClick = { navController.navigate("home") })
             }
         }
     }
@@ -66,19 +61,11 @@ fun SignInButton(onClick: () -> Unit) {
     }
 }
 
-
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun DefaultScreenPreview() {
-    WatchTheme {
-        DefaultScreen()
-    }
-}
-
-//@Preview
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
 //@Composable
-//fun SignInButtonPreview() {
+//fun DefaultScreenPreview() {
 //    WatchTheme {
-//        SignInButton(onClick = {})
+//        val navController = rememberNavController()
+//        DefaultScreen(navController)
 //    }
 //}
