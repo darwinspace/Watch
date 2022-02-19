@@ -6,27 +6,36 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
+import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
-//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-//@Composable
-//fun CreateScreenPreview() {
-//    WatchTheme {
-//        CreateScreen()
-//    }
-//}
-
+@ExperimentalMaterialApi
+@Preview(showBackground = true, heightDp = 640, widthDp = 360)
 @Composable
-fun CreateScreenTopBar(uploadButtonEnabled: Boolean, onUploadClick: () -> Unit) {
+fun CreateScreenPreview() {
+    WatchTheme {
+        CreateScreen()
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun CreateScreenTopBar(
+    uploadButtonEnabled: Boolean = false,
+    onUploadClick: () -> Unit,
+    onCloseClick: () -> Unit
+) {
     WatchTopBar(text = "Create") {
         Button(
             onClick = onUploadClick,
@@ -36,6 +45,12 @@ fun CreateScreenTopBar(uploadButtonEnabled: Boolean, onUploadClick: () -> Unit) 
             Text(text = "Upload")
             Spacer(modifier = Modifier.width(12.dp))
             Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        WatchIconButton(onClick = onCloseClick) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = null)
         }
     }
 }
@@ -50,7 +65,8 @@ fun CreateScreen() {
             Column {
                 CreateScreenTopBar(
                     uploadButtonEnabled = uploadButtonEnabled,
-                    onUploadClick = { /* TODO */ }
+                    onUploadClick = { /*TODO*/ },
+                    onCloseClick = { /*TODO*/ }
                 )
 
                 Divider()

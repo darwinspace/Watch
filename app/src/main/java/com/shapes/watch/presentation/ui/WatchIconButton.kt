@@ -11,17 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun WatchIconButton(
-    borderWidth: Dp = 0.dp,
     onClick: () -> Unit,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = MaterialTheme.shapes.small,
@@ -31,7 +28,7 @@ fun WatchIconButton(
     Surface(
         modifier = Modifier
             .border(
-                width = borderWidth,
+                width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,
                 shape = shape
             )

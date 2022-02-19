@@ -19,9 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
@@ -32,6 +34,7 @@ import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
 import com.shapes.watch.presentation.ui.WatchTopBar
+import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -259,6 +262,6 @@ fun WatchContent(
 //@Composable
 //fun DefaultPreview() {
 //    WatchTheme {
-//        HomeScreen()
+//        HomeScreen(navController = rememberNavController())
 //    }
 //}

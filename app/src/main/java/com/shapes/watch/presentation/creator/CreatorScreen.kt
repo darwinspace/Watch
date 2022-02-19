@@ -28,7 +28,7 @@ fun CreatorScreen(navController: NavHostController) {
         CreatorScreenContent(scrollState)
 
         Box(modifier = Modifier.padding(24.dp)) {
-            WatchIconButton(borderWidth = 1.dp, onClick = { navController.popBackStack() }) {
+            WatchIconButton(onClick = { navController.popBackStack() }) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
             }
         }

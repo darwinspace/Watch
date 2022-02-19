@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
@@ -15,38 +16,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.shapes.watch.R
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
+import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
 @Composable
 fun ProfileScreen() {
-    val saveButtonEnabled = false
+    var saveButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             Column {
-                WatchTopBar(text = "Profile") {
-                    Button(
-                        onClick = { /* TODO */ },
-                        enabled = saveButtonEnabled,
-                        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
-                    ) {
-                        Text(text = "Save")
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Icon(imageVector = Icons.Default.Done, contentDescription = null)
-                    }
-                }
+                ProfileScreenTopBar(
+                    saveButtonEnabled = saveButtonEnabled,
+                    onSaveClick = { /*TODO*/ },
+                    onCloseClick = { /*TODO*/ }
+                )
 
                 Divider()
             }
         }
-    ) {
-        Surface(modifier = Modifier.padding(it)) {
+    ) { contentPadding ->
+        Surface(modifier = Modifier.padding(contentPadding)) {
             Column(
                 modifier = Modifier
                     .padding(24.dp)
@@ -66,11 +63,37 @@ fun ProfileScreen() {
 
 @ExperimentalMaterialApi
 @Composable
+private fun ProfileScreenTopBar(
+    saveButtonEnabled: Boolean = false,
+    onSaveClick: () -> Unit,
+    onCloseClick: () -> Unit
+) {
+    WatchTopBar(text = "Profile") {
+        Button(
+            onClick = onSaveClick,
+            enabled = saveButtonEnabled,
+            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+        ) {
+            Text(text = "Save")
+            Spacer(modifier = Modifier.width(12.dp))
+            Icon(imageVector = Icons.Default.Done, contentDescription = null)
+        }
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        WatchIconButton(onClick = onCloseClick) {
+            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+        }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
 private fun ProfileData() {
     Box(contentAlignment = Alignment.BottomCenter) {
-        ProfileCover { /* TODO */ }
+        ProfileCover(onEditClick = { /* TODO */ })
 
-        ProfileImage { /* TODO */ }
+        ProfileImage(onEditClick = { /* TODO */ })
     }
 }
 
@@ -87,7 +110,7 @@ private fun ProfileCover(onEditClick: () -> Unit) {
                     shape = MaterialTheme.shapes.medium
                 )
                 .clip(MaterialTheme.shapes.medium)
-                .background(Color(0xFFE1BEE7))
+                .background(MaterialTheme.colors.onSurfaceCarbon)
                 .aspectRatio(ratio = 16f / 9f)
                 .fillMaxWidth()
         )
@@ -124,11 +147,11 @@ private fun ProfileImage(onEditClick: () -> Unit) {
     }
 }
 
-
-//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-//@Composable
-//fun ProfileScreenPreview() {
-//    WatchTheme {
-//        ProfileScreen()
-//    }
-//}
+@ExperimentalMaterialApi
+@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+@Composable
+fun ProfileScreenPreview() {
+    WatchTheme {
+        ProfileScreen()
+    }
+}
