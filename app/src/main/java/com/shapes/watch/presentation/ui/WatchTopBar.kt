@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -34,13 +35,13 @@ fun WatchTopBar(text: String, content: @Composable RowScope.() -> Unit) {
 }
 
 @Composable
-fun WatchTopBarNameText(text: String) {
+fun WatchTopBarNameText(text: String, textStyle: TextStyle = MaterialTheme.typography.h6) {
     Row {
-        Text(text = text, style = MaterialTheme.typography.h6)
+        Text(text = text, style = textStyle)
 
         Text(
             text = ".",
-            style = MaterialTheme.typography.h6,
+            style = textStyle,
             color = MaterialTheme.colors.primary
         )
     }

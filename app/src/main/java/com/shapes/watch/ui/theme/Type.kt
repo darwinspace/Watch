@@ -36,7 +36,7 @@ val Typography = Typography(
     h4 = TextStyle(
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Bold,
-        fontSize = 36.sp
+        fontSize = 32.sp
     ),
     h5 = TextStyle(
         fontFamily = SpaceGrotesk,
