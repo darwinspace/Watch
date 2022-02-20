@@ -1,8 +1,6 @@
 package com.shapes.watch.presentation.home.component
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,11 +17,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import coil.size.Scale
@@ -34,7 +30,6 @@ import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
 import com.shapes.watch.presentation.ui.WatchTopBar
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -105,7 +100,7 @@ fun HomeScreen(
     ) { contentPadding ->
         when (state) {
             is HomeState.Content -> {
-                WatchContent(
+                HomeScreenContent(
                     navController = navController,
                     homeContent = state.homeContent,
                     contentPadding = contentPadding
@@ -236,14 +231,15 @@ private fun VideoThumbnail(videoThumbnailUrl: String) {
 
 @ExperimentalMaterialApi
 @Composable
-fun WatchContent(
+fun HomeScreenContent(
     navController: NavHostController,
     homeContent: HomeContent,
     contentPadding: PaddingValues
 ) {
     Surface(modifier = Modifier.padding(contentPadding)) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             contentPadding = PaddingValues(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
