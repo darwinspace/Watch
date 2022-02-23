@@ -32,10 +32,12 @@ fun VideoScreen(
         ) {
             Video()
 
-            VideoData(videoInformation) {
-                val creator = videoInformation.creator
-                navController.navigate(route = Screen.CreatorScreen.route + creator.toRoute())
-            }
+            VideoData(
+                videoInformation = videoInformation,
+                onCreatorClick = {
+                    navController.navigate(route = Screen.CreatorScreen.route + it.toRoute())
+                }
+            )
         }
     }
 }
@@ -44,7 +46,7 @@ fun VideoScreen(
 @Composable
 private fun VideoData(
     videoInformation: VideoInformation,
-    onCreatorClick: () -> Unit
+    onCreatorClick: (Creator) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -56,7 +58,10 @@ private fun VideoData(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        VideoCreator(creator = videoInformation.creator, onClick = onCreatorClick)
+        VideoCreator(
+            creator = videoInformation.creator,
+            onClick = onCreatorClick
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -71,33 +76,40 @@ private fun VideoTitle(title: String) {
 
 @ExperimentalMaterialApi
 @Composable
-private fun VideoCreator(creator: Creator, onClick: () -> Unit) {
+private fun VideoCreator(creator: Creator, onClick: (Creator) -> Unit) {
     Card(
         elevation = 0.dp,
-        onClick = onClick
+        onClick = {
+            onClick(creator)
+        }
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = rememberImagePainter(data = creator.photoUrl),
-                contentDescription = null,
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colors.onSurfaceCarbon,
-                        shape = CircleShape
-                    )
-                    .clip(CircleShape)
-                    .size(28.dp)
-            )
+            VideoCreatorPhoto(creator)
 
             Spacer(modifier = Modifier.width(12.dp))
 
             VideoCreatorName(creator.name)
         }
     }
+}
+
+@Composable
+private fun VideoCreatorPhoto(creator: Creator) {
+    Image(
+        painter = rememberImagePainter(data = creator.photoUrl),
+        contentDescription = null,
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colors.onSurfaceCarbon,
+                shape = CircleShape
+            )
+            .clip(CircleShape)
+            .size(28.dp)
+    )
 }
 
 @Composable
