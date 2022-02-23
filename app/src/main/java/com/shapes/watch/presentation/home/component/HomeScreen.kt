@@ -1,6 +1,8 @@
 package com.shapes.watch.presentation.home.component
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,17 +22,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
-import coil.size.Scale
 import com.shapes.watch.R
 import com.shapes.watch.domain.model.HomeContent
 import com.shapes.watch.domain.model.VideoInformation
 import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
+import com.shapes.watch.presentation.ui.Screen
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
 import com.shapes.watch.presentation.ui.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
+import okio.ByteString.Companion.encode
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -121,7 +125,7 @@ fun Video(
         modifier = Modifier.fillMaxWidth(),
         elevation = 0.dp,
         onClick = {
-            navController.navigate("video")
+            navController.navigate(Screen.VideoScreen.route + video.toRoute())
         }
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -148,7 +152,18 @@ private fun VideoDataContainer(
             VideoCreatorPhoto(
                 url = video.creator.photoUrl,
                 onClick = {
-                    navController.navigate("creator")
+                    val creator = video.creator
+                    val photoUrl = creator.photoUrl.encode().toString()
+                    val coverUrl = creator.coverUrl.encode().toString()
+
+                    navController.navigate(
+                        route = Screen.CreatorScreen.route + creator.toRoute()
+//                                "/${creator.id}" +
+//                                "/${creator.name}" +
+//                                "/${creator.description}" +
+//                                "/$photoUrl" +
+//                                "/$coverUrl"
+                    )
                 }
             )
 
@@ -200,6 +215,7 @@ private fun VideoCreatorPhoto(url: String, onClick: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun VideoThumbnail(videoThumbnailUrl: String) {
     Box(
@@ -212,18 +228,18 @@ private fun VideoThumbnail(videoThumbnailUrl: String) {
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colors.onSurfaceCarbon)
     ) {
+        val painter = rememberImagePainter(
+            data = videoThumbnailUrl,
+            builder = {
+                size(OriginalSize)
+            },
+        )
+
         Image(
-            painter = rememberImagePainter(
-                data = videoThumbnailUrl,
-                builder = {
-                    size(OriginalSize)
-                    scale(Scale.FIT)
-                },
-            ),
+            painter = painter,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = 96.dp),
+                .fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )
     }

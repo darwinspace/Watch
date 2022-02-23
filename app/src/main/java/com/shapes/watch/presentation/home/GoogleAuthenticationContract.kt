@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation
+package com.shapes.watch.presentation.home
 
 import android.app.Activity
 import android.content.Context

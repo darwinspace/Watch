@@ -14,37 +14,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.shapes.watch.R
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
+import coil.size.Scale
+import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.CreatorContent
 import com.shapes.watch.presentation.creator.CreatorState
 import com.shapes.watch.presentation.creator.CreatorViewModel
 import com.shapes.watch.presentation.home.component.Video
 import com.shapes.watch.presentation.ui.WatchDescription
 import com.shapes.watch.presentation.ui.WatchIconButton
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
 @Composable
 fun CreatorScreen(
     viewModel: CreatorViewModel = viewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    creator: Creator
 ) {
     val state = viewModel.state.value
 
     Scaffold {
         when (state) {
             is CreatorState.Content -> CreatorScreenContent(
+                navController,
                 state.creatorContent,
-                navController
+                creator
             )
             else -> Unit
         }
@@ -64,30 +65,26 @@ fun CreatorScreen(
 @ExperimentalMaterialApi
 @Composable
 private fun CreatorScreenContent(
+    navController: NavHostController,
     creatorContent: CreatorContent,
-    navController: NavHostController
+    creator: Creator
 ) {
     Surface {
         LazyColumn(
-            modifier = Modifier
-                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(12.dp)
         ) {
             item {
                 Column(
                     modifier = Modifier.padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreatorData()
+                    CreatorData(creator)
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Text(
-                        text = "Darwin Delgado",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h5
-                    )
+                    CreatorName(creator.name)
 
                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -98,7 +95,7 @@ private fun CreatorScreenContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    WatchDescription(text = "Looking back")
+                    WatchDescription(text = creator.description)
                 }
             }
 
@@ -108,33 +105,21 @@ private fun CreatorScreenContent(
                     navController = navController
                 )
             }
-            // CreatorVideos(creatorContent, navController)
         }
     }
 }
 
-//@ExperimentalMaterialApi
-//@Composable
-//fun CreatorVideos(
-//    creatorContent: CreatorContent,
-//    navController: NavHostController
-//) {
-//    LazyColumn(
-//        modifier = Modifier.fillMaxWidth(),
-//        contentPadding = PaddingValues(12.dp),
-//        verticalArrangement = Arrangement.spacedBy(8.dp)
-//    ) {
-//        items(creatorContent.videos) { video ->
-//            Video(
-//                video = video,
-//                navController = navController
-//            )
-//        }
-//    }
-//}
+@Composable
+private fun CreatorName(name: String) {
+    Text(
+        text = name,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.h5
+    )
+}
 
 @Composable
-private fun CreatorData() {
+private fun CreatorData(creator: Creator) {
     Box(contentAlignment = Alignment.BottomCenter) {
         Box(
             modifier = Modifier
@@ -145,13 +130,24 @@ private fun CreatorData() {
                     shape = MaterialTheme.shapes.medium
                 )
                 .clip(MaterialTheme.shapes.medium)
-                .aspectRatio(ratio = 16f / 9f)
                 .background(MaterialTheme.colors.onSurfaceCarbon)
                 .fillMaxWidth()
-        )
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = creator.coverUrl,
+                    builder = {
+                        size(OriginalSize)
+                        scale(Scale.FIT)
+                    }
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+        }
 
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = rememberImagePainter(data = creator.photoUrl),
             contentDescription = null,
             modifier = Modifier
                 .border(
@@ -162,15 +158,8 @@ private fun CreatorData() {
                 .padding(8.dp)
                 .clip(CircleShape)
                 .size(96.dp)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
         )
-    }
-}
-
-@ExperimentalMaterialApi
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun CreatorScreenPreview() {
-    WatchTheme {
-        CreatorScreen(navController = rememberNavController())
     }
 }
