@@ -22,10 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.shapes.watch.R
+import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.HomeContent
 import com.shapes.watch.domain.model.VideoInformation
 import com.shapes.watch.presentation.home.HomeState
@@ -34,7 +34,6 @@ import com.shapes.watch.presentation.ui.Screen
 import com.shapes.watch.presentation.ui.WatchFloatingActionButton
 import com.shapes.watch.presentation.ui.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
-import okio.ByteString.Companion.encode
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -148,37 +147,36 @@ private fun VideoDataContainer(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            VideoCreatorPhoto(
-                url = video.creator.photoUrl,
-                onClick = {
-                    val creator = video.creator
-                    val photoUrl = creator.photoUrl.encode().toString()
-                    val coverUrl = creator.coverUrl.encode().toString()
+        VideoData(video, navController)
 
-                    navController.navigate(
-                        route = Screen.CreatorScreen.route + creator.toRoute()
-//                                "/${creator.id}" +
-//                                "/${creator.name}" +
-//                                "/${creator.description}" +
-//                                "/$photoUrl" +
-//                                "/$coverUrl"
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.width(12.dp))
-
-            VideoTitle(video.video.title)
-        }
-
-        val t = 2.minutes + 184.seconds
-        VideoDuration(t)
+        val duration = 2.minutes + 184.seconds
+        VideoDuration(duration)
     }
 }
 
 @Composable
-private fun VideoDuration(t: Duration) {
+private fun VideoData(
+    video: VideoInformation,
+    navController: NavHostController
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        VideoCreator(
+            creator = video.creator,
+            onClick = { creator ->
+                navController.navigate(
+                    route = Screen.CreatorScreen.route + creator.toRoute()
+                )
+            }
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        VideoTitle(video.video.title)
+    }
+}
+
+@Composable
+private fun VideoDuration(duration: Duration) {
     Box(
         modifier = Modifier
             .border(
@@ -188,7 +186,7 @@ private fun VideoDuration(t: Duration) {
             )
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Text(text = t.toString(), style = MaterialTheme.typography.caption)
+        Text(text = duration.toString(), style = MaterialTheme.typography.caption)
     }
 }
 
@@ -198,24 +196,28 @@ private fun VideoTitle(text: String) {
 }
 
 @Composable
-private fun VideoCreatorPhoto(url: String, onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
-        Image(
-            painter = rememberImagePainter(url),
-            contentDescription = null,
-            modifier = Modifier
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colors.onSurfaceCarbon,
-                    shape = CircleShape
-                )
-                .clip(CircleShape)
-                .size(32.dp)
-        )
+private fun VideoCreator(creator: Creator, onClick: (Creator) -> Unit) {
+    IconButton(onClick = { onClick(creator) }) {
+        VideoCreatorPhoto(creator)
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
+@Composable
+private fun VideoCreatorPhoto(creator: Creator) {
+    Image(
+        painter = rememberImagePainter(creator.coverUrl),
+        contentDescription = null,
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colors.onSurfaceCarbon,
+                shape = CircleShape
+            )
+            .clip(CircleShape)
+            .size(32.dp)
+    )
+}
+
 @Composable
 private fun VideoThumbnail(videoThumbnailUrl: String) {
     Box(
