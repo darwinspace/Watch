@@ -1,4 +1,4 @@
-package com.shapes.watch.domain.case.home
+package com.shapes.watch.domain.use_case.home
 
 import com.shapes.watch.common.Resource
 import com.shapes.watch.di.AppModule

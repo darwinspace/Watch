@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import coil.size.OriginalSize
 import com.shapes.watch.R
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.HomeContent
@@ -205,7 +204,7 @@ private fun VideoCreator(creator: Creator, onClick: (Creator) -> Unit) {
 @Composable
 private fun VideoCreatorPhoto(creator: Creator) {
     Image(
-        painter = rememberImagePainter(creator.coverUrl),
+        painter = rememberImagePainter(creator.photoUrl),
         contentDescription = null,
         modifier = Modifier
             .border(
@@ -229,19 +228,12 @@ private fun VideoThumbnail(videoThumbnailUrl: String) {
             )
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colors.onSurfaceCarbon)
+            .aspectRatio(ratio = 16f / 9f)
     ) {
-        val painter = rememberImagePainter(
-            data = videoThumbnailUrl,
-            builder = {
-                size(OriginalSize)
-            },
-        )
-
         Image(
-            painter = painter,
+            painter = rememberImagePainter(videoThumbnailUrl),
             contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             contentScale = ContentScale.FillWidth
         )
     }

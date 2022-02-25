@@ -2,10 +2,11 @@ package com.shapes.watch.data.repository
 
 import com.shapes.watch.data.remote.dto.CreatorContentDto
 import com.shapes.watch.data.remote.dto.VideoDto
+import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.repository.CreatorRepository
 
 class FakeCreatorRepository : CreatorRepository {
-    override suspend fun getContent(): CreatorContentDto {
+    override suspend fun getContent(creator: Creator): CreatorContentDto {
         val videos = (1..4).map {
             VideoDto(
                 videoId = "$it",

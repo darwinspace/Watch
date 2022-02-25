@@ -1,4 +1,4 @@
-package com.shapes.watch.domain.case.video
+package com.shapes.watch.domain.use_case.video
 
 import com.shapes.watch.common.Resource
 import com.shapes.watch.domain.model.VideoContent

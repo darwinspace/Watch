@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import coil.size.OriginalSize
-import coil.size.Scale
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.CreatorContent
 import com.shapes.watch.presentation.creator.CreatorState
@@ -38,6 +37,10 @@ fun CreatorScreen(
     navController: NavHostController,
     creator: Creator
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.getContent(creator)
+    }
+
     val state = viewModel.state.value
 
     Scaffold {
@@ -131,17 +134,12 @@ private fun CreatorData(creator: Creator) {
                 )
                 .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colors.onSurfaceCarbon)
-                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
         ) {
             Image(
-                painter = rememberImagePainter(
-                    data = creator.coverUrl,
-                    builder = {
-                        size(OriginalSize)
-                        scale(Scale.FIT)
-                    }
-                ),
+                painter = rememberImagePainter(creator.coverUrl),
                 contentDescription = null,
+                modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
             )
         }

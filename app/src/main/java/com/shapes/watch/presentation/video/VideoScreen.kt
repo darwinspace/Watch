@@ -1,5 +1,7 @@
 package com.shapes.watch.presentation.video
 
+import android.widget.MediaController
+import android.widget.VideoView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -8,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.Creator
@@ -119,17 +121,26 @@ private fun VideoCreatorName(name: String) {
 
 @Composable
 private fun Video() {
-    Box(
+    val color = MaterialTheme.colors.onSurfaceCarbon
+    Surface(
         modifier = Modifier
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colors.onSurfaceCarbon,
-                shape = MaterialTheme.shapes.medium
+                color = color
             )
-            .background(Color(0xFFD1C4E9))
-            .aspectRatio(ratio = 16f / 9f)
+            .background(color)
             .fillMaxWidth()
-    )
+            .aspectRatio(ratio = 16f / 9f)
+    ) {
+        AndroidView(
+            factory = { VideoView(it) }
+        ) {
+            it.setVideoPath("https://firebasestorage.googleapis.com/v0/b/watch-54504.appspot.com/o/Channel%20content%20-%20YouTube%20Studio%20and%202%20more%20pages%20-%20Darwin%20-%20Microsoft%E2%80%8B%20Edge%202022-02-10%2018-21-00.mp4?alt=media&token=2d632579-b2d1-42b7-a630-739a84c8a3da")
+            it.setMediaController(MediaController(it.context))
+            it.requestFocus()
+            it.start()
+        }
+    }
 }
 
 //@ExperimentalMaterialApi
