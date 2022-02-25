@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.shapes.watch.R
+import com.shapes.watch.presentation.ui.Screen
 import com.shapes.watch.presentation.ui.WatchTopBarNameText
 
 @Composable
@@ -33,7 +34,11 @@ fun DefaultScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                SignInButton(onClick = { navController.navigate("home") })
+                SignInButton(
+                    onClick = {
+                        navController.navigate(Screen.HomeScreen.route)
+                    }
+                )
             }
         }
     }

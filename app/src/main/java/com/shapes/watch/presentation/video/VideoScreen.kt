@@ -28,19 +28,29 @@ fun VideoScreen(
 ) {
     val scrollState = rememberScrollState()
     Scaffold {
-        Column(
-            modifier = Modifier.verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Video()
+        VideoScreenContent(scrollState, videoInformation, navController)
+    }
+}
 
-            VideoData(
-                videoInformation = videoInformation,
-                onCreatorClick = {
-                    navController.navigate(route = Screen.CreatorScreen.route + it.toRoute())
-                }
-            )
-        }
+@ExperimentalMaterialApi
+@Composable
+private fun VideoScreenContent(
+    scrollState: ScrollState,
+    videoInformation: VideoInformation,
+    navController: NavHostController
+) {
+    Column(
+        modifier = Modifier.verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Video(videoInformation.video.contentUrl)
+
+        VideoData(
+            videoInformation = videoInformation,
+            onCreatorClick = {
+                navController.navigate(route = Screen.CreatorScreen.route + it.toRoute())
+            }
+        )
     }
 }
 
@@ -120,7 +130,7 @@ private fun VideoCreatorName(name: String) {
 }
 
 @Composable
-private fun Video() {
+private fun Video(contentUrl: String) {
     val color = MaterialTheme.colors.onSurfaceCarbon
     Surface(
         modifier = Modifier
@@ -135,7 +145,7 @@ private fun Video() {
         AndroidView(
             factory = { VideoView(it) }
         ) {
-            it.setVideoPath("https://firebasestorage.googleapis.com/v0/b/watch-54504.appspot.com/o/Channel%20content%20-%20YouTube%20Studio%20and%202%20more%20pages%20-%20Darwin%20-%20Microsoft%E2%80%8B%20Edge%202022-02-10%2018-21-00.mp4?alt=media&token=2d632579-b2d1-42b7-a630-739a84c8a3da")
+            it.setVideoPath(contentUrl)
             it.setMediaController(MediaController(it.context))
             it.requestFocus()
             it.start()

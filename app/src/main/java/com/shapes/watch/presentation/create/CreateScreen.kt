@@ -12,22 +12,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
-@ExperimentalMaterialApi
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun CreateScreenPreview() {
-    WatchTheme {
-        CreateScreen()
-    }
-}
+//@ExperimentalMaterialApi
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun CreateScreenPreview() {
+//    WatchTheme {
+//        CreateScreen()
+//    }
+//}
 
 @ExperimentalMaterialApi
 @Composable
@@ -57,7 +56,7 @@ fun CreateScreenTopBar(
 
 @ExperimentalMaterialApi
 @Composable
-fun CreateScreen() {
+fun CreateScreen(navController: NavHostController) {
     var uploadButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -65,37 +64,41 @@ fun CreateScreen() {
             Column {
                 CreateScreenTopBar(
                     uploadButtonEnabled = uploadButtonEnabled,
-                    onUploadClick = { /*TODO*/ },
-                    onCloseClick = { /*TODO*/ }
+                    onUploadClick = {
+                        /*TODO*/
+                    },
+                    onCloseClick = {
+                        navController.popBackStack()
+                    }
                 )
 
                 Divider()
             }
         }
     ) {
-        CreateScreenContent(it)
+        Surface(modifier = Modifier.padding(it)) {
+            CreateScreenContent()
+        }
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun CreateScreenContent(contentPadding: PaddingValues) {
-    Surface(modifier = Modifier.padding(contentPadding)) {
-        Column(
-            modifier = Modifier
-                .padding(24.dp)
-                .fillMaxSize()
-        ) {
-            CreateVideo()
+private fun CreateScreenContent() {
+    Column(
+        modifier = Modifier
+            .padding(24.dp)
+            .fillMaxSize()
+    ) {
+        CreateVideo()
 
-            Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-            WatchTextField(value = "Title (required)", onValueChange = {})
+        WatchTextField(value = "Title (required)", onValueChange = {})
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-            WatchTextField(value = "Description\n", onValueChange = {})
-        }
+        WatchTextField(value = "Description\n", onValueChange = {})
     }
 }
 

@@ -78,10 +78,10 @@ fun HomeScreen(
             Column {
                 HomeScreenTopBar(
                     onSearchClick = {
-                        navController.navigate("search")
+                        navController.navigate(Screen.SearchScreen.route)
                     },
                     onProfileClick = {
-                        navController.navigate("profile")
+                        navController.navigate(Screen.ProfileScreen.route)
                     }
                 )
 
@@ -92,7 +92,7 @@ fun HomeScreen(
             Box(modifier = Modifier.padding(8.dp)) {
                 WatchFloatingActionButton(
                     onClick = {
-                        navController.navigate("create")
+                        navController.navigate(Screen.CreateScreen.route)
                     }
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)
@@ -129,7 +129,7 @@ fun Video(
         Column(modifier = Modifier.padding(12.dp)) {
             VideoThumbnail(video.video.thumbnailUrl)
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             VideoDataContainer(navController, video)
         }

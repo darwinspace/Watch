@@ -36,21 +36,28 @@ fun NavigationHostComponent() {
             ProfileScreen()
         }
         composable(Screen.CreateScreen.route) {
-            CreateScreen()
+            CreateScreen(navController = navController)
         }
         composable(Screen.SearchScreen.route) {
             SearchScreen()
         }
         composable(
-            route = "${Screen.VideoScreen.route}/{videoId}/{videoTitle}/{videoDescription}" +
-                    "/{creatorId}/{creatorName}/{creatorDescription}",
+            route = Screen.VideoScreen.route +
+                    "/{videoId}/{videoTitle}/{videoDescription}" +
+                    "/{videoThumbnailUrl}/{videoContentUrl}" +
+                    "/{creatorId}/{creatorName}/{creatorDescription}" +
+                    "/{creatorPhotoUrl}/{creatorCoverUrl}",
             arguments = listOf(
                 navArgument("videoId") { type = NavType.StringType },
                 navArgument("videoTitle") { type = NavType.StringType },
                 navArgument("videoDescription") { type = NavType.StringType },
+                navArgument("videoThumbnailUrl") { type = NavType.StringType },
+                navArgument("videoContentUrl") { type = NavType.StringType },
                 navArgument("creatorId") { type = NavType.StringType },
                 navArgument("creatorName") { type = NavType.StringType },
-                navArgument("creatorDescription") { type = NavType.StringType }
+                navArgument("creatorDescription") { type = NavType.StringType },
+                navArgument("creatorPhotoUrl") { type = NavType.StringType },
+                navArgument("creatorCoverUrl") { type = NavType.StringType }
             )
         ) { entry ->
             VideoScreen(
@@ -59,13 +66,15 @@ fun NavigationHostComponent() {
             )
         }
         composable(
-            route = "${Screen.CreatorScreen.route}/{creatorId}/{creatorName}/{creatorDescription}",
+            route = Screen.CreatorScreen.route +
+                    "/{creatorId}/{creatorName}/{creatorDescription}" +
+                    "/{creatorPhotoUrl}/{creatorCoverUrl}",
             arguments = listOf(
                 navArgument("creatorId") { type = NavType.StringType },
                 navArgument("creatorName") { type = NavType.StringType },
                 navArgument("creatorDescription") { type = NavType.StringType },
-//                navArgument("photoUrl") { type = NavType.StringType },
-//                navArgument("coverUrl") { type = NavType.StringType }
+                navArgument("creatorPhotoUrl") { type = NavType.StringType },
+                navArgument("creatorCoverUrl") { type = NavType.StringType }
             )
         ) { entry ->
             CreatorScreen(
