@@ -9,7 +9,7 @@ import com.shapes.watch.domain.use_case.home.GetHomeContent
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class HomeViewModel(
+class HomeViewModel constructor(
     private val getHomeContent: GetHomeContent = GetHomeContent()
 ) : ViewModel() {
     private val _state = mutableStateOf<HomeState>(HomeState.Empty)

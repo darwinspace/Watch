@@ -1,19 +1,30 @@
 package com.shapes.watch.presentation.create
 
-import androidx.compose.foundation.background
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
+import com.shapes.watch.domain.model.CreateVideoInformation
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
@@ -56,8 +67,44 @@ fun CreateScreenTopBar(
 
 @ExperimentalMaterialApi
 @Composable
-fun CreateScreen(navController: NavHostController) {
-    var uploadButtonEnabled by remember { mutableStateOf(false) }
+fun CreateScreen(
+    viewModel: CreateViewModel = viewModel(),
+    navController: NavHostController,
+    creatorId: String
+) {
+    when (val state = viewModel.state.value) {
+        is CreateState.Error -> {
+            throw(state.exception)
+        }
+        CreateState.Success -> {
+            navController.popBackStack()
+        }
+        CreateState.Loading -> {
+
+        }
+        else -> Unit
+    }
+
+    CreatorScreenContent(viewModel, creatorId, navController)
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun CreatorScreenContent(
+    viewModel: CreateViewModel,
+    creatorId: String,
+    navController: NavHostController
+) {
+    var title by rememberSaveable { mutableStateOf(String()) }
+    var description by rememberSaveable { mutableStateOf(String()) }
+
+    var videoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    val launcherVideoResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { videoUri = it }
+    )
+
+    val uploadButtonEnabled = title.isNotBlank() && description.isNotBlank() && videoUri != null
 
     Scaffold(
         topBar = {
@@ -65,7 +112,16 @@ fun CreateScreen(navController: NavHostController) {
                 CreateScreenTopBar(
                     uploadButtonEnabled = uploadButtonEnabled,
                     onUploadClick = {
-                        /*TODO*/
+                        videoUri?.let {
+                            viewModel.uploadVideoInformation(
+                                videoInformation = CreateVideoInformation(
+                                    creatorId = creatorId,
+                                    title = title,
+                                    description = description
+                                ),
+                                video = it
+                            )
+                        }
                     },
                     onCloseClick = {
                         navController.popBackStack()
@@ -75,29 +131,44 @@ fun CreateScreen(navController: NavHostController) {
                 Divider()
             }
         }
-    ) {
-        Surface(modifier = Modifier.padding(it)) {
-            CreateScreenContent()
+    ) { contentPadding ->
+        Surface(modifier = Modifier.padding(contentPadding)) {
+            CreateScreenFields(
+                title = title,
+                onTitleChange = { title = it },
+                description = description,
+                onDescriptionChange = { description = it },
+                videoUri = videoUri,
+                onVideoClick = {
+                    launcherVideoResult.launch("video/*")
+                }
+            )
         }
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-private fun CreateScreenContent() {
+private fun CreateScreenFields(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
+    videoUri: Uri?,
+    onVideoClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(24.dp)
             .fillMaxSize()
     ) {
-        CreateVideo()
+        CreateVideo(onClick = onVideoClick, uri = videoUri)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        var title by remember { mutableStateOf(String()) }
         WatchTextField(
             value = title,
-            onValueChange = { title = it },
+            onValueChange = onTitleChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(text = "Title (required)")
@@ -107,10 +178,9 @@ private fun CreateScreenContent() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        var description by remember { mutableStateOf(String()) }
         WatchTextField(
             value = description,
-            onValueChange = { description = it },
+            onValueChange = onDescriptionChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(text = "Description\n")
@@ -121,22 +191,36 @@ private fun CreateScreenContent() {
 
 @ExperimentalMaterialApi
 @Composable
-private fun CreateVideo() {
-    Box(
+private fun CreateVideo(onClick: () -> Unit, uri: Uri?) {
+    Surface(
         modifier = Modifier
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,
                 shape = MaterialTheme.shapes.medium
             )
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colors.onSurfaceCarbon)
             .aspectRatio(ratio = 16f / 9f)
             .fillMaxWidth(),
-        contentAlignment = Alignment.Center
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colors.onSurfaceCarbon,
+        onClick = onClick
     ) {
-        WatchIconButton(onClick = { /* TODO */ }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = rememberImagePainter(data = uri),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+
+            val icon = if (uri == null) Icons.Default.Add else Icons.Default.Edit
+            WatchIconButton(
+                onClick = onClick
+            ) {
+                Icon(imageVector = icon, contentDescription = null)
+            }
         }
     }
 }

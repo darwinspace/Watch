@@ -125,14 +125,19 @@ private fun ProfileImage(onEditClick: () -> Unit) {
     Box(contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier
-                .clip(CircleShape)
                 .border(
                     width = 8.dp,
                     color = MaterialTheme.colors.surface,
                     shape = CircleShape
                 )
                 .padding(8.dp)
+                .clip(CircleShape)
                 .background(Color.Blue)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurfaceCarbon,
+                    shape = CircleShape
+                )
                 .size(96.dp)
         )
 

@@ -103,7 +103,10 @@ fun HomeScreen(
             Box(modifier = Modifier.padding(8.dp)) {
                 WatchFloatingActionButton(
                     onClick = {
-                        navController.navigate(Screen.CreateScreen.route)
+                        navController.navigate(
+                            Screen.CreateScreen.route +
+                                    "/C4Del3NYWnoYuASnFI8b"
+                        )
                     }
                 ) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = null)

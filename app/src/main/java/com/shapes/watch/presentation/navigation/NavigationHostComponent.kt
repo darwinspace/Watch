@@ -35,8 +35,11 @@ fun NavigationHostComponent() {
         composable(Screen.ProfileScreen.route) {
             ProfileScreen(navController = navController)
         }
-        composable(Screen.CreateScreen.route) {
-            CreateScreen(navController = navController)
+        composable(Screen.CreateScreen.route + "/{creatorId}") {
+            CreateScreen(
+                navController = navController,
+                creatorId = it.arguments!!.getString("creatorId")!!
+            )
         }
         composable(Screen.SearchScreen.route) {
             SearchScreen()

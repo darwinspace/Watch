@@ -10,7 +10,7 @@ import com.shapes.watch.domain.use_case.creator.GetCreatorContent
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class CreatorViewModel(
+class CreatorViewModel constructor(
     private val getCreatorContent: GetCreatorContent = GetCreatorContent()
 ) : ViewModel() {
     private val _state = mutableStateOf<CreatorState>(CreatorState.Empty)

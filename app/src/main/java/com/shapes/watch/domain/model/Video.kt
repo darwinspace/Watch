@@ -1,8 +1,8 @@
 package com.shapes.watch.domain.model
 
 import android.os.Bundle
-import okio.ByteString.Companion.decodeBase64
-import okio.ByteString.Companion.encode
+import com.shapes.watch.common.encode
+import com.shapes.watch.common.getEncodedString
 
 data class Video(
     val id: String,
@@ -13,17 +13,17 @@ data class Video(
 ) {
     constructor(data: Bundle) : this(
         id = data.getString("videoId")!!,
-        title = data.getString("videoTitle")!!,
-        description = data.getString("videoDescription")!!,
-        thumbnailUrl = data.getString("videoThumbnailUrl")!!
-            .decodeBase64()!!.string(Charsets.UTF_8),
-        contentUrl = data.getString("videoContentUrl")!!
-            .decodeBase64()!!.string(Charsets.UTF_8)
+        title = data.getEncodedString("videoTitle")!!,
+        description = data.getEncodedString("videoDescription")!!,
+        thumbnailUrl = data.getEncodedString("videoThumbnailUrl")!!,
+        contentUrl = data.getEncodedString("videoContentUrl")!!
     )
 
     fun toRoute(): String {
-        val thumbnail = thumbnailUrl.encode().base64Url()
-        val content = contentUrl.encode().base64Url()
+        val title = title.encode()
+        val description = description.encode()
+        val thumbnail = thumbnailUrl.encode()
+        val content = contentUrl.encode()
         return "/$id/$title/$description/$thumbnail/$content"
     }
 }

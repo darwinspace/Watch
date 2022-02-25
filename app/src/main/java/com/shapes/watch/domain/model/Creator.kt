@@ -1,8 +1,8 @@
 package com.shapes.watch.domain.model
 
 import android.os.Bundle
-import okio.ByteString.Companion.decodeBase64
-import okio.ByteString.Companion.encode
+import com.shapes.watch.common.getEncodedString
+import com.shapes.watch.common.encode
 
 data class Creator(
     val id: String,
@@ -13,15 +13,17 @@ data class Creator(
 ) {
     constructor(data: Bundle) : this(
         id = data.getString("creatorId")!!,
-        name = data.getString("creatorName")!!,
-        description = data.getString("creatorDescription")!!,
-        photoUrl = data.getString("creatorPhotoUrl")!!.decodeBase64()!!.string(Charsets.UTF_8),
-        coverUrl = data.getString("creatorCoverUrl")!!.decodeBase64()!!.string(Charsets.UTF_8)
+        name = data.getEncodedString("creatorName")!!,
+        description = data.getEncodedString("creatorDescription")!!,
+        photoUrl = data.getEncodedString("creatorPhotoUrl")!!,
+        coverUrl = data.getEncodedString("creatorCoverUrl")!!
     )
 
     fun toRoute(): String {
-        val photo = photoUrl.encode().base64Url()
-        val cover = coverUrl.encode().base64Url()
+        val name = name.encode()
+        val description = description.encode()
+        val photo = photoUrl.encode()
+        val cover = coverUrl.encode()
         return "/$id/$name/$description/$photo/$cover"
     }
 }
