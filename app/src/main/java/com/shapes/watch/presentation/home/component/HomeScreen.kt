@@ -16,8 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,16 +52,27 @@ private fun HomeScreenTopBar(onSearchClick: () -> Unit, onProfileClick: () -> Un
 
 @Composable
 private fun UserPhoto() {
-    Image(
-        painter = painterResource(id = R.drawable.ic_launcher_background),
-        contentDescription = null,
+//    Image(
+//        painter = painterResource(id = R.drawable.ic_launcher_background),
+//        contentDescription = null,
+//        modifier = Modifier
+//            .border(
+//                width = 1.dp,
+//                color = MaterialTheme.colors.onSurfaceCarbon,
+//                shape = CircleShape
+//            )
+//            .clip(CircleShape)
+//            .size(32.dp)
+//    )
+    Box(
         modifier = Modifier
+            .clip(CircleShape)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,
                 shape = CircleShape
             )
-            .clip(CircleShape)
+            .background(Color.Blue)
             .size(32.dp)
     )
 }
@@ -207,12 +218,12 @@ private fun VideoCreatorPhoto(creator: Creator) {
         painter = rememberImagePainter(creator.photoUrl),
         contentDescription = null,
         modifier = Modifier
+            .clip(CircleShape)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,
                 shape = CircleShape
             )
-            .clip(CircleShape)
             .size(32.dp)
     )
 }

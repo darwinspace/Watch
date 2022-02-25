@@ -114,12 +114,12 @@ private fun VideoCreatorPhoto(creator: Creator) {
         painter = rememberImagePainter(data = creator.photoUrl),
         contentDescription = null,
         modifier = Modifier
+            .clip(CircleShape)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colors.onSurfaceCarbon,
                 shape = CircleShape
             )
-            .clip(CircleShape)
             .size(28.dp)
     )
 }

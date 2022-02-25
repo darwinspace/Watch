@@ -1,6 +1,5 @@
 package com.shapes.watch.presentation.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,19 +13,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shapes.watch.R
+import androidx.navigation.NavHostController
 import com.shapes.watch.presentation.ui.WatchIconButton
 import com.shapes.watch.presentation.ui.WatchTextField
 import com.shapes.watch.presentation.ui.WatchTopBar
-import com.shapes.watch.ui.theme.WatchTheme
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavHostController) {
     var saveButtonEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -35,7 +32,7 @@ fun ProfileScreen() {
                 ProfileScreenTopBar(
                     saveButtonEnabled = saveButtonEnabled,
                     onSaveClick = { /*TODO*/ },
-                    onCloseClick = { /*TODO*/ }
+                    onCloseClick = { navController.popBackStack() }
                 )
 
                 Divider()
@@ -126,19 +123,25 @@ private fun ProfileCover(onEditClick: () -> Unit) {
 @Composable
 private fun ProfileImage(onEditClick: () -> Unit) {
     Box(contentAlignment = Alignment.Center) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = null,
+        Box(
             modifier = Modifier
+                .clip(CircleShape)
                 .border(
                     width = 8.dp,
                     color = MaterialTheme.colors.surface,
                     shape = CircleShape
                 )
                 .padding(8.dp)
-                .clip(CircleShape)
+                .background(Color.Blue)
                 .size(96.dp)
         )
+
+//        Image(
+//            painter = painterResource(id = R.drawable.ic_launcher_background),
+//            contentDescription = null,
+//            modifier = Modifier
+//
+//        )
 
         WatchIconButton(onClick = onEditClick) {
             Icon(imageVector = Icons.Default.Edit, contentDescription = null)
@@ -146,11 +149,11 @@ private fun ProfileImage(onEditClick: () -> Unit) {
     }
 }
 
-@ExperimentalMaterialApi
-@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-@Composable
-fun ProfileScreenPreview() {
-    WatchTheme {
-        ProfileScreen()
-    }
-}
+//@ExperimentalMaterialApi
+//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
+//@Composable
+//fun ProfileScreenPreview() {
+//    WatchTheme {
+//        ProfileScreen()
+//    }
+//}

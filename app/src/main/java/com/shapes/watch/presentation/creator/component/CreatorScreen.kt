@@ -155,8 +155,12 @@ private fun CreatorData(creator: Creator) {
                 )
                 .padding(8.dp)
                 .clip(CircleShape)
-                .size(96.dp)
-                .fillMaxWidth(),
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurfaceCarbon,
+                    shape = CircleShape
+                )
+                .size(96.dp),
             contentScale = ContentScale.FillWidth
         )
     }

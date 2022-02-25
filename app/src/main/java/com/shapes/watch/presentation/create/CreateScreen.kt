@@ -94,11 +94,28 @@ private fun CreateScreenContent() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        WatchTextField(value = "Title (required)", onValueChange = {})
+        var title by remember { mutableStateOf(String()) }
+        WatchTextField(
+            value = title,
+            onValueChange = { title = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text(text = "Title (required)")
+            },
+            singleLine = true
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        WatchTextField(value = "Description\n", onValueChange = {})
+        var description by remember { mutableStateOf(String()) }
+        WatchTextField(
+            value = description,
+            onValueChange = { description = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = {
+                Text(text = "Description\n")
+            }
+        )
     }
 }
 

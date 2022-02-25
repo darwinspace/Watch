@@ -1,34 +1,34 @@
 package com.shapes.watch.presentation.ui
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.unit.dp
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @Composable
 fun WatchTextField(
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    singleLine: Boolean = false,
+    colors: TextFieldColors = TextFieldDefaults
+        .outlinedTextFieldColors(
+            unfocusedBorderColor = MaterialTheme.colors.onSurfaceCarbon
+        )
 ) {
-    BasicTextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colors.onSurfaceCarbon,
-                shape = MaterialTheme.shapes.small
-            )
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier,
         textStyle = MaterialTheme.typography.body1,
-        cursorBrush = SolidColor(MaterialTheme.colors.primary)
+        label = label,
+        placeholder = placeholder,
+        singleLine = singleLine,
+        colors = colors
     )
 }

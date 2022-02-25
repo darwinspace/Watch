@@ -33,7 +33,7 @@ fun NavigationHostComponent() {
             HomeScreen(navController = navController)
         }
         composable(Screen.ProfileScreen.route) {
-            ProfileScreen()
+            ProfileScreen(navController = navController)
         }
         composable(Screen.CreateScreen.route) {
             CreateScreen(navController = navController)
