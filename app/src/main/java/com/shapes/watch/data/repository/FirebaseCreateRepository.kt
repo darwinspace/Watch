@@ -19,16 +19,19 @@ class FirebaseCreateRepository(
         thumbnail: Uri
     ) {
         val document = firestore.collection("videos").document()
-        val storageReference = storage.getReference("${document.path}/video")
-        val snapshot = storageReference.putFile(video).await()
-        val url = snapshot.storage.downloadUrl.await()
+        val videoStorageReference = storage.getReference("${document.path}/video")
+        val videoSnapshot = videoStorageReference.putFile(video).await()
+        val videoUrl = videoSnapshot.storage.downloadUrl.await()
+        val thumbnailStorageReference = storage.getReference("${document.path}/thumbnail")
+        val thumbnailSnapshot = thumbnailStorageReference.putFile(thumbnail).await()
+        val thumbnailUrl = thumbnailSnapshot.storage.downloadUrl.await()
 
         val information = UploadVideoInformationDto(
             creatorId = videoInformation.creatorId,
             description = videoInformation.description,
             title = videoInformation.title,
-            contentUrl = url.toString(),
-            thumbnailUrl = "databaseexample"
+            contentUrl = videoUrl.toString(),
+            thumbnailUrl = thumbnailUrl.toString()
         )
 
         document.set(information).await()

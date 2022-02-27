@@ -49,12 +49,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
     ),
     subtitle1 = TextStyle(
-        fontSize = 18.sp,
+        fontSize = 16.sp,
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Bold,
     ),
     subtitle2 = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         fontFamily = SpaceGrotesk,
         fontWeight = FontWeight.Medium,
     ),

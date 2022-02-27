@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,9 +106,14 @@ private fun CreatorScreenContent(
     var description by rememberSaveable { mutableStateOf(String()) }
 
     var videoUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var thumbnailUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     val launcherVideoResult = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { videoUri = it }
+    )
+    val launcherImageResult = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { thumbnailUri = it }
     )
 
     val uploadButtonEnabled = title.isNotBlank() && description.isNotBlank() && videoUri != null
@@ -136,6 +140,10 @@ private fun CreatorScreenContent(
                 videoUri = videoUri,
                 onVideoClick = {
                     launcherVideoResult.launch("video/*")
+                },
+                thumbnailUri = thumbnailUri,
+                onThumbnailClick = {
+                    launcherImageResult.launch("image/*")
                 }
             )
         }
@@ -186,7 +194,9 @@ private fun CreateScreenFields(
     description: String,
     onDescriptionChange: (String) -> Unit,
     videoUri: Uri?,
-    onVideoClick: () -> Unit
+    onVideoClick: () -> Unit,
+    onThumbnailClick: () -> Unit,
+    thumbnailUri: Uri?
 ) {
     Column(
         modifier = Modifier
@@ -194,6 +204,10 @@ private fun CreateScreenFields(
             .fillMaxSize()
     ) {
         CreateVideo(onClick = onVideoClick, uri = videoUri)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        CreateVideoThumbnail(onClick = onThumbnailClick, uri = thumbnailUri)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -217,6 +231,41 @@ private fun CreateScreenFields(
                 Text(text = "Description\n")
             }
         )
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun CreateVideoThumbnail(uri: Uri?, onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colors.onSurfaceCarbon,
+                shape = MaterialTheme.shapes.medium
+            )
+            .aspectRatio(ratio = 16f / 9f)
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        onClick = onClick
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = rememberImagePainter(data = uri),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+
+            val icon = if (uri == null) Icons.Default.Photo else Icons.Default.Edit
+            WatchIconButton(
+                onClick = onClick
+            ) {
+                Icon(imageVector = icon, contentDescription = null)
+            }
+        }
     }
 }
 
