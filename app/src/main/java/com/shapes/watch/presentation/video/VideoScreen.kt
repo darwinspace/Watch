@@ -143,7 +143,8 @@ private fun Video(contentUrl: String) {
             .aspectRatio(ratio = 16f / 9f)
     ) {
         AndroidView(
-            factory = { VideoView(it) }
+            factory = { VideoView(it) },
+            modifier = Modifier.fillMaxWidth()
         ) {
             it.setVideoPath(contentUrl)
             it.setMediaController(MediaController(it.context))
