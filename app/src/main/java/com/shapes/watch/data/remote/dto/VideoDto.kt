@@ -7,14 +7,14 @@ import com.shapes.watch.domain.model.VideoInformation
 data class VideoDto(
     val videoId: String,
     val title: String,
-    val description: String,
+    val description: String?,
     val contentUrl: String,
     val thumbnailUrl: String,
     val creatorId: String,
     val creatorName: String,
-    val creatorDescription: String,
+    val creatorDescription: String?,
     val creatorPhotoUrl: String,
-    val creatorCoverUrl: String
+    val creatorCoverUrl: String?
 ) {
     fun toVideoInformation(): VideoInformation {
         val video = Video(

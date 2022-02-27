@@ -98,7 +98,9 @@ private fun CreatorScreenContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    WatchDescription(text = creator.description)
+                    creator.description?.let { description ->
+                        WatchDescription(text = description)
+                    }
                 }
             }
 

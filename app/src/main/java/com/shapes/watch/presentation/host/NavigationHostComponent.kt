@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.navigation
+package com.shapes.watch.presentation.host
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -38,7 +38,7 @@ fun NavigationHostComponent() {
         composable(Screen.CreateScreen.route + "/{creatorId}") {
             CreateScreen(
                 navController = navController,
-                creatorId = it.arguments!!.getString("creatorId")!!
+                creatorId = requireNotNull(it.arguments!!.getString("creatorId"))
             )
         }
         composable(Screen.SearchScreen.route) {
@@ -46,21 +46,36 @@ fun NavigationHostComponent() {
         }
         composable(
             route = Screen.VideoScreen.route +
-                    "/{videoId}/{videoTitle}/{videoDescription}" +
-                    "/{videoThumbnailUrl}/{videoContentUrl}" +
-                    "/{creatorId}/{creatorName}/{creatorDescription}" +
-                    "/{creatorPhotoUrl}/{creatorCoverUrl}",
+                    "/{videoId}" +
+                    "/{videoTitle}" +
+                    "/{videoThumbnailUrl}" +
+                    "/{videoContentUrl}" +
+                    "/{creatorId}" +
+                    "/{creatorName}" +
+                    "/{creatorPhotoUrl}" +
+                    "?videoDescription={videoDescription}" +
+                    "&creatorDescription={creatorDescription}" +
+                    "&creatorCoverUrl={creatorCoverUrl}",
             arguments = listOf(
                 navArgument("videoId") { type = NavType.StringType },
                 navArgument("videoTitle") { type = NavType.StringType },
-                navArgument("videoDescription") { type = NavType.StringType },
                 navArgument("videoThumbnailUrl") { type = NavType.StringType },
                 navArgument("videoContentUrl") { type = NavType.StringType },
                 navArgument("creatorId") { type = NavType.StringType },
                 navArgument("creatorName") { type = NavType.StringType },
-                navArgument("creatorDescription") { type = NavType.StringType },
                 navArgument("creatorPhotoUrl") { type = NavType.StringType },
-                navArgument("creatorCoverUrl") { type = NavType.StringType }
+                navArgument("videoDescription") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("creatorDescription") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("creatorCoverUrl") {
+                    type = NavType.StringType
+                    nullable = true
+                }
             )
         ) { entry ->
             VideoScreen(
@@ -70,14 +85,21 @@ fun NavigationHostComponent() {
         }
         composable(
             route = Screen.CreatorScreen.route +
-                    "/{creatorId}/{creatorName}/{creatorDescription}" +
-                    "/{creatorPhotoUrl}/{creatorCoverUrl}",
+                    "/{creatorId}/{creatorName}/{creatorPhotoUrl}" +
+                    "?creatorDescription={creatorDescription}" +
+                    "&creatorCoverUrl={creatorCoverUrl}",
             arguments = listOf(
                 navArgument("creatorId") { type = NavType.StringType },
                 navArgument("creatorName") { type = NavType.StringType },
-                navArgument("creatorDescription") { type = NavType.StringType },
                 navArgument("creatorPhotoUrl") { type = NavType.StringType },
-                navArgument("creatorCoverUrl") { type = NavType.StringType }
+                navArgument("creatorDescription") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("creatorCoverUrl") {
+                    type = NavType.StringType
+                    nullable = true
+                }
             )
         ) { entry ->
             CreatorScreen(

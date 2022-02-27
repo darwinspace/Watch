@@ -6,6 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -53,7 +55,7 @@ fun CreateScreenTopBar(
         ) {
             Text(text = "Upload")
             Spacer(modifier = Modifier.width(12.dp))
-            Icon(imageVector = Icons.Default.KeyboardArrowDown, contentDescription = null)
+            Icon(imageVector = Icons.Default.Upload, contentDescription = null)
         }
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -71,13 +73,13 @@ fun CreateScreen(
     navController: NavHostController,
     creatorId: String
 ) {
+    CreatorScreenContent(viewModel, creatorId, navController)
     when (val state = viewModel.uploadState.value) {
         is UploadVideoState.Error -> {
             throw(state.exception)
         }
         UploadVideoState.Success -> {
             Surface(
-                color = MaterialTheme.colors.primaryVariant,
                 modifier = Modifier.fillMaxSize()
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -91,8 +93,6 @@ fun CreateScreen(
         }
         else -> Unit
     }
-
-    CreatorScreenContent(viewModel, creatorId, navController)
 }
 
 @ExperimentalMaterialApi
@@ -187,10 +187,11 @@ private fun CreateScreenFields(
     onThumbnailClick: () -> Unit,
     thumbnailUri: Uri?
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
+            .verticalScroll(scrollState)
             .padding(24.dp)
-            .fillMaxSize()
     ) {
         CreateVideo(onClick = onVideoClick, uri = videoUri)
 

@@ -62,8 +62,8 @@ private fun VideoData(
 ) {
     Column(
         modifier = Modifier
-            .padding(24.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         VideoTitle(title = videoInformation.video.title)
@@ -77,7 +77,9 @@ private fun VideoData(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        WatchDescription(text = videoInformation.video.description)
+        videoInformation.video.description?.let { description ->
+            WatchDescription(text = description)
+        }
     }
 }
 

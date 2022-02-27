@@ -8,6 +8,6 @@ fun Bundle.getEncodedString(key: String): String? {
     return getString(key)?.decodeBase64()?.string(Charsets.UTF_8)
 }
 
-fun String.encode():String {
-    return this.encode().base64Url()
+fun String.encode(): String {
+    return encode().base64Url()
 }
