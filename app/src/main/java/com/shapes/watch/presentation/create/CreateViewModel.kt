@@ -14,19 +14,19 @@ import kotlinx.coroutines.flow.onEach
 class CreateViewModel constructor(
     private val uploadVideo: UploadVideo = UploadVideo()
 ) : ViewModel() {
-    private val _state = mutableStateOf<CreateState>(CreateState.Empty)
-    val state: State<CreateState> = _state
+    private val _uploadState = mutableStateOf<UploadVideoState>(UploadVideoState.Empty)
+    val uploadState: State<UploadVideoState> = _uploadState
 
-    fun uploadVideoInformation(video: Uri, videoInformation: CreateVideoInformation, thumbnail: Uri) {
+    fun uploadVideoInformation(
+        video: Uri,
+        videoInformation: CreateVideoInformation,
+        thumbnail: Uri
+    ) {
         uploadVideo(video, videoInformation, thumbnail).onEach {
-            when (it) {
-                is Resource.Success -> {
-                    _state.value = CreateState.Success
-                }
-                is Resource.Error -> {
-                    _state.value = CreateState.Error(it.exception)
-                }
-                is Resource.Loading -> Unit
+            _uploadState.value = when (it) {
+                is Resource.Success -> UploadVideoState.Success
+                is Resource.Error -> UploadVideoState.Error(it.exception)
+                is Resource.Loading -> UploadVideoState.Loading
             }
         }.launchIn(viewModelScope)
     }

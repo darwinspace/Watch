@@ -72,14 +72,14 @@ fun CreateScreen(
     navController: NavHostController,
     creatorId: String
 ) {
-    when (val state = viewModel.state.value) {
-        is CreateState.Error -> {
+    when (val state = viewModel.uploadState.value) {
+        is UploadVideoState.Error -> {
             throw(state.exception)
         }
-        CreateState.Success -> {
+        UploadVideoState.Success -> {
             navController.popBackStack()
         }
-        CreateState.Loading -> {
+        UploadVideoState.Loading -> {
 
         }
         else -> Unit
