@@ -122,13 +122,20 @@ private fun CreatorScreenContent(
         topBar = {
             CreateScreenTopBarContainer(
                 uploadButtonEnabled,
-                videoUri,
-                viewModel,
-                creatorId,
-                title,
-                description,
-                navController
-            )
+                onCloseClick = {
+                    navController.popBackStack()
+                }
+            ) {
+                viewModel.uploadVideoInformation(
+                    video = requireNotNull(videoUri),
+                    videoInformation = CreateVideoInformation(
+                        creatorId = creatorId,
+                        title = title,
+                        description = description
+                    ),
+                    thumbnail = requireNotNull(thumbnailUri)
+                )
+            }
         }
     ) { contentPadding ->
         Surface(modifier = Modifier.padding(contentPadding)) {
@@ -154,32 +161,14 @@ private fun CreatorScreenContent(
 @Composable
 private fun CreateScreenTopBarContainer(
     uploadButtonEnabled: Boolean,
-    videoUri: Uri?,
-    viewModel: CreateViewModel,
-    creatorId: String,
-    title: String,
-    description: String,
-    navController: NavHostController
+    onCloseClick: () -> Unit,
+    onUploadClick: () -> Unit
 ) {
     Column {
         CreateScreenTopBar(
             uploadButtonEnabled = uploadButtonEnabled,
-            onUploadClick = {
-                videoUri?.let {
-                    viewModel.uploadVideoInformation(
-                        video = it,
-                        videoInformation = CreateVideoInformation(
-                            creatorId = creatorId,
-                            title = title,
-                            description = description
-                        ),
-                        thumbnail = it
-                    )
-                }
-            },
-            onCloseClick = {
-                navController.popBackStack()
-            }
+            onUploadClick = onUploadClick,
+            onCloseClick = onCloseClick
         )
 
         Divider()
