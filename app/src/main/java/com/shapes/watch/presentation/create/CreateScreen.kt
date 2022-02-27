@@ -114,12 +114,13 @@ private fun CreatorScreenContent(
                     onUploadClick = {
                         videoUri?.let {
                             viewModel.uploadVideoInformation(
+                                video = it,
                                 videoInformation = CreateVideoInformation(
                                     creatorId = creatorId,
                                     title = title,
                                     description = description
                                 ),
-                                video = it
+                                thumbnail = it
                             )
                         }
                     },

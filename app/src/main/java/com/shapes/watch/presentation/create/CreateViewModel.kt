@@ -17,8 +17,8 @@ class CreateViewModel constructor(
     private val _state = mutableStateOf<CreateState>(CreateState.Empty)
     val state: State<CreateState> = _state
 
-    fun uploadVideoInformation(videoInformation: CreateVideoInformation, video: Uri) {
-        uploadVideo(videoInformation, video).onEach {
+    fun uploadVideoInformation(video: Uri, videoInformation: CreateVideoInformation, thumbnail: Uri) {
+        uploadVideo(video, videoInformation, thumbnail).onEach {
             when (it) {
                 is Resource.Success -> {
                     _state.value = CreateState.Success

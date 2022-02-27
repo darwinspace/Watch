@@ -12,13 +12,14 @@ class UploadVideo(
     private val repository: CreateRepository = AppModule.provideCreateRepository()
 ) {
     operator fun invoke(
+        video: Uri,
         videoInformation: CreateVideoInformation,
-        video: Uri
+        thumbnail: Uri
     ): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
 
         try {
-            repository.uploadVideo(videoInformation, video)
+            repository.uploadVideo(video, videoInformation, thumbnail)
 
             emit(Resource.Success(Unit))
         } catch (e: Exception) {

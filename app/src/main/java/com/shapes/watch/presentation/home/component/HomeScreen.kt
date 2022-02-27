@@ -86,44 +86,95 @@ fun HomeScreen(
     val state = viewModel.state.value
     Scaffold(
         topBar = {
-            Column {
-                HomeScreenTopBar(
-                    onSearchClick = {
-                        navController.navigate(Screen.SearchScreen.route)
-                    },
-                    onProfileClick = {
-                        navController.navigate(Screen.ProfileScreen.route)
-                    }
-                )
-
-                Divider()
-            }
+            HomeScreenTopBarContainer(navController)
         },
         floatingActionButton = {
-            Box(modifier = Modifier.padding(8.dp)) {
-                WatchFloatingActionButton(
-                    onClick = {
-                        navController.navigate(
-                            Screen.CreateScreen.route +
-                                    "/C4Del3NYWnoYuASnFI8b"
-                        )
-                    }
-                ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                }
-            }
+            HomeScreenCreateButtonContainer(navController)
         }
     ) { contentPadding ->
-        when (state) {
-            is HomeState.Content -> {
-                HomeScreenContent(
-                    navController = navController,
-                    homeContent = state.homeContent,
-                    contentPadding = contentPadding
-                )
-            }
-            else -> Unit
+        Surface(
+            modifier = Modifier
+                .padding(contentPadding)
+                .fillMaxSize()
+        ) {
+            HomeScreenContentState(state, navController)
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun HomeScreenContentState(
+    state: HomeState,
+    navController: NavHostController
+) {
+    when (state) {
+        is HomeState.Content -> {
+            HomeScreenContent(
+                homeContent = state.homeContent,
+                navController = navController
+            )
+        }
+        HomeState.Empty -> {
+            Text(text = "empty")
+        }
+        HomeState.Loading -> {
+            LoadingScreen()
+        }
+        is HomeState.Error -> {
+            state.exception.message?.let { Text(text = it) }
+        }
+    }
+}
+
+@Composable
+private fun HomeScreenTopBarContainer(navController: NavHostController) {
+    Column {
+        HomeScreenTopBar(navController)
+        Divider()
+    }
+}
+
+@Composable
+private fun HomeScreenTopBar(navController: NavHostController) {
+    HomeScreenTopBar(
+        onSearchClick = {
+            navController.navigate(Screen.SearchScreen.route)
+        },
+        onProfileClick = {
+            navController.navigate(Screen.ProfileScreen.route)
+        }
+    )
+}
+
+@Composable
+private fun HomeScreenCreateButtonContainer(navController: NavHostController) {
+    Box(modifier = Modifier.padding(8.dp)) {
+        HomeScreenCreateButton(navController)
+    }
+}
+
+@Composable
+private fun HomeScreenCreateButton(navController: NavHostController) {
+    WatchFloatingActionButton(
+        onClick = {
+            navController.navigate(
+                Screen.CreateScreen.route +
+                        "/C4Del3NYWnoYuASnFI8b"
+            )
+        }
+    ) {
+        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+    }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(modifier = Modifier.size(48.dp), strokeWidth = 6.dp)
     }
 }
 
@@ -140,13 +191,21 @@ fun Video(
             navController.navigate(Screen.VideoScreen.route + video.toRoute())
         }
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            VideoThumbnail(video.video.thumbnailUrl)
+        VideoContent(video, navController)
+    }
+}
 
-            Spacer(modifier = Modifier.height(8.dp))
+@Composable
+private fun VideoContent(
+    video: VideoInformation,
+    navController: NavHostController
+) {
+    Column(modifier = Modifier.padding(12.dp)) {
+        VideoThumbnail(video.video.thumbnailUrl)
 
-            VideoDataContainer(navController, video)
-        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        VideoDataContainer(navController, video)
     }
 }
 
@@ -256,32 +315,20 @@ private fun VideoThumbnail(videoThumbnailUrl: String) {
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreenContent(
-    navController: NavHostController,
     homeContent: HomeContent,
-    contentPadding: PaddingValues
+    navController: NavHostController
 ) {
-    Surface(modifier = Modifier.padding(contentPadding)) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(homeContent.videos) { video ->
-                Video(
-                    video = video,
-                    navController = navController
-                )
-            }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth(),
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(homeContent.videos) { video ->
+            Video(
+                video = video,
+                navController = navController
+            )
         }
     }
 }
-
-//@ExperimentalMaterialApi
-//@Preview(showBackground = true, heightDp = 640, widthDp = 360)
-//@Composable
-//fun DefaultPreview() {
-//    WatchTheme {
-//        HomeScreen(navController = rememberNavController())
-//    }
-//}

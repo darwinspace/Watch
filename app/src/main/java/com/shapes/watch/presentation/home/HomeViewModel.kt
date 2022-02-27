@@ -20,11 +20,11 @@ class HomeViewModel constructor(
     }
 
     private fun getContent() {
-        getHomeContent().onEach {
-            _state.value = when (it) {
-                is Resource.Success -> HomeState.Content(it.data)
+        getHomeContent().onEach { resource ->
+            _state.value = when (resource) {
+                is Resource.Success -> HomeState.Content(resource.data)
                 is Resource.Loading -> HomeState.Loading
-                is Resource.Error -> HomeState.Error(it.exception)
+                is Resource.Error -> throw resource.exception
             }
         }.launchIn(viewModelScope)
     }
