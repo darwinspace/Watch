@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.shapes.watch.common.Resource
 import com.shapes.watch.domain.model.CreateVideoInformation
 import com.shapes.watch.domain.use_case.create.UploadVideo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class CreateViewModel constructor(
-    private val uploadVideo: UploadVideo = UploadVideo()
+@HiltViewModel
+class CreateViewModel @Inject constructor(
+    private val uploadVideo: UploadVideo/* = UploadVideo()*/
 ) : ViewModel() {
     private val _uploadState = mutableStateOf<UploadVideoState>(UploadVideoState.Empty)
     val uploadState: State<UploadVideoState> = _uploadState

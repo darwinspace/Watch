@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class UploadVideo(
-    private val repository: CreateRepository = AppModule.provideCreateRepository()
+    private val repository: CreateRepository/* = AppModule.provideCreateRepository()*/
 ) {
     operator fun invoke(
         video: Uri,

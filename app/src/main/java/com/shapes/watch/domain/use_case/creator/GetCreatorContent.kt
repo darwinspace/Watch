@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class GetCreatorContent(
-    private val repository: CreatorRepository = AppModule.provideCreatorRepository()
+    private val repository: CreatorRepository /*= AppModule.provideCreatorRepository()*/
 ) {
     operator fun invoke(creator: Creator): Flow<Resource<CreatorContent>> = flow {
         emit(Resource.Loading())

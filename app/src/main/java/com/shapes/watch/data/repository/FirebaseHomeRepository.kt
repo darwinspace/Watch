@@ -8,7 +8,7 @@ import com.shapes.watch.domain.repository.HomeRepository
 import kotlinx.coroutines.tasks.await
 
 class FirebaseHomeRepository(
-    private val firebaseInstance: FirebaseFirestore = AppModule.provideFirebaseFirestoreInstance()
+    private val firebaseInstance: FirebaseFirestore/* = AppModule.provideFirebaseFirestoreInstance()*/
 ) : HomeRepository {
     override suspend fun getContent(): HomeContentDto {
         val videoSnapshots = firebaseInstance.collection("videos")

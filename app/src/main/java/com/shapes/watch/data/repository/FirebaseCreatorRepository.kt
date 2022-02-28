@@ -7,9 +7,10 @@ import com.shapes.watch.di.AppModule
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.repository.CreatorRepository
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class FirebaseCreatorRepository(
-    private val firebaseInstance: FirebaseFirestore = AppModule.provideFirebaseFirestoreInstance()
+class FirebaseCreatorRepository @Inject constructor(
+    private val firebaseInstance: FirebaseFirestore /*= AppModule.provideFirebaseFirestoreInstance()*/
 ) : CreatorRepository {
     override suspend fun getContent(creator: Creator): CreatorContentDto {
         val query = firebaseInstance.collection("videos").whereEqualTo("creatorId", creator.id)

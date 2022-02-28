@@ -7,11 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.shapes.watch.common.Resource
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.use_case.creator.GetCreatorContent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
-class CreatorViewModel constructor(
-    private val getCreatorContent: GetCreatorContent = GetCreatorContent()
+@HiltViewModel
+class CreatorViewModel @Inject constructor(
+    private val getCreatorContent: GetCreatorContent/* = GetCreatorContent()*/
 ) : ViewModel() {
     private val _state = mutableStateOf<CreatorState>(CreatorState.Empty)
     val state: State<CreatorState> = _state

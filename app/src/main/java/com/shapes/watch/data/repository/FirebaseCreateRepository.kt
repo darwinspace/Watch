@@ -8,10 +8,11 @@ import com.shapes.watch.di.AppModule
 import com.shapes.watch.domain.model.CreateVideoInformation
 import com.shapes.watch.domain.repository.CreateRepository
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class FirebaseCreateRepository(
-    private val firestore: FirebaseFirestore = AppModule.provideFirebaseFirestoreInstance(),
-    private val storage: FirebaseStorage = AppModule.provideFirebaseStorageInstance()
+class FirebaseCreateRepository @Inject constructor(
+    private val firestore: FirebaseFirestore/* = AppModule.provideFirebaseFirestoreInstance()*/,
+    private val storage: FirebaseStorage/* = AppModule.provideFirebaseStorageInstance()*/
 ) : CreateRepository {
     override suspend fun uploadVideo(
         video: Uri,

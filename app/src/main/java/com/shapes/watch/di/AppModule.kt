@@ -8,25 +8,46 @@ import com.shapes.watch.data.repository.FirebaseHomeRepository
 import com.shapes.watch.domain.repository.CreateRepository
 import com.shapes.watch.domain.repository.CreatorRepository
 import com.shapes.watch.domain.repository.HomeRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Singleton
+    @Provides
     fun provideFirebaseFirestoreInstance(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
+    @Singleton
+    @Provides
     fun provideFirebaseStorageInstance(): FirebaseStorage {
         return FirebaseStorage.getInstance()
     }
 
-    fun provideHomeRepository(): HomeRepository {
-        return FirebaseHomeRepository()
+    @Singleton
+    @Provides
+    fun provideHomeRepository(instance: FirebaseFirestore): HomeRepository {
+        return FirebaseHomeRepository(instance)
     }
 
-    fun provideCreatorRepository(): CreatorRepository {
-        return FirebaseCreatorRepository()
+    @Singleton
+    @Provides
+    fun provideCreatorRepository(instance: FirebaseFirestore): CreatorRepository {
+        return FirebaseCreatorRepository(instance)
     }
 
-    fun provideCreateRepository(): CreateRepository {
-        return FirebaseCreateRepository()
+    @Singleton
+    @Provides
+    fun provideCreateRepository(
+        instance: FirebaseFirestore,
+        storage: FirebaseStorage
+    ): CreateRepository {
+        return FirebaseCreateRepository(instance, storage)
     }
 }

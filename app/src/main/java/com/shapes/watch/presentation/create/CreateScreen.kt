@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.CreateVideoInformation
@@ -69,7 +69,7 @@ fun CreateScreenTopBar(
 @ExperimentalMaterialApi
 @Composable
 fun CreateScreen(
-    viewModel: CreateViewModel = viewModel(),
+    viewModel: CreateViewModel = hiltViewModel(),
     navController: NavHostController,
     creatorId: String
 ) {
