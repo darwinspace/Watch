@@ -8,14 +8,14 @@ import com.shapes.watch.presentation.host.NavigationHostComponent
 import com.shapes.watch.ui.theme.WatchTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-@ExperimentalMaterialApi
+//@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WatchTheme {
-                NavigationHostComponent()
+//                NavigationHostComponent()
             }
         }
     }

@@ -8,8 +8,9 @@ import com.shapes.watch.domain.repository.CreatorRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
+import javax.inject.Inject
 
-class GetCreatorContent(
+class GetCreatorContent @Inject constructor(
     private val repository: CreatorRepository /*= AppModule.provideCreatorRepository()*/
 ) {
     operator fun invoke(creator: Creator): Flow<Resource<CreatorContent>> = flow {

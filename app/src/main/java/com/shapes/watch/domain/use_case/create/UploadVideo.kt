@@ -8,8 +8,9 @@ import com.shapes.watch.domain.repository.CreateRepository
 import com.shapes.watch.presentation.create.UploadVideoState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class UploadVideo(
+class UploadVideo @Inject constructor(
     private val repository: CreateRepository/* = AppModule.provideCreateRepository()*/
 ) {
     operator fun invoke(

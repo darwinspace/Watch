@@ -6,8 +6,9 @@ import com.shapes.watch.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
+import javax.inject.Inject
 
-class GetHomeContent(
+class GetHomeContent @Inject constructor(
     private val repository: HomeRepository/* = AppModule.provideHomeRepository()*/
 ) {
     operator fun invoke(): Flow<Resource<HomeContent>> = flow {
