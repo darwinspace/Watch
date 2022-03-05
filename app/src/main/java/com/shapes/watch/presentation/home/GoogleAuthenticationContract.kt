@@ -6,17 +6,23 @@ import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 
 class GoogleAuthenticationContract : ActivityResultContract<Int, Task<GoogleSignInAccount>?>() {
     override fun createIntent(context: Context, input: Int): Intent {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("context.getString(R.string.google_pl)")
+        val client = getGoogleSignInClient(context)
+        return client.signInIntent
+    }
+
+    private fun getGoogleSignInClient(context: Context): GoogleSignInClient {
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken("context.getString(R.string.google_pl)")
             .requestEmail()
             .build()
-        val client = GoogleSignIn.getClient(context, gso)
-        return client.signInIntent
+
+        return GoogleSignIn.getClient(context, signInOptions)
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Task<GoogleSignInAccount>? {
@@ -27,5 +33,4 @@ class GoogleAuthenticationContract : ActivityResultContract<Int, Task<GoogleSign
             else -> null
         }
     }
-
 }

@@ -14,7 +14,7 @@ data class Creator(
     constructor(data: Bundle) : this(
         id = requireNotNull(data.getString("creatorId")),
         name = requireNotNull(data.getEncodedString("creatorName")),
-        description = data.getEncodedString("creatorDescription"),
+        description = data.getEncodedString("creatorDescription")/*Encoded*/,
         photoUrl = requireNotNull(data.getEncodedString("creatorPhotoUrl")),
         coverUrl = data.getEncodedString("creatorCoverUrl")
     )
@@ -25,7 +25,7 @@ data class Creator(
         val photo = photoUrl.encode()
         val cover = coverUrl?.encode()
         return "/$id/$name/$photo" +
-                "?creatorDescription={$description}" +
-                "&creatorCoverUrl={$cover}"
+                "?creatorDescription=$description&" +
+                "creatorCoverUrl=$cover"
     }
 }

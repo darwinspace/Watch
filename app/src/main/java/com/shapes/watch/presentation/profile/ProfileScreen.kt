@@ -16,9 +16,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.shapes.watch.presentation.ui.WatchIconButton
-import com.shapes.watch.presentation.ui.WatchTextField
-import com.shapes.watch.presentation.ui.WatchTopBar
+import com.shapes.watch.presentation.component.WatchButton
+import com.shapes.watch.presentation.component.WatchIconButton
+import com.shapes.watch.presentation.component.WatchTextField
+import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
@@ -65,10 +66,10 @@ private fun ProfileScreenTopBar(
     onCloseClick: () -> Unit
 ) {
     WatchTopBar(text = "Profile") {
-        Button(
+        WatchButton(
+            backgroundColor = MaterialTheme.colors.primary,
             onClick = onSaveClick,
-            enabled = saveButtonEnabled,
-            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+            enabled = saveButtonEnabled
         ) {
             Text(text = "Save")
             Spacer(modifier = Modifier.width(12.dp))

@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.ui
+package com.shapes.watch.presentation.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource

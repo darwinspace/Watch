@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.ui
+package com.shapes.watch.presentation.navigation
 
 sealed class Screen(val route: String) {
     object DefaultScreen : Screen("default")

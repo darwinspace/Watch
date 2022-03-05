@@ -11,11 +11,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,11 +22,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.CreateVideoInformation
+import com.shapes.watch.presentation.component.WatchButton
+import com.shapes.watch.presentation.component.WatchIconButton
+import com.shapes.watch.presentation.component.WatchTextField
+import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.presentation.home.component.LoadingScreen
-import com.shapes.watch.presentation.ui.WatchIconButton
-import com.shapes.watch.presentation.ui.WatchTextField
-import com.shapes.watch.presentation.ui.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
+import kotlinx.coroutines.launch
 
 //@ExperimentalMaterialApi
 //@Preview(showBackground = true, heightDp = 640, widthDp = 360)
@@ -48,10 +47,10 @@ fun CreateScreenTopBar(
     onCloseClick: () -> Unit
 ) {
     WatchTopBar(text = "Create") {
-        Button(
+        WatchButton(
+            backgroundColor = MaterialTheme.colors.primary,
             onClick = onUploadClick,
-            enabled = uploadButtonEnabled,
-            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+            enabled = uploadButtonEnabled
         ) {
             Text(text = "Upload")
             Spacer(modifier = Modifier.width(12.dp))
@@ -79,12 +78,8 @@ fun CreateScreen(
             throw(state.exception)
         }
         UploadVideoState.Success -> {
-            Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Success!")
-                }
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Success!")
             }
         }
         UploadVideoState.Loading -> {
@@ -102,6 +97,7 @@ private fun CreatorScreenContent(
     creatorId: String,
     navController: NavHostController
 ) {
+    val scope = rememberCoroutineScope()
     var title by rememberSaveable { mutableStateOf(String()) }
     var description by rememberSaveable { mutableStateOf(String()) }
 
@@ -126,15 +122,17 @@ private fun CreatorScreenContent(
                     navController.popBackStack()
                 }
             ) {
-                viewModel.uploadVideoInformation(
-                    video = requireNotNull(videoUri),
-                    videoInformation = CreateVideoInformation(
-                        creatorId = creatorId,
-                        title = title,
-                        description = description
-                    ),
-                    thumbnail = requireNotNull(thumbnailUri)
-                )
+                scope.launch {
+                    viewModel.uploadVideoInformation(
+                        video = requireNotNull(videoUri),
+                        videoInformation = CreateVideoInformation(
+                            creatorId = creatorId,
+                            title = title,
+                            description = description
+                        ),
+                        thumbnail = requireNotNull(thumbnailUri)
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -237,6 +235,7 @@ fun CreateVideoThumbnail(uri: Uri?, onClick: () -> Unit) {
             .aspectRatio(ratio = 16f / 9f)
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colors.onSurfaceCarbon,
         onClick = onClick
     ) {
         Box(
@@ -250,10 +249,11 @@ fun CreateVideoThumbnail(uri: Uri?, onClick: () -> Unit) {
             )
 
             val icon = if (uri == null) Icons.Default.Photo else Icons.Default.Edit
-            WatchIconButton(
-                onClick = onClick
-            ) {
+
+            WatchButton(onClick = onClick) {
                 Icon(imageVector = icon, contentDescription = null)
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = "Thumbnail")
             }
         }
     }
@@ -288,10 +288,11 @@ private fun CreateVideo(onClick: () -> Unit, uri: Uri?) {
             )
 
             val icon = if (b) Icons.Default.Movie else Icons.Default.Edit
-            WatchIconButton(
-                onClick = onClick
-            ) {
+
+            WatchButton(onClick = onClick) {
                 Icon(imageVector = icon, contentDescription = null)
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = "Video")
             }
         }
     }

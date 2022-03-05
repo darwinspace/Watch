@@ -21,7 +21,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.R
@@ -30,9 +29,9 @@ import com.shapes.watch.domain.model.HomeContent
 import com.shapes.watch.domain.model.VideoInformation
 import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
-import com.shapes.watch.presentation.ui.Screen
-import com.shapes.watch.presentation.ui.WatchFloatingActionButton
-import com.shapes.watch.presentation.ui.WatchTopBar
+import com.shapes.watch.presentation.navigation.Screen
+import com.shapes.watch.presentation.component.WatchFloatingActionButton
+import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes

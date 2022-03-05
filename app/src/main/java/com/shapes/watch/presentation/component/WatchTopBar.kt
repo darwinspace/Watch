@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.ui
+package com.shapes.watch.presentation.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme

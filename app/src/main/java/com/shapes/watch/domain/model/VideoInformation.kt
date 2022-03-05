@@ -27,8 +27,8 @@ data class VideoInformation(
 
         return "/$videoId/$videoTitle/$videoThumbnail/$videoContent" +
                 "/$creatorId/$creatorName/$creatorPhoto" +
-                "?videoDescription={$videoDescription}" +
-                "&creatorDescription={$creatorDescription}" +
-                "&creatorCover={$creatorCover}"
+                "?videoDescription=$videoDescription&" +
+                "creatorDescription=$creatorDescription&" +
+                "creatorCover=$creatorCover"
     }
 }

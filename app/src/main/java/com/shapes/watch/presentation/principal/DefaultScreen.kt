@@ -1,5 +1,7 @@
 package com.shapes.watch.presentation.principal
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.ButtonDefaults.outlinedButtonColors
@@ -11,38 +13,71 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.google.android.gms.common.api.ApiException
 import com.shapes.watch.R
-import com.shapes.watch.presentation.ui.Screen
-import com.shapes.watch.presentation.ui.WatchTopBarNameText
+import com.shapes.watch.presentation.home.GoogleAuthenticationContract
+import com.shapes.watch.presentation.navigation.Screen
+import com.shapes.watch.presentation.component.WatchTopBarNameText
 
 @Composable
 fun DefaultScreen(navController: NavHostController) {
-//    rememberLauncherForActivityResult(contract = GoogleAuthenticationContract()) {}
+//    val scope = rememberCoroutineScope()
 
     Surface {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                WatchTopBarNameText(
-                    stringResource(id = R.string.app_name),
-                    MaterialTheme.typography.h4
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                SignInButton(
-                    onClick = {
-                        navController.navigate(Screen.HomeScreen.route)
-                    }
-                )
-            }
+            DefaultScreenContent(navController)
         }
     }
 }
+
+@Composable
+private fun DefaultScreenContent(navController: NavHostController) {
+    val signInRequestCode = 1
+    val signInResultLauncher =
+        rememberLauncherForActivityResult(contract = GoogleAuthenticationContract()) { task ->
+            try {
+                val account = task?.getResult(ApiException::class.java)
+                if (account != null) {
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.DefaultScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                } else {
+                    val tag = "DefaultScreenContent"
+                    Log.d(tag, "Account was null.")
+                }
+            } catch (e: Exception) {
+                throw e
+            }
+        }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        WatchTopBarNameText(
+            stringResource(id = R.string.app_name),
+            MaterialTheme.typography.h4
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SignInButton(
+            onClick = {
+                signInResultLauncher.launch(signInRequestCode)
+//                        signIn()
+            }
+        )
+    }
+}
+
+//fun signIn() {
+//
+//}
+
 
 @Composable
 fun SignInButton(onClick: () -> Unit) {

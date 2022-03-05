@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.host
+package com.shapes.watch.presentation.navigation
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
@@ -15,16 +15,15 @@ import com.shapes.watch.presentation.home.component.HomeScreen
 import com.shapes.watch.presentation.principal.DefaultScreen
 import com.shapes.watch.presentation.profile.ProfileScreen
 import com.shapes.watch.presentation.search.SearchScreen
-import com.shapes.watch.presentation.ui.Screen
 import com.shapes.watch.presentation.video.VideoScreen
 
 @ExperimentalMaterialApi
 @Composable
-fun NavigationHostComponent() {
+fun NavigationHostComponent(route: String = Screen.HomeScreen.route) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = route
     ) {
         composable(Screen.DefaultScreen.route) {
             DefaultScreen(navController)
@@ -53,9 +52,9 @@ fun NavigationHostComponent() {
                     "/{creatorId}" +
                     "/{creatorName}" +
                     "/{creatorPhotoUrl}" +
-                    "?videoDescription={videoDescription}" +
-                    "&creatorDescription={creatorDescription}" +
-                    "&creatorCoverUrl={creatorCoverUrl}",
+                    "?videoDescription={videoDescription}&" +
+                    "creatorDescription={creatorDescription}&" +
+                    "creatorCoverUrl={creatorCoverUrl}",
             arguments = listOf(
                 navArgument("videoId") { type = NavType.StringType },
                 navArgument("videoTitle") { type = NavType.StringType },
@@ -86,8 +85,8 @@ fun NavigationHostComponent() {
         composable(
             route = Screen.CreatorScreen.route +
                     "/{creatorId}/{creatorName}/{creatorPhotoUrl}" +
-                    "?creatorDescription={creatorDescription}" +
-                    "&creatorCoverUrl={creatorCoverUrl}",
+                    "?creatorDescription={creatorDescription}&" +
+                    "creatorCoverUrl={creatorCoverUrl}",
             arguments = listOf(
                 navArgument("creatorId") { type = NavType.StringType },
                 navArgument("creatorName") { type = NavType.StringType },

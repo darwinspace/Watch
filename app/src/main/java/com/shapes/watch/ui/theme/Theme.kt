@@ -17,23 +17,14 @@ val Colors.onSurfaceCarbon: Color
 private val DarkColorPalette = darkColors(
     primary = PinkA700,
     primaryVariant = PinkA200,
-    secondary = Pink500
+    secondary = Pink500,
+    onPrimary = Color.White
 )
 
 private val LightColorPalette = lightColors(
     primary = PinkA200,
     primaryVariant = PinkA700,
     secondary = Pink500
-
-    /*
-        Other default colors to override
-        background = Color.White,
-        surface = Color.White,
-        onPrimary = Color.White,
-        onSecondary = Color.Black,
-        onBackground = Color.Black,
-        onSurface = Color.Black,
-    */
 )
 
 @Composable

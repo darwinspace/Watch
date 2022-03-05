@@ -19,7 +19,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.Creator
@@ -27,8 +26,8 @@ import com.shapes.watch.domain.model.CreatorContent
 import com.shapes.watch.presentation.creator.CreatorState
 import com.shapes.watch.presentation.creator.CreatorViewModel
 import com.shapes.watch.presentation.home.component.Video
-import com.shapes.watch.presentation.ui.WatchDescription
-import com.shapes.watch.presentation.ui.WatchIconButton
+import com.shapes.watch.presentation.component.WatchDescription
+import com.shapes.watch.presentation.component.WatchIconButton
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi

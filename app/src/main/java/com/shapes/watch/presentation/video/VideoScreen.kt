@@ -16,8 +16,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.VideoInformation
-import com.shapes.watch.presentation.ui.Screen
-import com.shapes.watch.presentation.ui.WatchDescription
+import com.shapes.watch.presentation.navigation.Screen
+import com.shapes.watch.presentation.component.WatchDescription
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
