@@ -13,8 +13,8 @@ import com.shapes.watch.presentation.create.CreateScreen
 import com.shapes.watch.presentation.creator.component.CreatorScreen
 import com.shapes.watch.presentation.home.component.HomeScreen
 import com.shapes.watch.presentation.principal.DefaultScreen
-import com.shapes.watch.presentation.profile.ProfileScreen
-import com.shapes.watch.presentation.search.SearchScreen
+import com.shapes.watch.presentation.profile.component.ProfileScreen
+import com.shapes.watch.presentation.search.component.SearchScreen
 import com.shapes.watch.presentation.video.VideoScreen
 
 @ExperimentalMaterialApi

@@ -2,16 +2,15 @@ package com.shapes.watch.domain.use_case.create
 
 import android.net.Uri
 import com.shapes.watch.common.Resource
-import com.shapes.watch.di.AppModule
 import com.shapes.watch.domain.model.CreateVideoInformation
-import com.shapes.watch.domain.repository.CreateRepository
+import com.shapes.watch.domain.repository.VideoRepository
 import com.shapes.watch.presentation.create.UploadVideoState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UploadVideo @Inject constructor(
-    private val repository: CreateRepository/* = AppModule.provideCreateRepository()*/
+    private val repository: VideoRepository
 ) {
     operator fun invoke(
         video: Uri,

@@ -2,7 +2,6 @@ package com.shapes.watch.presentation.component
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,11 +14,7 @@ fun WatchTextField(
     modifier: Modifier = Modifier,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
-    singleLine: Boolean = false,
-    colors: TextFieldColors = TextFieldDefaults
-        .outlinedTextFieldColors(
-            unfocusedBorderColor = MaterialTheme.colors.onSurfaceCarbon
-        )
+    singleLine: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -29,6 +24,9 @@ fun WatchTextField(
         label = label,
         placeholder = placeholder,
         singleLine = singleLine,
-        colors = colors
+        colors = TextFieldDefaults
+            .outlinedTextFieldColors(
+                unfocusedBorderColor = MaterialTheme.colors.onSurfaceCarbon
+            )
     )
 }

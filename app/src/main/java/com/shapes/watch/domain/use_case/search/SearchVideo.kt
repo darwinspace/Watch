@@ -1,23 +1,22 @@
-package com.shapes.watch.domain.use_case.home
+package com.shapes.watch.domain.use_case.search
 
 import com.shapes.watch.common.Resource
-import com.shapes.watch.domain.model.HomeContent
+import com.shapes.watch.domain.model.SearchVideoContent
 import com.shapes.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.io.IOException
 import javax.inject.Inject
 
-class GetHomeContent @Inject constructor(
+class SearchVideo @Inject constructor(
     private val repository: VideoRepository
 ) {
-    operator fun invoke(): Flow<Resource<HomeContent>> = flow {
+    operator fun invoke(value: String): Flow<Resource<SearchVideoContent>> = flow {
         emit(Resource.Loading())
 
         try {
-            val content = repository.getHomeContent()
+            val content = repository.searchContent(value)
             emit(Resource.Success(content))
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             emit(Resource.Error(e))
         }
     }

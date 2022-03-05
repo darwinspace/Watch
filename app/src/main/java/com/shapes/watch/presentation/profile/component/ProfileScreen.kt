@@ -1,4 +1,4 @@
-package com.shapes.watch.presentation.profile
+package com.shapes.watch.presentation.profile.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,20 +41,46 @@ fun ProfileScreen(navController: NavHostController) {
         }
     ) { contentPadding ->
         Surface(modifier = Modifier.padding(contentPadding)) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ProfileData()
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                var text by remember { mutableStateOf(String()) }
-                WatchTextField(value = text, onValueChange = { text = it })
-            }
+            ProfileScreenContent()
         }
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+private fun ProfileScreenContent() {
+    Column(
+        modifier = Modifier
+            .padding(24.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ProfileData()
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        var name by remember { mutableStateOf(String()) }
+        WatchTextField(
+            value = name,
+            onValueChange = { name = it },
+            placeholder = {
+                Text(text = "Name")
+            },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        var description by remember { mutableStateOf(String()) }
+        WatchTextField(
+            value = description,
+            onValueChange = { description = it },
+            placeholder = {
+                Text(text = "Description")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 

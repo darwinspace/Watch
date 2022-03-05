@@ -3,7 +3,6 @@ package com.shapes.watch.data.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shapes.watch.data.remote.dto.CreatorContentDto
 import com.shapes.watch.data.remote.dto.VideoDto
-import com.shapes.watch.di.AppModule
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.repository.CreatorRepository
 import kotlinx.coroutines.tasks.await

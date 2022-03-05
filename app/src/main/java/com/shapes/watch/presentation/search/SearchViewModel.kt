@@ -1,32 +1,28 @@
-package com.shapes.watch.presentation.home
+package com.shapes.watch.presentation.search
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shapes.watch.common.Resource
-import com.shapes.watch.domain.use_case.home.GetHomeContent
+import com.shapes.watch.domain.use_case.search.SearchVideo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val getHomeContent: GetHomeContent
+class SearchViewModel @Inject constructor(
+    private val searchContent: SearchVideo
 ) : ViewModel() {
-    private val _state = mutableStateOf<HomeState>(HomeState.Empty)
-    val state: State<HomeState> = _state
+    private val _state = mutableStateOf<SearchState>(SearchState.Empty)
+    val state: State<SearchState> = _state
 
-    init {
-        getContent()
-    }
-
-    private fun getContent() {
-        getHomeContent().onEach { resource ->
+    fun search(value: String) {
+        searchContent(value).onEach { resource ->
             _state.value = when (resource) {
-                is Resource.Success -> HomeState.Content(resource.data)
-                is Resource.Loading -> HomeState.Loading
+                is Resource.Success -> SearchState.Content(resource.data)
+                is Resource.Loading -> SearchState.Loading
                 is Resource.Error -> throw resource.exception
             }
         }.launchIn(viewModelScope)

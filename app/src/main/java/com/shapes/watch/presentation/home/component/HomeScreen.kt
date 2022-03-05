@@ -27,11 +27,11 @@ import com.shapes.watch.R
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.HomeContent
 import com.shapes.watch.domain.model.VideoInformation
+import com.shapes.watch.presentation.component.WatchFloatingActionButton
+import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.presentation.home.HomeState
 import com.shapes.watch.presentation.home.HomeViewModel
 import com.shapes.watch.presentation.navigation.Screen
-import com.shapes.watch.presentation.component.WatchFloatingActionButton
-import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -174,52 +174,51 @@ fun LoadingScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(modifier = Modifier.size(48.dp), strokeWidth = 6.dp)
+        CircularProgressIndicator(modifier = Modifier.size(42.dp), strokeWidth = 4.dp)
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
 fun Video(
-    navController: NavHostController,
-    video: VideoInformation
+    video: VideoInformation,
+    onClick: (VideoInformation) -> Unit,
+    onCreatorClick: (Creator) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = 0.dp,
-        onClick = {
-            navController.navigate(Screen.VideoScreen.route + video.toRoute())
-        }
+        onClick = { onClick(video) }
     ) {
-        VideoContent(video, navController)
+        VideoContent(video, onCreatorClick)
     }
 }
 
 @Composable
 private fun VideoContent(
     video: VideoInformation,
-    navController: NavHostController
+    onCreatorClick: (Creator) -> Unit
 ) {
     Column(modifier = Modifier.padding(12.dp)) {
         VideoThumbnail(video.video.thumbnailUrl)
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        VideoDataContainer(navController, video)
+        VideoDataContainer(video, onCreatorClick)
     }
 }
 
 @Composable
 private fun VideoDataContainer(
-    navController: NavHostController,
-    video: VideoInformation
+    video: VideoInformation,
+    onCreatorClick: (Creator) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        VideoData(video, navController)
+        VideoData(video, onCreatorClick)
 
         val duration = 2.minutes + 184.seconds
         VideoDuration(duration)
@@ -229,16 +228,12 @@ private fun VideoDataContainer(
 @Composable
 private fun VideoData(
     video: VideoInformation,
-    navController: NavHostController
+    onCreatorClick: (Creator) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         VideoCreator(
             creator = video.creator,
-            onClick = { creator ->
-                navController.navigate(
-                    route = Screen.CreatorScreen.route + creator.toRoute()
-                )
-            }
+            onClick = { onCreatorClick(it) }
         )
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -327,7 +322,16 @@ fun HomeScreenContent(
         items(homeContent.videos) { video ->
             Video(
                 video = video,
-                navController = navController
+                onClick = {
+                    navController.navigate(
+                        route = Screen.VideoScreen.route + it.toRoute()
+                    )
+                },
+                onCreatorClick = {
+                    navController.navigate(
+                        route = Screen.CreatorScreen.route + it.toRoute()
+                    )
+                }
             )
         }
     }

@@ -23,11 +23,12 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.CreatorContent
+import com.shapes.watch.presentation.component.WatchDescription
+import com.shapes.watch.presentation.component.WatchIconButton
 import com.shapes.watch.presentation.creator.CreatorState
 import com.shapes.watch.presentation.creator.CreatorViewModel
 import com.shapes.watch.presentation.home.component.Video
-import com.shapes.watch.presentation.component.WatchDescription
-import com.shapes.watch.presentation.component.WatchIconButton
+import com.shapes.watch.presentation.navigation.Screen
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
@@ -107,7 +108,16 @@ private fun CreatorScreenContent(
             items(creatorContent.videos) { video ->
                 Video(
                     video = video,
-                    navController = navController
+                    onClick = {
+                        navController.navigate(
+                            route = Screen.VideoScreen.route + it.toRoute()
+                        )
+                    },
+                    onCreatorClick = {
+                        navController.navigate(
+                            route = Screen.CreatorScreen.route + it.toRoute()
+                        )
+                    }
                 )
             }
         }

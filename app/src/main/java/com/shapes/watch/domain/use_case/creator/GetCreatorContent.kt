@@ -11,7 +11,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class GetCreatorContent @Inject constructor(
-    private val repository: CreatorRepository /*= AppModule.provideCreatorRepository()*/
+    private val repository: CreatorRepository
 ) {
     operator fun invoke(creator: Creator): Flow<Resource<CreatorContent>> = flow {
         emit(Resource.Loading())
