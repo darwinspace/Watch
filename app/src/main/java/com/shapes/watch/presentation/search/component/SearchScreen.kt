@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shapes.watch.domain.model.SearchVideoContent
@@ -46,13 +47,26 @@ private fun SearchButton(text: String, onSearchClick: () -> Unit) {
 
 @Composable
 private fun RowScope.SearchTextField(text: String, onTextChange: (String) -> Unit) {
-    BasicTextField(
-        value = text,
-        onValueChange = onTextChange,
-        modifier = Modifier.Companion
-            .weight(1f),
-        textStyle = MaterialTheme.typography.subtitle1
-    )
+    Box(modifier = Modifier.weight(1f)) {
+        BasicTextField(
+            value = text,
+            onValueChange = onTextChange,
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = MaterialTheme.typography.subtitle1.copy(color = MaterialTheme.colors.onSurface),
+            cursorBrush = SolidColor(MaterialTheme.colors.primary)
+        )
+
+        if (text.isBlank()) {
+            Text(
+                text = "Search",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.subtitle1.copy(
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.4f)
+                )
+            )
+        }
+    }
 }
 
 @ExperimentalMaterialApi
