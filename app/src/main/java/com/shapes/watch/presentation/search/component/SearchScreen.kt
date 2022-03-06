@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,13 +25,35 @@ import com.shapes.watch.ui.theme.onSurfaceCarbon
 import kotlinx.coroutines.launch
 
 @Composable
-fun SearchTopBar(text: String, onTextChange: (String) -> Unit, onSearchClick: () -> Unit) {
+fun SearchTopBar(
+    text: String,
+    onTextChange: (String) -> Unit,
+    onCloseClick: () -> Unit,
+    onSearchClick: () -> Unit
+) {
     Surface {
         Row(
-            modifier = Modifier.padding(end = 16.dp, start = 24.dp, top = 16.dp, bottom = 16.dp),
+            modifier = Modifier.padding(end = 16.dp, start = 12.dp, top = 16.dp, bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SearchTextField(text, onTextChange)
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    onClick = onCloseClick
+                ) {
+                    Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                SearchTextField(
+                    text = text,
+                    onTextChange = onTextChange,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
 
             SearchButton(text, onSearchClick)
         }
@@ -48,13 +71,17 @@ private fun SearchButton(text: String, onSearchClick: () -> Unit) {
 }
 
 @Composable
-private fun RowScope.SearchTextField(text: String, onTextChange: (String) -> Unit) {
-    Box(modifier = Modifier.weight(1f)) {
+private fun SearchTextField(
+    modifier: Modifier = Modifier,
+    text: String,
+    onTextChange: (String) -> Unit
+) {
+    Box {
         BasicTextField(
             value = text,
             onValueChange = onTextChange,
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier,
             textStyle = MaterialTheme.typography.subtitle1.copy(color = MaterialTheme.colors.onSurface),
             cursorBrush = SolidColor(MaterialTheme.colors.primary)
         )
@@ -83,6 +110,9 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel(), navController: Na
             SearchTopBarContainer(
                 text = text,
                 onTextChange = onTextChange,
+                onCloseClick = {
+                    navController.popBackStack()
+                },
                 onSearchClick = {
                     scope.launch {
                         viewModel.search(text)
@@ -146,12 +176,14 @@ fun EmptySearchScreen() {
 private fun SearchTopBarContainer(
     text: String,
     onTextChange: (String) -> Unit,
+    onCloseClick: () -> Unit,
     onSearchClick: () -> Unit
 ) {
     Column {
         SearchTopBar(
             text = text,
             onTextChange = onTextChange,
+            onCloseClick = onCloseClick,
             onSearchClick = onSearchClick
         )
 

@@ -6,6 +6,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +18,9 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.Creator
 import com.shapes.watch.domain.model.VideoInformation
-import com.shapes.watch.presentation.navigation.Screen
 import com.shapes.watch.presentation.component.WatchDescription
+import com.shapes.watch.presentation.component.WatchIconButton
+import com.shapes.watch.presentation.navigation.Screen
 import com.shapes.watch.ui.theme.onSurfaceCarbon
 
 @ExperimentalMaterialApi
@@ -29,6 +32,13 @@ fun VideoScreen(
     val scrollState = rememberScrollState()
     Scaffold {
         VideoScreenContent(scrollState, videoInformation, navController)
+        Box(modifier = Modifier.padding(24.dp)) {
+            WatchIconButton(
+                onClick = { navController.popBackStack() }
+            ) {
+                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+            }
+        }
     }
 }
 

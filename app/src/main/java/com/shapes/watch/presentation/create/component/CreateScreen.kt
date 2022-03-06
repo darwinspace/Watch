@@ -23,7 +23,6 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.shapes.watch.domain.model.CreateVideoInformation
 import com.shapes.watch.presentation.component.WatchButton
-import com.shapes.watch.presentation.component.WatchIconButton
 import com.shapes.watch.presentation.component.WatchTextField
 import com.shapes.watch.presentation.component.WatchTopBar
 import com.shapes.watch.presentation.home.component.LoadingScreen
@@ -46,7 +45,14 @@ fun CreateScreenTopBar(
     onUploadClick: () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    WatchTopBar(text = "Create") {
+    WatchTopBar(
+        text = "Create",
+        leadingContent = {
+            IconButton(onClick = onCloseClick) {
+                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+            }
+        }
+    ) {
         WatchButton(
             backgroundColor = MaterialTheme.colors.primary,
             onClick = onUploadClick,
@@ -59,9 +65,9 @@ fun CreateScreenTopBar(
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        WatchIconButton(onClick = onCloseClick) {
-            Icon(imageVector = Icons.Default.Close, contentDescription = null)
-        }
+//        WatchIconButton(onClick = onCloseClick) {
+//            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+//        }
     }
 }
 

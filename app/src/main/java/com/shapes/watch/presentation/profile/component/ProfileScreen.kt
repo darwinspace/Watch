@@ -91,7 +91,14 @@ private fun ProfileScreenTopBar(
     onSaveClick: () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    WatchTopBar(text = "Profile") {
+    WatchTopBar(
+        text = "Profile",
+        leadingContent = {
+            IconButton(onClick = onCloseClick) {
+                Icon(imageVector = Icons.Default.Close, contentDescription = null)
+            }
+        }
+    ) {
         WatchButton(
             backgroundColor = MaterialTheme.colors.primary,
             onClick = onSaveClick,
@@ -104,9 +111,9 @@ private fun ProfileScreenTopBar(
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        WatchIconButton(onClick = onCloseClick) {
-            Icon(imageVector = Icons.Default.Close, contentDescription = null)
-        }
+//        WatchIconButton(onClick = onCloseClick) {
+//            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+//        }
     }
 }
 

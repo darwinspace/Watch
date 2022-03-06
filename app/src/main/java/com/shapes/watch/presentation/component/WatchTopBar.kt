@@ -11,14 +11,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun WatchTopBar(text: String, content: @Composable RowScope.() -> Unit) {
+fun WatchTopBar(
+    text: String,
+    leadingContent: (@Composable () -> Unit)? = null,
+    content: @Composable RowScope.() -> Unit
+) {
     Surface(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
                     PaddingValues(
-                        start = 24.dp,
+                        start = if (leadingContent == null) 24.dp else 12.dp,
                         end = 16.dp,
                         top = 16.dp,
                         bottom = 16.dp
@@ -27,7 +31,14 @@ fun WatchTopBar(text: String, content: @Composable RowScope.() -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            WatchTopBarNameText(text)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                leadingContent?.let {
+                    it.invoke()
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
+
+                WatchTopBarNameText(text)
+            }
 
             Row(content = content)
         }
