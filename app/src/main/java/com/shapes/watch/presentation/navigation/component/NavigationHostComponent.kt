@@ -41,7 +41,7 @@ fun NavigationHostComponent(route: String = Screen.HomeScreen.route) {
             )
         }
         composable(Screen.SearchScreen.route) {
-            SearchScreen()
+            SearchScreen(navController = navController)
         }
         composable(
             route = Screen.VideoScreen.route +

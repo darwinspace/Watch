@@ -13,9 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.shapes.watch.domain.model.SearchVideoContent
 import com.shapes.watch.presentation.home.component.LoadingScreen
 import com.shapes.watch.presentation.home.component.Video
+import com.shapes.watch.presentation.navigation.Screen
 import com.shapes.watch.presentation.search.SearchState
 import com.shapes.watch.presentation.search.SearchViewModel
 import com.shapes.watch.ui.theme.onSurfaceCarbon
@@ -71,7 +73,7 @@ private fun RowScope.SearchTextField(text: String, onTextChange: (String) -> Uni
 
 @ExperimentalMaterialApi
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchScreen(viewModel: SearchViewModel = hiltViewModel(), navController: NavHostController) {
     var text by remember { mutableStateOf(String()) }
     val onTextChange: (String) -> Unit = { text = it }
     val scope = rememberCoroutineScope()
@@ -92,7 +94,7 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         Surface(modifier = Modifier.padding(it)) {
             when (state) {
                 is SearchState.Content -> {
-                    SearchScreenContent(state.searchVideoContent)
+                    SearchScreenContent(state.searchVideoContent, navController)
                 }
                 SearchState.Empty -> {
                     EmptySearchScreen()
@@ -108,7 +110,7 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 
 @ExperimentalMaterialApi
 @Composable
-fun SearchScreenContent(searchVideoContent: SearchVideoContent) {
+fun SearchScreenContent(searchVideoContent: SearchVideoContent, navController: NavHostController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth(),
@@ -119,10 +121,14 @@ fun SearchScreenContent(searchVideoContent: SearchVideoContent) {
             Video(
                 video = video,
                 onClick = {
-
+                    navController.navigate(
+                        route = Screen.VideoScreen.route + it.toRoute()
+                    )
                 },
                 onCreatorClick = {
-
+                    navController.navigate(
+                        route = Screen.CreatorScreen.route + it.toRoute()
+                    )
                 }
             )
         }
