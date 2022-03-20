@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.shapes.watch.presentation.navigation.NavigationHostComponent
 import com.shapes.watch.presentation.navigation.Screen
 import com.shapes.watch.ui.theme.WatchTheme
@@ -18,18 +20,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        auth = Firebase.auth
-//        val user = auth.currentUser
-//        setContent {
-//            val route = if (user != null) {
-//                Screen.HomeScreen.route
-//            } else {
-//                Screen.DefaultScreen.route
-//            }
-//        }
+        auth = Firebase.auth
+        val user = auth.currentUser
+        val route = if (user != null) {
+            Screen.HomeScreen.route
+        } else {
+            Screen.DefaultScreen.route
+        }
 
         setContent {
-            ActivityContent(Screen.HomeScreen.route)
+            ActivityContent(route)
         }
     }
 
