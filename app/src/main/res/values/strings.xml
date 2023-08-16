@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Watch</string>
+    <string name="application_name">Watch</string>
     <string name="client_id">243046412242-8esm37tnmt48kp25p1lksd7437mutkef.apps.googleusercontent.com</string>
 </resources>
