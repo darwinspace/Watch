@@ -3,7 +3,7 @@ package com.space.watch.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.space.watch.presentation.main.MainScreen
+import com.space.watch.presentation.home.HomeScreen
 import com.space.watch.ui.theme.WatchTheme
 
 class MainActivity : ComponentActivity() {
@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WatchTheme {
-                MainScreen()
+                HomeScreen()
             }
         }
     }
