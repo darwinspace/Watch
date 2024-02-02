@@ -18,7 +18,8 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             _content.value = HomeState.Wait
-            _content.value = repository.getContent()
+            val content = repository.getContent()
+            _content.value = HomeState.Content(content)
         }
     }
 }

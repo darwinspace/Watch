@@ -42,6 +42,7 @@ import com.space.watch.R
 import com.space.watch.domain.model.HomeState
 import com.space.watch.domain.model.Video
 import com.space.watch.domain.model.VideoSize
+import com.space.watch.domain.model.HomeContent
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
@@ -51,15 +52,17 @@ fun HomeScreenPreview() {
     WatchTheme {
         HomeScreen(
             state = HomeState.Content(
-                videos = List(10) {
-                    Video(
-                        title = "Video",
-                        image = String(),
-                        creatorImage = String(),
-                        size = VideoSize(1920, 1080),
-                        duration = 0
-                    )
-                }
+                content = HomeContent(
+                    videos = List(10) {
+                        Video(
+                            title = "Video",
+                            image = String(),
+                            creatorImage = String(),
+                            size = VideoSize(1920, 1080),
+                            duration = 0
+                        )
+                    }
+                )
             )
         )
     }
@@ -84,7 +87,7 @@ fun HomeScreen(state: HomeState) {
         when (state) {
             is HomeState.Content -> {
                 HomeScreenContent(
-                    videos = state.videos,
+                    content = state.content,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
@@ -105,14 +108,14 @@ fun HomeScreenFloatingActionButton() {
 }
 
 @Composable
-fun HomeScreenContent(modifier: Modifier, videos: List<Video>) {
+fun HomeScreenContent(modifier: Modifier, content: HomeContent) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(videos) { video ->
+        items(content.videos) { video ->
             Video(video, { }, { })
         }
     }

@@ -1,8 +1,7 @@
 package com.space.watch.domain.repository
 
-import com.space.watch.domain.model.HomeState
+import com.space.watch.domain.model.HomeContent
 
 interface HomeRepository {
-    // TODO: HomeState.Content to HomeContent
-    suspend fun getContent(): HomeState.Content
+    suspend fun getContent(): HomeContent
 }
