@@ -21,9 +21,9 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,7 +58,7 @@ fun VideoScreenPreview() {
                     title = "Video",
                     description = "Description",
                     creator = "Video Creator",
-                    size = VideoSize(1920, 1920)
+                    size = VideoSize(1920, 1080)
                 )
             )
         )
@@ -90,7 +90,7 @@ fun VideoScreen(state: VideoState) {
             }
         }
 
-        SmallFloatingActionButton(onClick = { /*TODO*/ }) {
+        IconButton(colors = IconButtonDefaults.filledTonalIconButtonColors(), onClick = { /*TODO*/ }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
         }
     }
