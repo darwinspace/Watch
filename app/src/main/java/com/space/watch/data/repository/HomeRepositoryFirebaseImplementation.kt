@@ -9,7 +9,7 @@ import com.space.watch.domain.model.Video
 import com.space.watch.domain.repository.HomeRepository
 import kotlinx.coroutines.tasks.await
 
-class HomeFirebaseRepository : HomeRepository {
+class HomeRepositoryFirebaseImplementation : HomeRepository {
     private val database = Firebase.firestore
     private val collection = "videos"
 
