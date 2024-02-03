@@ -28,8 +28,6 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +39,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
@@ -75,12 +72,6 @@ fun VideoScreenPreview() {
 }
 
 @Composable
-fun VideoScreen(viewModel: VideoViewModel = viewModel(), onBackButtonClick: () -> Unit) {
-    val videoState by viewModel.content.collectAsState()
-    VideoScreen(state = videoState, onBackButtonClick = onBackButtonClick)
-}
-
-@Composable
 fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
     Box {
         Scaffold {
@@ -94,8 +85,8 @@ fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
                     )
                 }
 
-                VideoState.Empty -> {}
-                VideoState.Wait -> {}
+                VideoState.Empty -> { }
+                VideoState.Wait -> { }
             }
         }
 
