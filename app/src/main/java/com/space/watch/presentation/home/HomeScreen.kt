@@ -35,62 +35,66 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.space.watch.R
-import com.space.watch.domain.model.HomeState
+import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Video
 import com.space.watch.domain.model.VideoSize
-import com.space.watch.domain.model.HomeContent
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
-@Preview(wallpaper = Wallpapers.RED_DOMINATED_EXAMPLE)
+@Preview
 @Composable
 fun HomeScreenPreview() {
     WatchTheme {
         HomeScreen(
             state = HomeState.Content(
-                content = HomeContent(
-                    videos = List(10) {
-                        Video(
-                            title = "Video",
-                            image = String(),
-                            creatorImage = String(),
-                            size = VideoSize(1920, 1080),
-                            duration = 0
-                        )
-                    }
-                )
+                videos = List(10) {
+                    Video(
+                        id = String(),
+                        title = "Video",
+                        description = "Description",
+                        image = String(),
+                        creator = Creator(
+                            id = String(),
+                            name = "Video Creator",
+                            description = String(),
+                            image = String()
+                        ),
+                        size = VideoSize(1920, 1080),
+                        duration = 0
+                    )
+                }
             )
         )
     }
 }
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(viewModel: HomeViewModel = viewModel(), onVideoClick: (String) -> Unit) {
     val homeState by viewModel.content.collectAsState()
-    HomeScreen(state = homeState)
+    HomeScreen(state = homeState, onVideoClick = onVideoClick)
 }
 
 @Composable
-fun HomeScreen(state: HomeState) {
+fun HomeScreen(state: HomeState, onVideoClick: (String) -> Unit= { }) {
     Scaffold(
         topBar = {
             HomeScreenTopBar()
         },
         floatingActionButton = {
-            HomeScreenFloatingActionButton()
+            HomeScreenCreateVideoButton()
         }
     ) {
         when (state) {
             is HomeState.Content -> {
                 HomeScreenContent(
-                    content = state.content,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
+                        .padding(it),
+                    videos = state.videos,
+                    onVideoClick = onVideoClick
                 )
             }
 
@@ -101,22 +105,31 @@ fun HomeScreen(state: HomeState) {
 }
 
 @Composable
-fun HomeScreenFloatingActionButton() {
-    FloatingActionButton(onClick = { /*TODO*/ }) {
+fun HomeScreenCreateVideoButton() {
+    FloatingActionButton(
+        containerColor = MaterialTheme.colorScheme.surface,
+        onClick = { /*TODO*/ }
+    ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null)
     }
 }
 
 @Composable
-fun HomeScreenContent(modifier: Modifier, content: HomeContent) {
+fun HomeScreenContent(modifier: Modifier, videos: List<Video>, onVideoClick: (String) -> Unit) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(content.videos) { video ->
-            Video(video, { }, { })
+        items(videos) { video ->
+            Video(
+                video = video,
+                onCreatorClick = { /*TODO*/ },
+                onClick = {
+                    onVideoClick(video.id)
+                }
+            )
         }
     }
 }

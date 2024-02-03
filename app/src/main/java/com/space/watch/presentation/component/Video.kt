@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.space.watch.R
+import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Video
 import com.space.watch.domain.model.VideoSize
 import com.space.watch.ui.theme.WatchTheme
-import kotlin.time.Duration.Companion.minutes
 
 @Preview(showBackground = true)
 @Composable
@@ -39,11 +39,18 @@ fun VideoPreview() {
     WatchTheme {
         Video(
             video = Video(
+                id = String(),
                 title = "Video",
+                description = "Description",
                 image = String(),
-                creatorImage = String(),
+                creator = Creator(
+                    id = String(),
+                    name = "Video Creator",
+                    description = String(),
+                    image = String()
+                ),
                 size = VideoSize(1920, 1080),
-                duration = 20,
+                duration = 0
             ),
             onCreatorClick = { throw NotImplementedError() },
             onClick = { throw NotImplementedError() }
@@ -52,7 +59,11 @@ fun VideoPreview() {
 }
 
 @Composable
-fun Video(video: Video, onClick: () -> Unit, onCreatorClick: () -> Unit) {
+fun Video(
+    video: Video,
+    onCreatorClick: () -> Unit,
+    onClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .clip(MaterialTheme.shapes.large)
@@ -72,7 +83,7 @@ fun Video(video: Video, onClick: () -> Unit, onCreatorClick: () -> Unit) {
                 .fillMaxWidth()
         ) {
             VideoCreatorImage(
-                creatorImage = video.creatorImage,
+                creatorImage = video.creator.image,
                 onClick = onCreatorClick
             )
 

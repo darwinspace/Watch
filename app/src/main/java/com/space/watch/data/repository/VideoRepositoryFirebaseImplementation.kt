@@ -1,23 +1,24 @@
 package com.space.watch.data.repository
 
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.toObjects
+import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import com.space.watch.data.model.VideoDto
 import com.space.watch.domain.model.Video
-import com.space.watch.domain.repository.HomeRepository
+import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.tasks.await
 
-class HomeRepositoryFirebaseImplementation : HomeRepository {
+class VideoRepositoryFirebaseImplementation : VideoRepository {
     private val database = Firebase.firestore
     private val collection = "videos"
 
-    override suspend fun getContent(): List<Video> {
+    override suspend fun getVideoById(id: String): Video {
         return database
             .collection(collection)
+            .document(id)
             .get()
             .await()
-            .toObjects<VideoDto>()
-            .map(VideoDto::toVideo)
+            .toObject<VideoDto>()!!
+            .toVideo()
     }
 }

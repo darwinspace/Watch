@@ -1,5 +1,6 @@
 package com.space.watch.presentation.video
 
+import android.content.res.Configuration
 import android.widget.VideoView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -21,9 +22,9 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,22 +44,30 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.space.watch.R
-import com.space.watch.domain.model.VideoDetail
+import com.space.watch.domain.model.Creator
+import com.space.watch.domain.model.Video
 import com.space.watch.domain.model.VideoSize
-import com.space.watch.domain.model.VideoState
 import com.space.watch.ui.theme.WatchTheme
 
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun VideoScreenPreview() {
     WatchTheme {
         VideoScreen(
             state = VideoState.Content(
-                video = VideoDetail(
+                video = Video(
+                    id = String(),
                     title = "Video",
                     description = "Description",
-                    creator = "Video Creator",
-                    size = VideoSize(1920, 1080)
+                    image = String(),
+                    creator = Creator(
+                        id = String(),
+                        name = "Video Creator",
+                        description = String(),
+                        image = String()
+                    ),
+                    size = VideoSize(1920, 1080),
+                    duration = 0
                 )
             )
         )
@@ -66,13 +75,13 @@ fun VideoScreenPreview() {
 }
 
 @Composable
-fun VideoScreen(viewModel: VideoViewModel = viewModel()) {
+fun VideoScreen(viewModel: VideoViewModel = viewModel(), onBackButtonClick: () -> Unit) {
     val videoState by viewModel.content.collectAsState()
-    VideoScreen(state = videoState)
+    VideoScreen(state = videoState, onBackButtonClick = onBackButtonClick)
 }
 
 @Composable
-fun VideoScreen(state: VideoState) {
+fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
     Box {
         Scaffold {
             when (state) {
@@ -85,12 +94,16 @@ fun VideoScreen(state: VideoState) {
                     )
                 }
 
-                VideoState.Empty -> TODO()
-                VideoState.Wait -> TODO()
+                VideoState.Empty -> {}
+                VideoState.Wait -> {}
             }
         }
 
-        IconButton(colors = IconButtonDefaults.filledTonalIconButtonColors(), onClick = { /*TODO*/ }) {
+        SmallFloatingActionButton(
+            modifier = Modifier.padding(12.dp),
+            containerColor = MaterialTheme.colorScheme.surface,
+            onClick = onBackButtonClick
+        ) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
         }
     }
@@ -99,7 +112,7 @@ fun VideoScreen(state: VideoState) {
 @Composable
 private fun VideoScreenContent(
     modifier: Modifier,
-    video: VideoDetail
+    video: Video
 ) {
     Column(
         modifier = modifier
@@ -111,7 +124,7 @@ private fun VideoScreenContent(
 }
 
 @Composable
-fun MainVideoDetail(video: VideoDetail) {
+fun MainVideoDetail(video: Video) {
     LazyColumn(
         contentPadding = PaddingValues(12.dp)
     ) {
@@ -156,7 +169,7 @@ fun MainVideoDetail(video: VideoDetail) {
                             modifier = Modifier
                                 .clip(shape = CircleShape)
                                 .size(32.dp),
-                            model = "creatorImage",
+                            model = video.creator.image,
                             contentDescription = null
                         )
                     }
@@ -169,7 +182,7 @@ fun MainVideoDetail(video: VideoDetail) {
                     ) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = video.creator,
+                            text = video.creator.name,
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 lineHeight = 24.sp,
@@ -217,7 +230,7 @@ fun MainVideoDetail(video: VideoDetail) {
 }
 
 @Composable
-fun MainVideo(video: VideoDetail) {
+fun MainVideo(video: Video) {
     Box(
         modifier = Modifier
             .border(
