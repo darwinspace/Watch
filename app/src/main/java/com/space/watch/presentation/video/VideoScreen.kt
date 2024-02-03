@@ -7,8 +7,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,7 +73,11 @@ fun VideoScreenPreview() {
 }
 
 @Composable
-fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
+fun VideoScreen(
+    state: VideoState,
+    onBackButtonClick: () -> Unit = { },
+    onVideoCreatorClick: (String) -> Unit = { }
+) {
     Box {
         Scaffold {
             when (state) {
@@ -82,12 +86,13 @@ fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(it),
-                        video = state.video
+                        video = state.video,
+                        onVideoCreatorClick = onVideoCreatorClick
                     )
                 }
 
-                VideoState.Empty -> { }
-                VideoState.Wait -> { }
+                VideoState.Empty -> {}
+                VideoState.Wait -> {}
             }
         }
 
@@ -105,125 +110,141 @@ fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
 @Composable
 private fun VideoScreenContent(
     modifier: Modifier,
-    video: Video
+    video: Video,
+    onVideoCreatorClick: (String) -> Unit
 ) {
-    Column(
-        modifier = modifier
-    ) {
-        MainVideo(video)
-
-        MainVideoDetail(video)
-    }
-}
-
-@Composable
-fun MainVideoDetail(video: Video) {
-    LazyColumn(
-        contentPadding = PaddingValues(12.dp)
-    ) {
+    LazyColumn(modifier = modifier) {
         item {
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .weight(1f),
-                        text = video.title,
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 24.sp,
-                            fontFamily = FontFamily(Font(R.font.mono_medium)),
-                            fontWeight = FontWeight(500)
-                        )
-                    )
+                VideoContent(video)
 
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
-                    }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .clip(shape = MaterialTheme.shapes.large)
-                        .clickable { /*TODO*/ }
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(shape = CircleShape)
-                            .border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                                shape = CircleShape
-                            )
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .clip(shape = CircleShape)
-                                .size(32.dp),
-                            model = video.creator.image,
-                            contentDescription = null
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = video.creator.name,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 24.sp,
-                                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                                fontWeight = FontWeight(500)
-                            ),
-                            maxLines = 1,
-                        )
-                    }
-
-                    Icon(
-                        imageVector = Icons.Outlined.Verified,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        }
-
-        item {
-            Column(modifier = Modifier.padding(12.dp)) {
-                Surface(
-                    shape = MaterialTheme.shapes.small,
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        text = video.description,
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 24.sp,
-                            fontFamily = FontFamily(Font(R.font.mono_medium)),
-                            fontWeight = FontWeight(500)
-                        )
-                    )
-                }
+                VideoInformation(video, onVideoCreatorClick)
             }
         }
     }
 }
 
 @Composable
-fun MainVideo(video: Video) {
+fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
+    Column(modifier = Modifier.padding(12.dp)) {
+        VideoTitle(video.title)
+
+        VideoCreator(video.creator) {
+            onVideoCreatorClick(video.creator.id)
+        }
+
+        VideoDescription(video)
+    }
+}
+
+@Composable
+private fun VideoTitle(title: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .weight(1f),
+            text = title,
+            style = TextStyle(
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                fontFamily = FontFamily(Font(R.font.mono_medium)),
+                fontWeight = FontWeight(500)
+            )
+        )
+
+        IconButton(onClick = { /*TODO*/ }) {
+            Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
+        }
+    }
+}
+
+@Composable
+private fun VideoCreator(creator: Creator, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .clip(shape = MaterialTheme.shapes.large)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        VideoCreatorImage(creator)
+
+        VideoCreatorName(creator)
+
+        Icon(
+            imageVector = Icons.Outlined.Verified,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun RowScope.VideoCreatorName(creator: Creator) {
+    Text(
+        modifier = Modifier.Companion
+            .weight(1f)
+            .padding(horizontal = 12.dp),
+        text = creator.name,
+        style = TextStyle(
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            fontFamily = FontFamily(Font(R.font.mono_medium)),
+            fontWeight = FontWeight(500)
+        ),
+        maxLines = 1,
+    )
+}
+
+@Composable
+private fun VideoCreatorImage(creator: Creator) {
+    Box(
+        modifier = Modifier
+            .clip(shape = CircleShape)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                shape = CircleShape
+            )
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .clip(shape = CircleShape)
+                .size(32.dp),
+            model = creator.image,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun VideoDescription(video: Video) {
+    Surface(
+        modifier = Modifier.padding(12.dp),
+        shape = MaterialTheme.shapes.small,
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        )
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            text = video.description,
+            style = TextStyle(
+                fontSize = 14.sp,
+                lineHeight = 24.sp,
+                fontFamily = FontFamily(Font(R.font.mono_medium)),
+                fontWeight = FontWeight(500)
+            )
+        )
+    }
+}
+
+@Composable
+fun VideoContent(video: Video) {
     Box(
         modifier = Modifier
             .border(

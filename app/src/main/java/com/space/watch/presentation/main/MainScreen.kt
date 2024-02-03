@@ -38,7 +38,7 @@ fun MainScreen() {
         }
 
         composable(
-            route = "${Destination.Video}/{$IdentifierArgumentName}}",
+            route = "${Destination.Video}/{$IdentifierArgumentName}",
             arguments = listOf(
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
@@ -59,12 +59,15 @@ fun MainScreen() {
                 state = state,
                 onBackButtonClick = {
                     navController.popBackStack()
+                },
+                onVideoCreatorClick = {
+                    navController.navigate(route = "${Destination.Creator}/$it")
                 }
             )
         }
 
         composable(
-            route = "${Destination.Creator}/$IdentifierArgumentName",
+            route = "${Destination.Creator}/{$IdentifierArgumentName}",
             arguments = listOf(
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType

@@ -64,7 +64,7 @@ fun HomeScreenPreview() {
                         duration = 0
                     )
                 }
-            ),
+            )
         )
     }
 }
@@ -73,7 +73,7 @@ fun HomeScreenPreview() {
 fun HomeScreen(
     state: HomeState,
     onVideoCreatorClick: (String) -> Unit = { },
-    onVideoClick: (String) -> Unit = { },
+    onVideoClick: (String) -> Unit = { }
 ) {
     Scaffold(
         topBar = {
@@ -153,40 +153,50 @@ private fun HomeScreenTopBar() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        modifier = Modifier.size(48.dp),
-                        painter = painterResource(R.drawable.icon_launcher_foreground),
-                        contentDescription = null
-                    )
+                HomeScreenTopBarApplicationLogo()
 
-                    Text(
-                        text = stringResource(id = R.string.application_name),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-                Row {
-                    IconButton(
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null
-                        )
-                    }
-
-                    UserImage()
-                }
+                HomeScreenTopBarActions()
             }
         }
 
         Divider(
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        )
+    }
+}
+
+@Composable
+private fun HomeScreenTopBarActions() {
+    Row {
+        IconButton(
+            onClick = { /*TODO*/ }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null
+            )
+        }
+
+        UserImage()
+    }
+}
+
+@Composable
+private fun HomeScreenTopBarApplicationLogo() {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            modifier = Modifier.size(48.dp),
+            painter = painterResource(R.drawable.icon_launcher_foreground),
+            contentDescription = null
+        )
+
+        Text(
+            text = stringResource(id = R.string.application_name),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
