@@ -47,7 +47,8 @@ fun VideoPreview() {
                     id = String(),
                     name = "Video Creator",
                     description = String(),
-                    image = String()
+                    image = String(),
+                    cover = String()
                 ),
                 size = VideoSize(1920, 1080),
                 duration = 0

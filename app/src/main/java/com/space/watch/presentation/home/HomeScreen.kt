@@ -1,6 +1,6 @@
 package com.space.watch.presentation.home
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,19 +57,24 @@ fun HomeScreenPreview() {
                             id = String(),
                             name = "Video Creator",
                             description = String(),
-                            image = String()
+                            image = String(),
+                            cover = String()
                         ),
                         size = VideoSize(1920, 1080),
                         duration = 0
                     )
                 }
-            )
+            ),
         )
     }
 }
 
 @Composable
-fun HomeScreen(state: HomeState, onVideoClick: (String) -> Unit= { }) {
+fun HomeScreen(
+    state: HomeState,
+    onVideoCreatorClick: (String) -> Unit = { },
+    onVideoClick: (String) -> Unit = { },
+) {
     Scaffold(
         topBar = {
             HomeScreenTopBar()
@@ -85,6 +90,7 @@ fun HomeScreen(state: HomeState, onVideoClick: (String) -> Unit= { }) {
                         .fillMaxSize()
                         .padding(it),
                     videos = state.videos,
+                    onVideoCreatorClick = onVideoCreatorClick,
                     onVideoClick = onVideoClick
                 )
             }
@@ -106,7 +112,12 @@ fun HomeScreenCreateVideoButton() {
 }
 
 @Composable
-fun HomeScreenContent(modifier: Modifier, videos: List<Video>, onVideoClick: (String) -> Unit) {
+fun HomeScreenContent(
+    modifier: Modifier,
+    videos: List<Video>,
+    onVideoCreatorClick: (String) -> Unit,
+    onVideoClick: (String) -> Unit
+) {
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
@@ -116,7 +127,9 @@ fun HomeScreenContent(modifier: Modifier, videos: List<Video>, onVideoClick: (St
         items(videos) { video ->
             Video(
                 video = video,
-                onCreatorClick = { /*TODO*/ },
+                onCreatorClick = {
+                    onVideoCreatorClick(video.creator.id)
+                },
                 onClick = {
                     onVideoClick(video.id)
                 }
@@ -141,17 +154,18 @@ private fun HomeScreenTopBar() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Canvas(modifier = Modifier.size(32.dp)) {
-                        drawCircle(Color.Gray)
-                    }
+                    Image(
+                        modifier = Modifier.size(48.dp),
+                        painter = painterResource(R.drawable.icon_launcher_foreground),
+                        contentDescription = null
+                    )
 
                     Text(
                         text = stringResource(id = R.string.application_name),
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
@@ -190,6 +204,6 @@ private fun UserImage() {
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
                 shape = CircleShape
             )
-            .size(32.dp),
+            .size(32.dp)
     )
 }

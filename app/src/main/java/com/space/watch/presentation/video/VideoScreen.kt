@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -61,7 +61,8 @@ fun VideoScreenPreview() {
                         id = String(),
                         name = "Video Creator",
                         description = String(),
-                        image = String()
+                        image = String(),
+                        cover = String()
                     ),
                     size = VideoSize(1920, 1080),
                     duration = 0
@@ -92,10 +93,11 @@ fun VideoScreen(state: VideoState, onBackButtonClick: () -> Unit = { }) {
 
         SmallFloatingActionButton(
             modifier = Modifier.padding(12.dp),
+            shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.surface,
             onClick = onBackButtonClick
         ) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }
     }
 }
@@ -168,7 +170,7 @@ fun MainVideoDetail(video: Video) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 8.dp),
+                            .padding(horizontal = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -185,7 +187,7 @@ fun MainVideoDetail(video: Video) {
                     }
 
                     Icon(
-                        imageVector = Icons.Default.Info,
+                        imageVector = Icons.Outlined.Verified,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary
                     )

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.space.watch.presentation.creator.CreatorScreen
 import com.space.watch.presentation.home.HomeScreen
 import com.space.watch.presentation.home.HomeViewModel
 import com.space.watch.presentation.video.VideoScreen
@@ -27,14 +28,17 @@ fun MainScreen() {
             val state by viewModel.content.collectAsState()
             HomeScreen(
                 state = state,
+                onVideoCreatorClick = {
+                    navController.navigate(route = "${Destination.Creator}/$it")
+                },
                 onVideoClick = {
-                    navController.navigate(route = Destination.Video)
+                    navController.navigate(route = "${Destination.Video}/$it")
                 }
             )
         }
 
         composable(
-            route = "${Destination.Video}/{${IdentifierArgumentName}}",
+            route = "${Destination.Video}/{$IdentifierArgumentName}}",
             arguments = listOf(
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
@@ -57,6 +61,17 @@ fun MainScreen() {
                     navController.popBackStack()
                 }
             )
+        }
+
+        composable(
+            route = "${Destination.Creator}/$IdentifierArgumentName",
+            arguments = listOf(
+                navArgument(name = IdentifierArgumentName) {
+                    type = IdentifierArgumentType
+                }
+            )
+        ) {
+            CreatorScreen()
         }
     }
 }

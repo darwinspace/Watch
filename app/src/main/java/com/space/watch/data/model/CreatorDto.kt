@@ -6,14 +6,16 @@ data class CreatorDto(
     val id: String = String(),
     val name: String = String(),
     val description: String = String(),
-    val image: String = String()
+    val image: String = String(),
+    val cover: String = String()
 ) {
     fun toCreator(): Creator {
         return Creator(
             id = id,
             name = name,
             description = description,
-            image = image
+            image = image,
+            cover = cover
         )
     }
 }
