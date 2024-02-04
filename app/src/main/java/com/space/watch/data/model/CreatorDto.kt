@@ -7,7 +7,8 @@ data class CreatorDto(
     val name: String = String(),
     val description: String = String(),
     val image: String = String(),
-    val cover: String = String()
+    val cover: String = String(),
+    val verified: Boolean = true
 ) {
     fun toCreator(): Creator {
         return Creator(
@@ -15,7 +16,8 @@ data class CreatorDto(
             name = name,
             description = description,
             image = image,
-            cover = cover
+            cover = cover,
+            verified = verified
         )
     }
 }

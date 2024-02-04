@@ -31,4 +31,14 @@ class VideoRepositoryFirebaseImplementation : VideoRepository {
             .toObjects<VideoDto>()
             .map(VideoDto::toVideo)
     }
+
+    override suspend fun getAllVideosByCreatorId(id: String): List<Video> {
+        return database
+            .collection(collection)
+            .whereEqualTo("creatorId", id)
+            .get()
+            .await()
+            .toObjects<VideoDto>()
+            .map(VideoDto::toVideo)
+    }
 }

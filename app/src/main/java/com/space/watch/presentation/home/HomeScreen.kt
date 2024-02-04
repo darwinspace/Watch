@@ -1,7 +1,6 @@
 package com.space.watch.presentation.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,10 +56,11 @@ fun HomeScreenPreview() {
                         image = String(),
                         creator = Creator(
                             id = String(),
-                            name = "Video Creator",
+                            name = "Creator",
                             description = String(),
                             image = String(),
-                            cover = String()
+                            cover = String(),
+                            verified = true
                         ),
                         size = VideoSize(1920, 1080),
                         duration = 0
@@ -97,8 +97,18 @@ fun HomeScreen(
                 )
             }
 
+            HomeState.Wait -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
             HomeState.Empty -> Unit
-            HomeState.Wait -> Unit
         }
     }
 }
@@ -161,7 +171,7 @@ private fun HomeScreenTopBar() {
             }
         }
 
-        Divider(
+        HorizontalDivider(
             thickness = 2.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
         )

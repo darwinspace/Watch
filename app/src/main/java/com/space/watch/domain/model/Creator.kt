@@ -5,5 +5,6 @@ data class Creator(
     val name: String,
     val description: String,
     val image: String,
-    val cover: String
+    val cover: String,
+    val verified: Boolean
 )

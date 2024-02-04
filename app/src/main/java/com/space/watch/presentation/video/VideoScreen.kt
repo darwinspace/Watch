@@ -3,7 +3,7 @@ package com.space.watch.presentation.video
 import android.widget.VideoView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Verified
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,10 +59,11 @@ fun VideoScreenPreview() {
                     image = String(),
                     creator = Creator(
                         id = String(),
-                        name = "Video Creator",
+                        name = "Creator",
                         description = String(),
                         image = String(),
-                        cover = String()
+                        cover = String(),
+                        verified = true
                     ),
                     size = VideoSize(1920, 1080),
                     duration = 0
@@ -90,8 +92,18 @@ fun VideoScreen(
                     )
                 }
 
-                VideoState.Empty -> {}
-                VideoState.Wait -> {}
+                VideoState.Wait -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                VideoState.Empty -> Unit
             }
         }
 
@@ -128,9 +140,12 @@ fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(12.dp)) {
         VideoTitle(video.title)
 
-        VideoCreator(video.creator) {
-            onVideoCreatorClick(video.creator.id)
-        }
+        VideoCreator(
+            creator = video.creator,
+            onClick = {
+                onVideoCreatorClick(video.creator.id)
+            }
+        )
 
         VideoDescription(video)
     }
@@ -160,32 +175,40 @@ private fun VideoTitle(title: String) {
 
 @Composable
 private fun VideoCreator(creator: Creator, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .clip(shape = MaterialTheme.shapes.large)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        onClick = onClick
     ) {
-        VideoCreatorImage(creator)
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            VideoCreatorImage(creator.image)
 
-        VideoCreatorName(creator)
+            VideoCreatorName(creator.name)
 
-        Icon(
-            imageVector = Icons.Outlined.Verified,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
+            if (creator.verified) {
+                VideoCreatorVerifiedIcon()
+            }
+        }
     }
 }
 
 @Composable
-private fun RowScope.VideoCreatorName(creator: Creator) {
+fun VideoCreatorVerifiedIcon() {
+    Icon(
+        imageVector = Icons.Outlined.Verified,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Composable
+private fun RowScope.VideoCreatorName(name: String) {
     Text(
-        modifier = Modifier.Companion
-            .weight(1f)
-            .padding(horizontal = 12.dp),
-        text = creator.name,
+        modifier = Modifier.weight(1f),
+        text = name,
         style = TextStyle(
             fontSize = 16.sp,
             lineHeight = 24.sp,
@@ -197,7 +220,7 @@ private fun RowScope.VideoCreatorName(creator: Creator) {
 }
 
 @Composable
-private fun VideoCreatorImage(creator: Creator) {
+private fun VideoCreatorImage(image: String) {
     Box(
         modifier = Modifier
             .clip(shape = CircleShape)
@@ -211,7 +234,7 @@ private fun VideoCreatorImage(creator: Creator) {
             modifier = Modifier
                 .clip(shape = CircleShape)
                 .size(32.dp),
-            model = creator.image,
+            model = image,
             contentDescription = null
         )
     }
