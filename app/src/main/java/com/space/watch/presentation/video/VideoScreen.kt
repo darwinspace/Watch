@@ -1,6 +1,5 @@
 package com.space.watch.presentation.video
 
-import android.content.res.Configuration
 import android.widget.VideoView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -46,7 +45,7 @@ import com.space.watch.domain.model.Video
 import com.space.watch.domain.model.VideoSize
 import com.space.watch.ui.theme.WatchTheme
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview
 @Composable
 fun VideoScreenPreview() {
     WatchTheme {
