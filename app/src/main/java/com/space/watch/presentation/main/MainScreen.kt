@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.space.watch.presentation.create_video.CreateVideoScreen
+import com.space.watch.presentation.create_video.CreateVideoViewModel
 import com.space.watch.presentation.creator.CreatorScreen
 import com.space.watch.presentation.creator.CreatorViewModel
 import com.space.watch.presentation.home.HomeScreen
@@ -97,7 +98,30 @@ fun MainScreen() {
         }
 
         composable(route = Destination.CreateVideo) {
-            CreateVideoScreen(onBackButtonClick = navController::popBackStack)
+            val viewModel = viewModel<CreateVideoViewModel>()
+            val videoTitle by viewModel.videoTitle.collectAsState()
+            val videoDescription by viewModel.videoDescription.collectAsState()
+            val videoUri by viewModel.videoUri.collectAsState()
+            val videoSize by viewModel.videoSize.collectAsState()
+            val videoImageUri by viewModel.videoImageUri.collectAsState()
+            val videoImageSize by viewModel.videoImageSize.collectAsState()
+
+            CreateVideoScreen(
+                videoTitle = videoTitle,
+                onVideoTitleChange = viewModel::onVideoTitleChange,
+                videoDescription = videoDescription,
+                onVideoDescriptionChange = viewModel::onVideoDescriptionChange,
+                videoUri = videoUri,
+                onVideoSelected = viewModel::onVideoSelected,
+                videoSize = videoSize,
+                onVideoSizeChange = viewModel::onVideoSizeChange,
+                videoImageUri = videoImageUri,
+                videoImageSize = videoImageSize,
+                onVideoImageSizeChange = viewModel::onVideoImageSizeChange,
+                onVideoImageSelected = viewModel::onVideoImageSelected,
+                onBackButtonClick = navController::popBackStack,
+                onCreateVideoClick = viewModel::onCreateVideoClick
+            )
         }
     }
 }
