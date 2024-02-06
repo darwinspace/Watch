@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
+import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.Video
-import com.space.watch.domain.model.VideoSize
 import com.space.watch.ui.theme.WatchTheme
 
 @Preview
@@ -43,7 +43,9 @@ fun VideoPreview() {
                 id = String(),
                 title = "Video",
                 description = "Description",
+                size = Size(1920, 1080),
                 image = String(),
+                imageSize = Size(1920, 1080),
                 creator = Creator(
                     id = String(),
                     name = "Creator",
@@ -52,7 +54,6 @@ fun VideoPreview() {
                     cover = String(),
                     verified = true
                 ),
-                size = VideoSize(1920, 1080),
                 duration = 0
             ),
             onCreatorClick = { throw NotImplementedError() },
@@ -73,13 +74,13 @@ fun Video(
     ) {
         Column(
             modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             VideoImage(
                 modifier = Modifier.padding(horizontal = 12.dp),
                 videoImage = video.image,
-                videoSize = video.size
+                videoImageSize = video.imageSize
             )
 
             Row(
@@ -164,7 +165,7 @@ private fun VideoCreatorImage(creatorImage: String, onClick: () -> Unit) {
 }
 
 @Composable
-private fun VideoImage(modifier: Modifier, videoImage: String, videoSize: VideoSize) {
+private fun VideoImage(modifier: Modifier, videoImage: String, videoImageSize: Size) {
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
@@ -176,7 +177,7 @@ private fun VideoImage(modifier: Modifier, videoImage: String, videoSize: VideoS
         AsyncImage(
             modifier = Modifier
                 .clip(shape = MaterialTheme.shapes.medium)
-                .aspectRatio(ratio = videoSize.width.toFloat() / videoSize.height.toFloat())
+                .aspectRatio(ratio = videoImageSize.width.toFloat() / videoImageSize.height.toFloat())
                 .fillMaxWidth(),
             model = videoImage,
             contentDescription = null

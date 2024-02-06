@@ -4,4 +4,5 @@ object Destination {
     const val Home = "Home"
     const val Video = "Video"
     const val Creator = "Creator"
+    const val CreateVideo = "CreateVideo"
 }

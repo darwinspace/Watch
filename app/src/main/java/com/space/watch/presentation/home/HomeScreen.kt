@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
+import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.Video
-import com.space.watch.domain.model.VideoSize
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
@@ -53,7 +53,9 @@ fun HomeScreenPreview() {
                         id = String(),
                         title = "Video",
                         description = "Description",
+                        size = Size(1920, 1080),
                         image = String(),
+                        imageSize = Size(1920, 1080),
                         creator = Creator(
                             id = String(),
                             name = "Creator",
@@ -62,7 +64,6 @@ fun HomeScreenPreview() {
                             cover = String(),
                             verified = true
                         ),
-                        size = VideoSize(1920, 1080),
                         duration = 0
                     )
                 }
@@ -74,6 +75,7 @@ fun HomeScreenPreview() {
 @Composable
 fun HomeScreen(
     state: HomeState,
+    onCreateVideoClick: () -> Unit = { },
     onVideoCreatorClick: (String) -> Unit = { },
     onVideoClick: (String) -> Unit = { }
 ) {
@@ -82,7 +84,7 @@ fun HomeScreen(
             HomeScreenTopBar()
         },
         floatingActionButton = {
-            HomeScreenCreateVideoButton()
+            HomeScreenCreateVideoButton(onCreateVideoClick)
         }
     ) {
         when (state) {
@@ -114,10 +116,10 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreenCreateVideoButton() {
+fun HomeScreenCreateVideoButton(onClick: () -> Unit) {
     FloatingActionButton(
         containerColor = MaterialTheme.colorScheme.surface,
-        onClick = { /*TODO*/ }
+        onClick = onClick
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null)
     }
@@ -133,8 +135,8 @@ fun HomeScreenContent(
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(videos) { video ->
             Video(
@@ -154,8 +156,8 @@ fun HomeScreenContent(
 @Composable
 private fun HomeScreenTopBar() {
     Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Surface {
             Row(

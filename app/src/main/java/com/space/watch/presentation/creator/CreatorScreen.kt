@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
+import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.Video
-import com.space.watch.domain.model.VideoSize
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
@@ -63,7 +63,9 @@ fun CreatorScreenPreview() {
                         id = String(),
                         title = "Video",
                         description = "Description",
+                        size = Size(1920, 1080),
                         image = String(),
+                        imageSize = Size(1920, 1080),
                         creator = Creator(
                             id = String(),
                             name = "Video Creator",
@@ -72,7 +74,6 @@ fun CreatorScreenPreview() {
                             cover = String(),
                             verified = true,
                         ),
-                        size = VideoSize(1920, 1080),
                         duration = 0
                     )
                 }
@@ -142,8 +143,8 @@ private fun CreatorScreenContent(
         item {
             Column(
                 modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 CreatorHeader(creator)
 
@@ -156,8 +157,8 @@ private fun CreatorScreenContent(
         item {
             Row(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     modifier = Modifier.weight(1f),
@@ -174,7 +175,7 @@ private fun CreatorScreenContent(
                 ) {
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        text = "10",
+                        text = videos.size.toString(),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

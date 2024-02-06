@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.space.watch.presentation.create_video.CreateVideoScreen
 import com.space.watch.presentation.creator.CreatorScreen
 import com.space.watch.presentation.creator.CreatorViewModel
 import com.space.watch.presentation.home.HomeScreen
@@ -29,6 +30,9 @@ fun MainScreen() {
             val state by viewModel.content.collectAsState()
             HomeScreen(
                 state = state,
+                onCreateVideoClick = {
+                    navController.navigate(route = Destination.CreateVideo)
+                },
                 onVideoCreatorClick = {
                     navController.navigate(route = "${Destination.Creator}/$it")
                 },
@@ -58,9 +62,7 @@ fun MainScreen() {
 
             VideoScreen(
                 state = state,
-                onBackButtonClick = {
-                    navController.popBackStack()
-                },
+                onBackButtonClick = navController::popBackStack,
                 onVideoCreatorClick = {
                     navController.navigate(route = "${Destination.Creator}/$it")
                 }
@@ -87,13 +89,15 @@ fun MainScreen() {
 
             CreatorScreen(
                 state = state,
-                onBackButtonClick = {
-                    navController.popBackStack()
-                },
+                onBackButtonClick = navController::popBackStack,
                 onVideoClick = {
                     navController.navigate(route = "${Destination.Video}/$it")
                 }
             )
+        }
+
+        composable(route = Destination.CreateVideo) {
+            CreateVideoScreen(onBackButtonClick = navController::popBackStack)
         }
     }
 }

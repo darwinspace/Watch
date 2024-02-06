@@ -42,8 +42,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
+import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.Video
-import com.space.watch.domain.model.VideoSize
 import com.space.watch.ui.theme.WatchTheme
 
 @Preview
@@ -56,7 +56,9 @@ fun VideoScreenPreview() {
                     id = String(),
                     title = "Video",
                     description = "Description",
+                    size = Size(1920, 1080),
                     image = String(),
+                    imageSize = Size(1920, 1080),
                     creator = Creator(
                         id = String(),
                         name = "Creator",
@@ -65,7 +67,6 @@ fun VideoScreenPreview() {
                         cover = String(),
                         verified = true
                     ),
-                    size = VideoSize(1920, 1080),
                     duration = 0
                 )
             )

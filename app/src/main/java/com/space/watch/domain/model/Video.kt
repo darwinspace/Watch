@@ -4,8 +4,9 @@ data class Video(
     val id: String,
     val title: String,
     val description: String,
+    val size: Size,
     val image: String,
+    val imageSize: Size,
     val creator: Creator,
-    val size: VideoSize,
     val duration: Long
 )
