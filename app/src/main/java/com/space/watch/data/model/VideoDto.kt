@@ -7,9 +7,11 @@ data class VideoDto(
     val id: String = String(),
     val title: String = String(),
     val description: String = String(),
+    val content: String = String(),
     val size: Size = Size(),
     val image: String = String(),
     val imageSize: Size = Size(),
+    val creatorId: String = String(),
     val creator: CreatorDto = CreatorDto(),
     val duration: Long = 0
 ) {
