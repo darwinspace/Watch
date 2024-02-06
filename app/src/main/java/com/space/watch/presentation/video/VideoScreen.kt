@@ -56,6 +56,7 @@ fun VideoScreenPreview() {
                     id = String(),
                     title = "Video",
                     description = "Description",
+                    content = String(),
                     size = Size(1920, 1080),
                     image = String(),
                     imageSize = Size(1920, 1080),
@@ -281,6 +282,10 @@ fun VideoContent(video: Video) {
                 .fillMaxWidth(),
             factory = {
                 VideoView(it)
+            },
+            update = {
+                it.setVideoPath(video.content)
+                it.start()
             }
         )
     }

@@ -53,6 +53,7 @@ fun HomeScreenPreview() {
                         id = String(),
                         title = "Video",
                         description = "Description",
+                        content = String(),
                         size = Size(1920, 1080),
                         image = String(),
                         imageSize = Size(1920, 1080),

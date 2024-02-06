@@ -20,6 +20,7 @@ data class VideoDto(
             id = id,
             title = title,
             description = description,
+            content = content,
             size = size,
             image = image,
             imageSize = imageSize,
