@@ -28,7 +28,7 @@ fun MainScreen() {
     NavHost(navController = navController, startDestination = Destination.Home) {
         composable(route = Destination.Home) {
             val viewModel = viewModel<HomeViewModel>()
-            val state by viewModel.content.collectAsState()
+            val state by viewModel.state.collectAsState()
             HomeScreen(
                 state = state,
                 onCreateVideoClick = {
@@ -52,7 +52,7 @@ fun MainScreen() {
             )
         ) { backStackEntry ->
             val viewModel = viewModel<VideoViewModel>()
-            val state by viewModel.content.collectAsState()
+            val state by viewModel.state.collectAsState()
 
             val id = requireNotNull(backStackEntry.arguments)
                 .getString(IdentifierArgumentName)!!
@@ -79,7 +79,7 @@ fun MainScreen() {
             )
         ) { backStackEntry ->
             val viewModel = viewModel<CreatorViewModel>()
-            val state by viewModel.content.collectAsState()
+            val state by viewModel.state.collectAsState()
 
             val id = requireNotNull(backStackEntry.arguments)
                 .getString(IdentifierArgumentName)!!
@@ -99,14 +99,17 @@ fun MainScreen() {
 
         composable(route = Destination.CreateVideo) {
             val viewModel = viewModel<CreateVideoViewModel>()
+            val state by viewModel.state.collectAsState()
             val videoTitle by viewModel.videoTitle.collectAsState()
             val videoDescription by viewModel.videoDescription.collectAsState()
             val videoUri by viewModel.videoUri.collectAsState()
             val videoSize by viewModel.videoSize.collectAsState()
             val videoImageUri by viewModel.videoImageUri.collectAsState()
             val videoImageSize by viewModel.videoImageSize.collectAsState()
+            val isCreateVideoButtonEnabled by viewModel.isCreateVideoButtonEnabled.collectAsState()
 
             CreateVideoScreen(
+                state = state,
                 videoTitle = videoTitle,
                 onVideoTitleChange = viewModel::onVideoTitleChange,
                 videoDescription = videoDescription,
@@ -116,9 +119,10 @@ fun MainScreen() {
                 videoSize = videoSize,
                 onVideoSizeChange = viewModel::onVideoSizeChange,
                 videoImageUri = videoImageUri,
+                onVideoImageSelected = viewModel::onVideoImageSelected,
                 videoImageSize = videoImageSize,
                 onVideoImageSizeChange = viewModel::onVideoImageSizeChange,
-                onVideoImageSelected = viewModel::onVideoImageSelected,
+                isCreateVideoButtonEnabled = isCreateVideoButtonEnabled,
                 onBackButtonClick = navController::popBackStack,
                 onCreateVideoClick = viewModel::onCreateVideoClick
             )

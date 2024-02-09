@@ -14,15 +14,15 @@ class CreatorViewModel(
     private val creatorRepository: CreatorRepository = CreatorRepositoryFirebaseImplementation(),
     private val videoRepository: VideoRepository = VideoRepositoryFirebaseImplementation()
 ) : ViewModel() {
-    private val _content = MutableStateFlow<CreatorState>(CreatorState.Empty)
-    val content = _content.asStateFlow()
+    private val _state = MutableStateFlow<CreatorState>(CreatorState.Empty)
+    val state = _state.asStateFlow()
 
     fun getContent(id: String) {
         viewModelScope.launch {
-            _content.value = CreatorState.Wait
+            _state.value = CreatorState.Wait
             val creator = creatorRepository.getCreatorById(id)
             val videos = videoRepository.getAllVideosByCreatorId(id)
-            _content.value = CreatorState.Content(creator, videos)
+            _state.value = CreatorState.Content(creator, videos)
         }
     }
 }

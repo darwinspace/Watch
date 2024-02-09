@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VideoOnly
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -41,6 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -55,16 +59,19 @@ import com.space.watch.util.getVideoSize
 fun CreateVideoScreenPreview() {
     WatchTheme {
         CreateVideoScreen(
+            state = CreateVideoState.Empty,
             videoTitle = String(),
             onVideoTitleChange = { },
             videoDescription = String(),
-            onVideoDescriptionChange = { }
+            onVideoDescriptionChange = { },
+            isCreateVideoButtonEnabled = true
         )
     }
 }
 
 @Composable
 fun CreateVideoScreen(
+    state: CreateVideoState,
     videoTitle: String,
     onVideoTitleChange: (String) -> Unit,
     videoDescription: String,
@@ -77,6 +84,7 @@ fun CreateVideoScreen(
     onVideoImageSelected: (Uri?) -> Unit = { },
     videoImageSize: Size? = null,
     onVideoImageSizeChange: (Size?) -> Unit = { },
+    isCreateVideoButtonEnabled: Boolean,
     onBackButtonClick: () -> Unit = { },
     onCreateVideoClick: () -> Unit = { }
 ) {
@@ -102,6 +110,8 @@ fun CreateVideoScreen(
     Scaffold(
         topBar = {
             CreateVideoScreenTopBar(
+                state = state,
+                isCreateVideoButtonEnabled = isCreateVideoButtonEnabled,
                 onBackButtonClick = onBackButtonClick,
                 onCreateVideoClick = onCreateVideoClick
             )
@@ -163,6 +173,10 @@ private fun VideoDescriptionTextField(
         onValueChange = onVideoDescriptionChange,
         textStyle = MaterialTheme.typography.bodySmall,
         shape = MaterialTheme.shapes.small,
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Done
+        ),
         minLines = 2,
         placeholder = {
             Text(
@@ -184,6 +198,10 @@ private fun VideoTitleTextField(
         onValueChange = onVideoTitleChange,
         textStyle = MaterialTheme.typography.bodySmall,
         shape = MaterialTheme.shapes.small,
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Next
+        ),
         placeholder = {
             Text(
                 text = "Title",
@@ -314,7 +332,12 @@ private fun VideoImage(imageUri: Uri?, imageSize: Size?) {
 }
 
 @Composable
-private fun CreateVideoScreenTopBar(onBackButtonClick: () -> Unit, onCreateVideoClick: () -> Unit) {
+private fun CreateVideoScreenTopBar(
+    state: CreateVideoState,
+    isCreateVideoButtonEnabled: Boolean,
+    onBackButtonClick: () -> Unit,
+    onCreateVideoClick: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -341,11 +364,16 @@ private fun CreateVideoScreenTopBar(onBackButtonClick: () -> Unit, onCreateVideo
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(40.dp)
-                    )
+                    AnimatedVisibility(
+                        visible = state is CreateVideoState.Wait
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
 
                     Button(
+                        enabled = isCreateVideoButtonEnabled,
                         border = BorderStroke(
                             width = 2.dp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),

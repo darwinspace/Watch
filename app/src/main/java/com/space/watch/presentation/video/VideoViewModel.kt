@@ -11,14 +11,14 @@ import kotlinx.coroutines.launch
 class VideoViewModel(
     private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
 ) : ViewModel() {
-    private val _content = MutableStateFlow<VideoState>(VideoState.Empty)
-    val content = _content.asStateFlow()
+    private val _state = MutableStateFlow<VideoState>(VideoState.Empty)
+    val state = _state.asStateFlow()
 
     fun getContent(id: String) {
         viewModelScope.launch {
-            _content.value = VideoState.Wait
+            _state.value = VideoState.Wait
             val video = repository.getVideoById(id)
-            _content.value = VideoState.Content(video)
+            _state.value = VideoState.Content(video)
         }
     }
 }

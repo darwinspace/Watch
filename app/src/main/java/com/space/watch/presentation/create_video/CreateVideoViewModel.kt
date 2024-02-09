@@ -8,12 +8,18 @@ import com.space.watch.domain.model.Size
 import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class CreateVideoViewModel(
     private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
 ) : ViewModel() {
+    private val _state = MutableStateFlow<CreateVideoState>(CreateVideoState.Empty)
+    val state = _state.asStateFlow()
+
     private val _videoTitle = MutableStateFlow(String())
     val videoTitle = _videoTitle.asStateFlow()
 
@@ -31,6 +37,16 @@ class CreateVideoViewModel(
 
     private val _videoImageSize = MutableStateFlow<Size?>(null)
     val videoImageSize = _videoImageSize.asStateFlow()
+
+    val isCreateVideoButtonEnabled = combine(
+        videoTitle, videoUri, videoSize, videoImageUri, videoImageSize
+    ) { videoTitle, video, videoSize, videoImage, videoImageSize ->
+        videoTitle.isNotEmpty() && video != null && videoImage != null && videoSize != null && videoImageSize != null
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = false
+    )
 
     fun onVideoTitleChange(value: String) {
         _videoTitle.value = value
@@ -62,6 +78,7 @@ class CreateVideoViewModel(
             val videoSize = _videoSize.value ?: return@launch
             val videoImageUri = _videoImageUri.value ?: return@launch
             val videoImageSize = _videoImageSize.value ?: return@launch
+            _state.value = CreateVideoState.Wait
             repository.uploadVideo(
                 videoTitle = _videoTitle.value,
                 videoDescription = _videoDescription.value,
@@ -70,6 +87,7 @@ class CreateVideoViewModel(
                 videoImageUri = videoImageUri,
                 videoImageSize = videoImageSize
             )
+            _state.value = CreateVideoState.Empty
         }
     }
 }
