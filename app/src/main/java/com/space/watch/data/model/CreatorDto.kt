@@ -6,9 +6,9 @@ data class CreatorDto(
     val id: String = String(),
     val name: String = String(),
     val description: String = String(),
-    val image: String = String(),
-    val cover: String = String(),
-    val verified: Boolean = true
+    val image: String? = null,
+    val cover: String? = null,
+    val verified: Boolean = false
 ) {
     fun toCreator(): Creator {
         return Creator(

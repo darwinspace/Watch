@@ -132,11 +132,10 @@ fun CreateVideoScreen(
                 }
             )
 
-            videoUri?.let { uri ->
-                videoSize?.let { size ->
-                    Video(uri, size)
-                }
-            }
+            Video(
+                videoUri = videoUri,
+                videoSize = videoSize
+            )
 
             SelectVideoImageButton(
                 onClick = {
@@ -145,11 +144,10 @@ fun CreateVideoScreen(
                 }
             )
 
-            videoImageUri?.let { uri ->
-                videoImageSize?.let { size ->
-                    VideoImage(uri, size)
-                }
-            }
+            VideoImage(
+                imageUri = videoImageUri,
+                imageSize = videoImageSize
+            )
         }
     }
 }
@@ -225,7 +223,9 @@ private fun SelectVideoButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun Video(uri: Uri, size: Size) {
+private fun Video(videoUri: Uri?, videoSize: Size?) {
+    val video = videoUri ?: return
+    val size = videoSize ?: return
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
@@ -242,7 +242,7 @@ private fun Video(uri: Uri, size: Size) {
                     VideoView(it)
                 },
                 update = {
-                    it.setVideoURI(uri)
+                    it.setVideoURI(video)
                     it.start()
                 }
             )
@@ -286,7 +286,9 @@ private fun SelectVideoImageButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun VideoImage(imageUri: Uri, size: Size) {
+private fun VideoImage(imageUri: Uri?, imageSize: Size?) {
+    val image = imageUri ?: return
+    val size = imageSize ?: return
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
@@ -297,7 +299,7 @@ private fun VideoImage(imageUri: Uri, size: Size) {
         Column {
             AsyncImage(
                 modifier = Modifier.fillMaxWidth(),
-                model = imageUri,
+                model = image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

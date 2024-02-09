@@ -142,7 +142,7 @@ private fun RowScope.VideoTitle(title: String) {
 }
 
 @Composable
-private fun VideoCreatorImage(creatorImage: String, onClick: () -> Unit) {
+private fun VideoCreatorImage(creatorImage: String?, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(4.dp)

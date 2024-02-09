@@ -3,19 +3,17 @@ package com.space.watch.presentation.create_video
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.space.watch.data.model.CreatorDto
-import com.space.watch.data.model.VideoDto
+import com.space.watch.data.repository.VideoRepositoryFirebaseImplementation
 import com.space.watch.domain.model.Size
+import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
-class CreateVideoViewModel : ViewModel() {
+class CreateVideoViewModel(
+    private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
+) : ViewModel() {
     private val _videoTitle = MutableStateFlow(String())
     val videoTitle = _videoTitle.asStateFlow()
 
@@ -58,42 +56,20 @@ class CreateVideoViewModel : ViewModel() {
         _videoImageSize.value = value
     }
 
-    private val database = Firebase.firestore
-    private val storage = FirebaseStorage.getInstance()
-
     fun onCreateVideoClick() {
         viewModelScope.launch(Dispatchers.IO) {
-            _videoUri.value?.let { videoUri ->
-                _videoImageUri.value?.let { imageUri ->
-                    val videosCollectionRef = database.collection("videos")
-                    val videosStorageRef = storage.reference.child("videos")
-                    val videoDocumentRef = videosCollectionRef.document()
-                    val id = videoDocumentRef.id
-                    val videoStorageRef = videosStorageRef.child("$id/video")
-                    val videoImageRef = videosStorageRef.child("$id/image")
-
-                    val videoTaskSnapshot = videoStorageRef.putFile(videoUri).await()
-                    val videoUrl = videoStorageRef.downloadUrl.await()
-                    val videoImageTaskSnapshot = videoImageRef.putFile(imageUri).await()
-                    val videoImageUrl = videoImageRef.downloadUrl.await()
-                    val videoDto = VideoDto(
-                        id = id,
-                        title = _videoTitle.value,
-                        description = _videoDescription.value,
-                        content = videoUrl.toString(),
-                        size = _videoSize.value!!,
-                        image = videoImageUrl.toString(),
-                        imageSize = _videoImageSize.value!!,
-                        creatorId = "NnbXZGVizfoTdos4HCdh",
-                        creator = CreatorDto(
-                            id = "NnbXZGVizfoTdos4HCdh",
-                            name = "Creator"
-                        )
-                    )
-
-                    videoDocumentRef.set(videoDto)
-                }
-            }
+            val videoUri = _videoUri.value ?: return@launch
+            val videoSize = _videoSize.value ?: return@launch
+            val videoImageUri = _videoImageUri.value ?: return@launch
+            val videoImageSize = _videoImageSize.value ?: return@launch
+            repository.uploadVideo(
+                videoTitle = _videoTitle.value,
+                videoDescription = _videoDescription.value,
+                videoUri = videoUri,
+                videoSize = videoSize,
+                videoImageUri = videoImageUri,
+                videoImageSize = videoImageSize
+            )
         }
     }
 }

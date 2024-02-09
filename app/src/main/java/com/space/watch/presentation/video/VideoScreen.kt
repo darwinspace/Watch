@@ -149,7 +149,7 @@ fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
             }
         )
 
-        VideoDescription(video)
+        VideoDescription(video.description)
     }
 }
 
@@ -222,7 +222,7 @@ private fun RowScope.VideoCreatorName(name: String) {
 }
 
 @Composable
-private fun VideoCreatorImage(image: String) {
+private fun VideoCreatorImage(image: String?) {
     Box(
         modifier = Modifier
             .clip(shape = CircleShape)
@@ -243,27 +243,29 @@ private fun VideoCreatorImage(image: String) {
 }
 
 @Composable
-private fun VideoDescription(video: Video) {
-    Surface(
-        modifier = Modifier.padding(12.dp),
-        shape = MaterialTheme.shapes.small,
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        )
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            text = video.description,
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 24.sp,
-                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                fontWeight = FontWeight(500)
+private fun VideoDescription(description: String) {
+    if (description.isNotBlank()) {
+        Surface(
+            modifier = Modifier.padding(12.dp),
+            shape = MaterialTheme.shapes.small,
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
             )
-        )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                text = description,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.mono_medium)),
+                    fontWeight = FontWeight(500)
+                )
+            )
+        }
     }
 }
 

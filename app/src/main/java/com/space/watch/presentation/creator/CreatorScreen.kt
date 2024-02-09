@@ -191,25 +191,27 @@ private fun CreatorScreenContent(
 
 @Composable
 private fun CreatorDescription(description: String) {
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        )
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            text = description,
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 24.sp,
-                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                fontWeight = FontWeight(500)
+    if (description.isNotBlank()) {
+        Surface(
+            shape = MaterialTheme.shapes.small,
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
             )
-        )
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                text = description,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.mono_medium)),
+                    fontWeight = FontWeight(500)
+                )
+            )
+        }
     }
 }
 
@@ -238,33 +240,33 @@ private fun CreatorHeader(creator: Creator) {
         ) {
             CreatorImage(creator.image)
 
-            if (creator.verified) {
-                CreatorVerifiedIcon()
-            }
+            CreatorVerifiedIcon(creator.verified)
         }
     }
 }
 
 @Composable
-private fun CreatorVerifiedIcon() {
-    Surface(
-        shape = CircleShape,
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        )
-    ) {
-        Icon(
-            modifier = Modifier.padding(4.dp),
-            imageVector = Icons.Outlined.Verified,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
+private fun CreatorVerifiedIcon(verified: Boolean) {
+    if (verified) {
+        Surface(
+            shape = CircleShape,
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
+        ) {
+            Icon(
+                modifier = Modifier.padding(4.dp),
+                imageVector = Icons.Outlined.Verified,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 
 @Composable
-private fun CreatorImage(image: String) {
+private fun CreatorImage(image: String?) {
     Surface(
         shape = CircleShape,
         border = BorderStroke(
@@ -283,7 +285,7 @@ private fun CreatorImage(image: String) {
 }
 
 @Composable
-private fun CreatorCover(cover: String) {
+private fun CreatorCover(cover: String?) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
