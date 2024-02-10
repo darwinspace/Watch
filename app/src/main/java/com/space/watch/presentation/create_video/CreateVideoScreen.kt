@@ -59,32 +59,32 @@ import com.space.watch.util.getVideoSize
 fun CreateVideoScreenPreview() {
     WatchTheme {
         CreateVideoScreen(
-            state = CreateVideoState.Empty,
-            videoTitle = String(),
+            videoTitle = { String() },
             onVideoTitleChange = { },
-            videoDescription = String(),
+            videoDescription = { String() },
             onVideoDescriptionChange = { },
-            isCreateVideoButtonEnabled = true
+            isCreateVideoButtonEnabled = { true },
+            isVideoUploading = { true },
         )
     }
 }
 
 @Composable
 fun CreateVideoScreen(
-    state: CreateVideoState,
-    videoTitle: String,
+    videoTitle: () -> String,
     onVideoTitleChange: (String) -> Unit,
-    videoDescription: String,
+    videoDescription: () -> String,
     onVideoDescriptionChange: (String) -> Unit,
-    videoUri: Uri? = null,
+    videoUri: () -> Uri? = { null },
     onVideoSelected: (Uri?) -> Unit = { },
-    videoSize: Size? = null,
+    videoSize: () -> Size? = { null },
     onVideoSizeChange: (Size?) -> Unit = { },
-    videoImageUri: Uri? = null,
+    videoImageUri: () -> Uri? = { null },
     onVideoImageSelected: (Uri?) -> Unit = { },
-    videoImageSize: Size? = null,
+    videoImageSize: () -> Size? = { null },
     onVideoImageSizeChange: (Size?) -> Unit = { },
-    isCreateVideoButtonEnabled: Boolean,
+    isCreateVideoButtonEnabled: () -> Boolean,
+    isVideoUploading: () -> Boolean,
     onBackButtonClick: () -> Unit = { },
     onCreateVideoClick: () -> Unit = { }
 ) {
@@ -110,8 +110,8 @@ fun CreateVideoScreen(
     Scaffold(
         topBar = {
             CreateVideoScreenTopBar(
-                state = state,
                 isCreateVideoButtonEnabled = isCreateVideoButtonEnabled,
+                isVideoUploading = isVideoUploading,
                 onBackButtonClick = onBackButtonClick,
                 onCreateVideoClick = onCreateVideoClick
             )
@@ -164,12 +164,12 @@ fun CreateVideoScreen(
 
 @Composable
 private fun VideoDescriptionTextField(
-    videoDescription: String,
+    videoDescription: () -> String,
     onVideoDescriptionChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = videoDescription,
+        value = videoDescription(),
         onValueChange = onVideoDescriptionChange,
         textStyle = MaterialTheme.typography.bodySmall,
         shape = MaterialTheme.shapes.small,
@@ -189,12 +189,12 @@ private fun VideoDescriptionTextField(
 
 @Composable
 private fun VideoTitleTextField(
-    videoTitle: String,
+    videoTitle: () -> String,
     onVideoTitleChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = videoTitle,
+        value = videoTitle(),
         onValueChange = onVideoTitleChange,
         textStyle = MaterialTheme.typography.bodySmall,
         shape = MaterialTheme.shapes.small,
@@ -241,9 +241,9 @@ private fun SelectVideoButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun Video(videoUri: Uri?, videoSize: Size?) {
-    val video = videoUri ?: return
-    val size = videoSize ?: return
+private fun Video(videoUri: () -> Uri?, videoSize: () -> Size?) {
+    val video = videoUri() ?: return
+    val size = videoSize() ?: return
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
@@ -257,11 +257,14 @@ private fun Video(videoUri: Uri?, videoSize: Size?) {
                     .aspectRatio(ratio = size.width.toFloat() / size.height.toFloat())
                     .fillMaxWidth(),
                 factory = {
-                    VideoView(it)
+                    VideoView(it).apply {
+                        setOnPreparedListener {
+                            start()
+                        }
+                    }
                 },
                 update = {
                     it.setVideoURI(video)
-                    it.start()
                 }
             )
 
@@ -304,9 +307,9 @@ private fun SelectVideoImageButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun VideoImage(imageUri: Uri?, imageSize: Size?) {
-    val image = imageUri ?: return
-    val size = imageSize ?: return
+private fun VideoImage(imageUri: () -> Uri?, imageSize: () -> Size?) {
+    val image = imageUri() ?: return
+    val size = imageSize() ?: return
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
@@ -333,8 +336,8 @@ private fun VideoImage(imageUri: Uri?, imageSize: Size?) {
 
 @Composable
 private fun CreateVideoScreenTopBar(
-    state: CreateVideoState,
-    isCreateVideoButtonEnabled: Boolean,
+    isCreateVideoButtonEnabled: () -> Boolean,
+    isVideoUploading: () -> Boolean,
     onBackButtonClick: () -> Unit,
     onCreateVideoClick: () -> Unit
 ) {
@@ -365,7 +368,7 @@ private fun CreateVideoScreenTopBar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AnimatedVisibility(
-                        visible = state is CreateVideoState.Wait
+                        visible = isVideoUploading()
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(40.dp)
@@ -373,7 +376,7 @@ private fun CreateVideoScreenTopBar(
                     }
 
                     Button(
-                        enabled = isCreateVideoButtonEnabled,
+                        enabled = isCreateVideoButtonEnabled(),
                         border = BorderStroke(
                             width = 2.dp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.1f),

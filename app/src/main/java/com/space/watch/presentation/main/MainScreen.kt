@@ -99,7 +99,6 @@ fun MainScreen() {
 
         composable(route = Destination.CreateVideo) {
             val viewModel = viewModel<CreateVideoViewModel>()
-            val state by viewModel.state.collectAsState()
             val videoTitle by viewModel.videoTitle.collectAsState()
             val videoDescription by viewModel.videoDescription.collectAsState()
             val videoUri by viewModel.videoUri.collectAsState()
@@ -107,22 +106,23 @@ fun MainScreen() {
             val videoImageUri by viewModel.videoImageUri.collectAsState()
             val videoImageSize by viewModel.videoImageSize.collectAsState()
             val isCreateVideoButtonEnabled by viewModel.isCreateVideoButtonEnabled.collectAsState()
+            val isVideoUploading by viewModel.isVideoUploading.collectAsState()
 
             CreateVideoScreen(
-                state = state,
-                videoTitle = videoTitle,
+                videoTitle = { videoTitle },
                 onVideoTitleChange = viewModel::onVideoTitleChange,
-                videoDescription = videoDescription,
+                videoDescription = { videoDescription },
                 onVideoDescriptionChange = viewModel::onVideoDescriptionChange,
-                videoUri = videoUri,
+                videoUri = { videoUri },
                 onVideoSelected = viewModel::onVideoSelected,
-                videoSize = videoSize,
+                videoSize = { videoSize },
                 onVideoSizeChange = viewModel::onVideoSizeChange,
-                videoImageUri = videoImageUri,
+                videoImageUri = { videoImageUri },
                 onVideoImageSelected = viewModel::onVideoImageSelected,
-                videoImageSize = videoImageSize,
+                videoImageSize = { videoImageSize },
                 onVideoImageSizeChange = viewModel::onVideoImageSizeChange,
-                isCreateVideoButtonEnabled = isCreateVideoButtonEnabled,
+                isCreateVideoButtonEnabled = { isCreateVideoButtonEnabled },
+                isVideoUploading = { isVideoUploading },
                 onBackButtonClick = navController::popBackStack,
                 onCreateVideoClick = viewModel::onCreateVideoClick
             )

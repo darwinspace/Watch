@@ -17,9 +17,6 @@ import kotlinx.coroutines.launch
 class CreateVideoViewModel(
     private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
 ) : ViewModel() {
-    private val _state = MutableStateFlow<CreateVideoState>(CreateVideoState.Empty)
-    val state = _state.asStateFlow()
-
     private val _videoTitle = MutableStateFlow(String())
     val videoTitle = _videoTitle.asStateFlow()
 
@@ -48,6 +45,9 @@ class CreateVideoViewModel(
         initialValue = false
     )
 
+    private val _isVideoUploading = MutableStateFlow<Boolean>(false)
+    val isVideoUploading = _isVideoUploading.asStateFlow()
+
     fun onVideoTitleChange(value: String) {
         _videoTitle.value = value
     }
@@ -74,20 +74,16 @@ class CreateVideoViewModel(
 
     fun onCreateVideoClick() {
         viewModelScope.launch(Dispatchers.IO) {
-            val videoUri = _videoUri.value ?: return@launch
-            val videoSize = _videoSize.value ?: return@launch
-            val videoImageUri = _videoImageUri.value ?: return@launch
-            val videoImageSize = _videoImageSize.value ?: return@launch
-            _state.value = CreateVideoState.Wait
+            _isVideoUploading.value = true
             repository.uploadVideo(
-                videoTitle = _videoTitle.value,
-                videoDescription = _videoDescription.value,
-                videoUri = videoUri,
-                videoSize = videoSize,
-                videoImageUri = videoImageUri,
-                videoImageSize = videoImageSize
+                videoTitle = videoTitle.value,
+                videoDescription = videoDescription.value,
+                videoUri = videoUri.value!!,
+                videoSize = videoSize.value!!,
+                videoImageUri = videoImageUri.value!!,
+                videoImageSize = videoImageSize.value!!
             )
-            _state.value = CreateVideoState.Empty
+            _isVideoUploading.value = false
         }
     }
 }
