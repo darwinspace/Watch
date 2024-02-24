@@ -110,7 +110,7 @@ private fun VideoDuration() {
         shape = MaterialTheme.shapes.small,
         border = BorderStroke(
             width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
+            color = MaterialTheme.colorScheme.onSurface.copy(0.1f)
         )
     ) {
         Text(

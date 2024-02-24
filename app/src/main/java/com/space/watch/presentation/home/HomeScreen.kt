@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -119,7 +120,11 @@ fun HomeScreen(
 @Composable
 fun HomeScreenCreateVideoButton(onClick: () -> Unit) {
     FloatingActionButton(
-        containerColor = MaterialTheme.colorScheme.surface,
+        modifier = Modifier.padding(8.dp),
+        containerColor = MaterialTheme.colorScheme.primary,
+        elevation = FloatingActionButtonDefaults.elevation(
+            defaultElevation = 0.dp
+        ),
         onClick = onClick
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null)
@@ -135,7 +140,12 @@ fun HomeScreenContent(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = PaddingValues(
+            start = 12.dp,
+            top = 12.dp,
+            end = 12.dp,
+            bottom = 80.dp
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {

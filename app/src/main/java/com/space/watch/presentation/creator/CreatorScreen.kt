@@ -19,9 +19,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -118,10 +119,16 @@ fun CreatorScreen(
             }
         }
 
-        SmallFloatingActionButton(
+        OutlinedIconButton(
             modifier = Modifier.padding(20.dp),
-            containerColor = MaterialTheme.colorScheme.surface,
-            shape = CircleShape,
+            colors = IconButtonDefaults.outlinedIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+            ),
             onClick = onBackButtonClick
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)

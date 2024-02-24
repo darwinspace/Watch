@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -107,6 +108,11 @@ fun MainScreen() {
             val videoImageSize by viewModel.videoImageSize.collectAsState()
             val isCreateVideoButtonEnabled by viewModel.isCreateVideoButtonEnabled.collectAsState()
             val isVideoUploading by viewModel.isVideoUploading.collectAsState()
+            val onCreateVideoClick = remember {
+                {
+                    viewModel.onCreateVideoClick(onSuccess = navController::popBackStack)
+                }
+            }
 
             CreateVideoScreen(
                 videoTitle = { videoTitle },
@@ -124,7 +130,7 @@ fun MainScreen() {
                 isCreateVideoButtonEnabled = { isCreateVideoButtonEnabled },
                 isVideoUploading = { isVideoUploading },
                 onBackButtonClick = navController::popBackStack,
-                onCreateVideoClick = viewModel::onCreateVideoClick
+                onCreateVideoClick = onCreateVideoClick
             )
         }
     }

@@ -22,15 +22,17 @@ import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -57,9 +59,9 @@ fun VideoScreenPreview() {
                     title = "Video",
                     description = "Description",
                     content = String(),
-                    size = Size(1920, 1080),
+                    size = Size(1280, 720),
                     image = String(),
-                    imageSize = Size(1920, 1080),
+                    imageSize = Size(),
                     creator = Creator(
                         id = String(),
                         name = "Creator",
@@ -109,10 +111,16 @@ fun VideoScreen(
             }
         }
 
-        SmallFloatingActionButton(
-            modifier = Modifier.padding(12.dp),
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.surface,
+        OutlinedIconButton(
+            modifier = Modifier.padding(20.dp),
+            colors = IconButtonDefaults.outlinedIconButtonColors(
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
+                contentColor = Color.White
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = Color.White.copy(alpha = 0.1f),
+            ),
             onClick = onBackButtonClick
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)

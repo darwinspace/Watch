@@ -10,10 +10,13 @@ import com.space.watch.data.model.CreatorDto
 import com.space.watch.data.model.VideoDto
 import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.Video
+import com.space.watch.domain.repository.CreatorRepository
 import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.tasks.await
 
-class VideoRepositoryFirebaseImplementation : VideoRepository {
+class VideoRepositoryFirebaseImplementation(
+    private val creatorRepository: CreatorRepository = CreatorRepositoryFirebaseImplementation()
+) : VideoRepository {
     private val database = Firebase.firestore
     private val storage = FirebaseStorage.getInstance()
     private val collection = "videos"
@@ -61,14 +64,18 @@ class VideoRepositoryFirebaseImplementation : VideoRepository {
         val id = videoDocumentRef.id
         val videoStorageRef = videosStorageRef.child("$id/video")
         val videoImageRef = videosStorageRef.child("$id/image")
-
         videoStorageRef.putFile(videoUri).await()
         videoImageRef.putFile(videoImageUri).await()
         val videoUrl = videoStorageRef.downloadUrl.await()
         val videoImageUrl = videoImageRef.downloadUrl.await()
+        val creator = creatorRepository.getCreatorById("NnbXZGVizfoTdos4HCdh")
         val creatorDto = CreatorDto(
-            id = "NnbXZGVizfoTdos4HCdh",
-            name = "Creator"
+            id = creator.id,
+            name = creator.name,
+            description = creator.description,
+            image = creator.image,
+            cover = creator.cover,
+            verified = creator.verified
         )
         val videoDto = VideoDto(
             id = id,
@@ -78,10 +85,9 @@ class VideoRepositoryFirebaseImplementation : VideoRepository {
             size = videoSize,
             image = videoImageUrl.toString(),
             imageSize = videoImageSize,
-            creatorId = creatorDto.id,
+            creatorId = creator.id,
             creator = creatorDto
         )
-
         videoDocumentRef.set(videoDto).await()
     }
 }

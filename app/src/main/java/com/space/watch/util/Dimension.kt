@@ -23,7 +23,6 @@ fun Context.getVideoSize(uri: Uri): Size {
     return Size(width, height)
 }
 
-
 fun Context.getImageSize(uri: Uri): Size {
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true

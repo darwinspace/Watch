@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CreateVideoViewModel(
     private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
@@ -45,7 +46,7 @@ class CreateVideoViewModel(
         initialValue = false
     )
 
-    private val _isVideoUploading = MutableStateFlow<Boolean>(false)
+    private val _isVideoUploading = MutableStateFlow(false)
     val isVideoUploading = _isVideoUploading.asStateFlow()
 
     fun onVideoTitleChange(value: String) {
@@ -72,7 +73,7 @@ class CreateVideoViewModel(
         _videoImageSize.value = value
     }
 
-    fun onCreateVideoClick() {
+    fun onCreateVideoClick(onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             _isVideoUploading.value = true
             repository.uploadVideo(
@@ -84,6 +85,9 @@ class CreateVideoViewModel(
                 videoImageSize = videoImageSize.value!!
             )
             _isVideoUploading.value = false
+            withContext(Dispatchers.Main) {
+                onSuccess()
+            }
         }
     }
 }
