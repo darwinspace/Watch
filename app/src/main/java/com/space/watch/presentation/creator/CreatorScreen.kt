@@ -119,20 +119,25 @@ fun CreatorScreen(
             }
         }
 
-        OutlinedIconButton(
-            modifier = Modifier.padding(20.dp),
-            colors = IconButtonDefaults.outlinedIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            border = BorderStroke(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-            ),
-            onClick = onBackButtonClick
-        ) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-        }
+        CreatorScreenBackButton(onBackButtonClick)
+    }
+}
+
+@Composable
+private fun CreatorScreenBackButton(onBackButtonClick: () -> Unit) {
+    OutlinedIconButton(
+        modifier = Modifier.padding(16.dp),
+        colors = IconButtonDefaults.outlinedIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+        ),
+        onClick = onBackButtonClick
+    ) {
+        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
     }
 }
 
@@ -191,9 +196,102 @@ private fun CreatorScreenContent(
         }
 
         items(videos) { video ->
-            Video(video = video, { /*TODO*/ }, onClick = { onVideoClick(video.id) })
+            Video(
+                video = video,
+                onCreatorClick = { /*TODO*/ },
+                onClick = { onVideoClick(video.id) }
+            )
         }
     }
+}
+
+@Composable
+private fun CreatorHeader(creator: Creator) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy((-96 / 2).dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CreatorCover(creator.cover)
+
+        Box(
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            CreatorImage(creator.image)
+
+            CreatorVerifiedIcon(creator.verified)
+        }
+    }
+}
+
+@Composable
+private fun CreatorCover(cover: String?) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .clip(shape = MaterialTheme.shapes.medium)
+                .aspectRatio(ratio = 2f)
+                .fillMaxWidth(),
+            model = cover,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun CreatorImage(image: String?) {
+    Surface(
+        shape = CircleShape,
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        )
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .clip(shape = CircleShape)
+                .size(96.dp),
+            model = image,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun CreatorVerifiedIcon(verified: Boolean) {
+    if (verified) {
+        Surface(
+            shape = CircleShape,
+            border = BorderStroke(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
+        ) {
+            Icon(
+                modifier = Modifier.padding(4.dp),
+                imageVector = Icons.Outlined.Verified,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}
+
+@Composable
+private fun CreatorName(name: String) {
+    Text(
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth(),
+        text = name,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleMedium
+    )
 }
 
 @Composable
@@ -219,94 +317,5 @@ private fun CreatorDescription(description: String) {
                 )
             )
         }
-    }
-}
-
-@Composable
-private fun CreatorName(name: String) {
-    Text(
-        modifier = Modifier
-            .padding(12.dp)
-            .fillMaxWidth(),
-        text = name,
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.titleMedium
-    )
-}
-
-@Composable
-private fun CreatorHeader(creator: Creator) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy((-96 / 2).dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        CreatorCover(creator.cover)
-
-        Box(
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            CreatorImage(creator.image)
-
-            CreatorVerifiedIcon(creator.verified)
-        }
-    }
-}
-
-@Composable
-private fun CreatorVerifiedIcon(verified: Boolean) {
-    if (verified) {
-        Surface(
-            shape = CircleShape,
-            border = BorderStroke(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-            )
-        ) {
-            Icon(
-                modifier = Modifier.padding(4.dp),
-                imageVector = Icons.Outlined.Verified,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        }
-    }
-}
-
-@Composable
-private fun CreatorImage(image: String?) {
-    Surface(
-        shape = CircleShape,
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-        )
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .clip(shape = CircleShape)
-                .size(96.dp),
-            model = image,
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
-private fun CreatorCover(cover: String?) {
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-        )
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .clip(shape = MaterialTheme.shapes.medium)
-                .aspectRatio(ratio = 2f)
-                .fillMaxWidth(),
-            model = cover,
-            contentDescription = null
-        )
     }
 }

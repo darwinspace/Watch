@@ -1,5 +1,7 @@
 package com.space.watch.presentation.main
 
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,7 +29,9 @@ val IdentifierArgumentType = NavType.StringType
 fun MainScreen() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Destination.Home) {
-        composable(route = Destination.Home) {
+        composable(
+            route = Destination.Home
+        ) {
             val viewModel = viewModel<HomeViewModel>()
             val state by viewModel.state.collectAsState()
             HomeScreen(
@@ -50,7 +54,9 @@ fun MainScreen() {
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
                 }
-            )
+            ),
+            enterTransition = { slideInVertically { it } },
+            exitTransition = { slideOutVertically { it } }
         ) { backStackEntry ->
             val viewModel = viewModel<VideoViewModel>()
             val state by viewModel.state.collectAsState()
@@ -77,7 +83,9 @@ fun MainScreen() {
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
                 }
-            )
+            ),
+            enterTransition = { slideInVertically { it } },
+            exitTransition = { slideOutVertically { it } }
         ) { backStackEntry ->
             val viewModel = viewModel<CreatorViewModel>()
             val state by viewModel.state.collectAsState()
@@ -98,7 +106,11 @@ fun MainScreen() {
             )
         }
 
-        composable(route = Destination.CreateVideo) {
+        composable(
+            route = Destination.CreateVideo,
+            enterTransition = { slideInVertically { it } },
+            exitTransition = { slideOutVertically { it } }
+        ) {
             val viewModel = viewModel<CreateVideoViewModel>()
             val videoTitle by viewModel.videoTitle.collectAsState()
             val videoDescription by viewModel.videoDescription.collectAsState()

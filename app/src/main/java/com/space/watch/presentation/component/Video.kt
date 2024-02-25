@@ -105,40 +105,24 @@ fun Video(
 }
 
 @Composable
-private fun VideoDuration() {
+private fun VideoImage(modifier: Modifier, videoImage: String, videoImageSize: Size) {
     Surface(
-        shape = MaterialTheme.shapes.small,
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
             width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(0.1f)
+            color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
         )
     ) {
-        Text(
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            text = "10:00",
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                fontWeight = FontWeight(500)
-            )
+        AsyncImage(
+            modifier = Modifier
+                .clip(shape = MaterialTheme.shapes.medium)
+                .aspectRatio(ratio = videoImageSize.width.toFloat() / videoImageSize.height.toFloat())
+                .fillMaxWidth(),
+            model = videoImage,
+            contentDescription = null
         )
     }
-}
-
-@Composable
-private fun RowScope.VideoTitle(title: String) {
-    Text(
-        modifier = Modifier.weight(1f),
-        text = title,
-        style = TextStyle(
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            fontFamily = FontFamily(Font(R.font.mono_medium)),
-            fontWeight = FontWeight(500)
-        ),
-        maxLines = 1
-    )
 }
 
 @Composable
@@ -166,22 +150,38 @@ private fun VideoCreatorImage(creatorImage: String?, onClick: () -> Unit) {
 }
 
 @Composable
-private fun VideoImage(modifier: Modifier, videoImage: String, videoImageSize: Size) {
+private fun RowScope.VideoTitle(title: String) {
+    Text(
+        modifier = Modifier.weight(1f),
+        text = title,
+        style = TextStyle(
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            fontFamily = FontFamily(Font(R.font.mono_medium)),
+            fontWeight = FontWeight(500)
+        ),
+        maxLines = 1
+    )
+}
+
+@Composable
+private fun VideoDuration() {
     Surface(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.small,
         border = BorderStroke(
             width = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
+            color = MaterialTheme.colorScheme.onSurface.copy(0.1f)
         )
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .clip(shape = MaterialTheme.shapes.medium)
-                .aspectRatio(ratio = videoImageSize.width.toFloat() / videoImageSize.height.toFloat())
-                .fillMaxWidth(),
-            model = videoImage,
-            contentDescription = null
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            text = "10:00",
+            style = TextStyle(
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                fontFamily = FontFamily(Font(R.font.mono_medium)),
+                fontWeight = FontWeight(500)
+            )
         )
     }
 }

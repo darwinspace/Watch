@@ -118,6 +118,90 @@ fun HomeScreen(
 }
 
 @Composable
+private fun HomeScreenTopBar() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Surface {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    HomeScreenTopBarLogo()
+
+                    HomeScreenTopBarTitle()
+                }
+
+                Row {
+                    HomeScreenTopBarSearchButton()
+
+                    HomeScreenTopBarUserButton()
+                }
+            }
+        }
+
+        HorizontalDivider(
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        )
+    }
+}
+
+@Composable
+private fun HomeScreenTopBarLogo() {
+    Image(
+        modifier = Modifier.size(48.dp),
+        painter = painterResource(R.drawable.icon_launcher_foreground),
+        contentDescription = null
+    )
+}
+
+@Composable
+private fun HomeScreenTopBarTitle() {
+    Text(
+        text = stringResource(id = R.string.application_name),
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
+
+@Composable
+private fun HomeScreenTopBarSearchButton() {
+    IconButton(
+        onClick = { /*TODO*/ }
+    ) {
+        Icon(
+            imageVector = Icons.Default.Search,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun HomeScreenTopBarUserButton() {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .clip(shape = CircleShape)
+            .clickable { /*TODO*/ }
+            .padding(4.dp)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                shape = CircleShape
+            )
+            .size(32.dp)
+    )
+}
+
+@Composable
 fun HomeScreenCreateVideoButton(onClick: () -> Unit) {
     FloatingActionButton(
         modifier = Modifier.padding(8.dp),
@@ -144,7 +228,7 @@ fun HomeScreenContent(
             start = 12.dp,
             top = 12.dp,
             end = 12.dp,
-            bottom = 80.dp
+            bottom = 92.dp
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -161,84 +245,4 @@ fun HomeScreenContent(
             )
         }
     }
-}
-
-
-@Composable
-private fun HomeScreenTopBar() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Surface {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HomeScreenTopBarApplicationLogo()
-
-                HomeScreenTopBarActions()
-            }
-        }
-
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        )
-    }
-}
-
-@Composable
-private fun HomeScreenTopBarActions() {
-    Row {
-        IconButton(
-            onClick = { /*TODO*/ }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null
-            )
-        }
-
-        UserImage()
-    }
-}
-
-@Composable
-private fun HomeScreenTopBarApplicationLogo() {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            modifier = Modifier.size(48.dp),
-            painter = painterResource(R.drawable.icon_launcher_foreground),
-            contentDescription = null
-        )
-
-        Text(
-            text = stringResource(id = R.string.application_name),
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-}
-
-@Composable
-private fun UserImage() {
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .clip(shape = CircleShape)
-            .clickable { /*TODO*/ }
-            .padding(4.dp)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                shape = CircleShape
-            )
-            .size(32.dp)
-    )
 }

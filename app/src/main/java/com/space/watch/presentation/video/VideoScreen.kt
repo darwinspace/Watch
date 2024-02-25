@@ -1,6 +1,6 @@
 package com.space.watch.presentation.video
 
-import android.widget.VideoView
+import androidx.annotation.OptIn
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +29,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -41,6 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
@@ -112,9 +125,9 @@ fun VideoScreen(
         }
 
         OutlinedIconButton(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(16.dp),
             colors = IconButtonDefaults.outlinedIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.1f),
+                containerColor = Color.Black.copy(alpha = 0.2f),
                 contentColor = Color.White
             ),
             border = BorderStroke(
@@ -145,10 +158,69 @@ private fun VideoScreenContent(
     }
 }
 
+@OptIn(UnstableApi::class)
+@Composable
+fun VideoContent(video: Video) {
+    val context = LocalContext.current
+    val exoPlayer = remember {
+        val mediaItem = MediaItem.fromUri(video.content)
+        ExoPlayer.Builder(context).build().apply {
+            setMediaItem(mediaItem)
+            prepare()
+        }
+    }
+
+    var lifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycleEvent = event
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            exoPlayer.release()
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    AndroidView(
+        modifier = Modifier
+            .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
+            .fillMaxWidth(),
+        factory = {
+            PlayerView(it).apply {
+                player = exoPlayer
+                setShowRewindButton(false)
+                setShowFastForwardButton(false)
+            }
+        },
+        update = {
+            when (lifecycleEvent) {
+                Lifecycle.Event.ON_RESUME -> {
+                    it.onResume()
+                }
+
+                Lifecycle.Event.ON_PAUSE -> {
+                    it.onPause()
+                    it.player?.pause()
+                }
+
+                else -> Unit
+            }
+        }
+    )
+}
+
 @Composable
 fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(12.dp)) {
-        VideoTitle(video.title)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            VideoTitle(video.title)
+
+            VideoFavoriteButton()
+        }
 
         VideoCreator(
             creator = video.creator,
@@ -162,24 +234,20 @@ fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
 }
 
 @Composable
-private fun VideoTitle(title: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .weight(1f),
-            text = title,
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                fontWeight = FontWeight(500)
-            )
-        )
+private fun RowScope.VideoTitle(title: String) {
+    Text(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .weight(1f),
+        text = title,
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
 
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
-        }
+@Composable
+private fun VideoFavoriteButton() {
+    IconButton(onClick = { /*TODO*/ }) {
+        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
     }
 }
 
@@ -206,30 +274,6 @@ private fun VideoCreator(creator: Creator, onClick: () -> Unit) {
 }
 
 @Composable
-fun VideoCreatorVerifiedIcon() {
-    Icon(
-        imageVector = Icons.Outlined.Verified,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.primary
-    )
-}
-
-@Composable
-private fun RowScope.VideoCreatorName(name: String) {
-    Text(
-        modifier = Modifier.weight(1f),
-        text = name,
-        style = TextStyle(
-            fontSize = 16.sp,
-            lineHeight = 24.sp,
-            fontFamily = FontFamily(Font(R.font.mono_medium)),
-            fontWeight = FontWeight(500)
-        ),
-        maxLines = 1,
-    )
-}
-
-@Composable
 private fun VideoCreatorImage(image: String?) {
     Box(
         modifier = Modifier
@@ -248,6 +292,30 @@ private fun VideoCreatorImage(image: String?) {
             contentDescription = null
         )
     }
+}
+
+@Composable
+private fun RowScope.VideoCreatorName(name: String) {
+    Text(
+        modifier = Modifier.weight(1f),
+        text = name,
+        style = TextStyle(
+            fontSize = 16.sp,
+            lineHeight = 24.sp,
+            fontFamily = FontFamily(Font(R.font.mono_medium)),
+            fontWeight = FontWeight(500)
+        ),
+        maxLines = 1,
+    )
+}
+
+@Composable
+fun VideoCreatorVerifiedIcon() {
+    Icon(
+        imageVector = Icons.Outlined.Verified,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Composable
@@ -274,29 +342,5 @@ private fun VideoDescription(description: String) {
                 )
             )
         }
-    }
-}
-
-@Composable
-fun VideoContent(video: Video) {
-    Box(
-        modifier = Modifier
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
-            )
-    ) {
-        AndroidView(
-            modifier = Modifier
-                .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
-                .fillMaxWidth(),
-            factory = {
-                VideoView(it)
-            },
-            update = {
-                it.setVideoPath(video.content)
-                it.start()
-            }
-        )
     }
 }
