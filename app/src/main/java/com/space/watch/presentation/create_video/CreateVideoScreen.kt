@@ -132,8 +132,8 @@ fun CreateVideoScreen(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
-                .padding(24.dp)
                 .fillMaxSize()
+                .padding(24.dp)
                 .padding(padding),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {

@@ -19,6 +19,7 @@ import com.space.watch.presentation.creator.CreatorScreen
 import com.space.watch.presentation.creator.CreatorViewModel
 import com.space.watch.presentation.home.HomeScreen
 import com.space.watch.presentation.home.HomeViewModel
+import com.space.watch.presentation.sign_in.SignInScreen
 import com.space.watch.presentation.video.VideoScreen
 import com.space.watch.presentation.video.VideoViewModel
 
@@ -28,28 +29,28 @@ val IdentifierArgumentType = NavType.StringType
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Destination.Home) {
+    NavHost(navController = navController, startDestination = Screen.SignIn) {
         composable(
-            route = Destination.Home
+            route = Screen.Home
         ) {
             val viewModel = viewModel<HomeViewModel>()
             val state by viewModel.state.collectAsState()
             HomeScreen(
                 state = state,
                 onCreateVideoClick = {
-                    navController.navigate(route = Destination.CreateVideo)
+                    navController.navigate(route = Screen.CreateVideo)
                 },
                 onVideoCreatorClick = {
-                    navController.navigate(route = "${Destination.Creator}/$it")
+                    navController.navigate(route = "${Screen.Creator}/$it")
                 },
                 onVideoClick = {
-                    navController.navigate(route = "${Destination.Video}/$it")
+                    navController.navigate(route = "${Screen.Video}/$it")
                 }
             )
         }
 
         composable(
-            route = "${Destination.Video}/{$IdentifierArgumentName}",
+            route = "${Screen.Video}/{$IdentifierArgumentName}",
             arguments = listOf(
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
@@ -72,13 +73,13 @@ fun MainScreen() {
                 state = state,
                 onBackButtonClick = navController::popBackStack,
                 onVideoCreatorClick = {
-                    navController.navigate(route = "${Destination.Creator}/$it")
+                    navController.navigate(route = "${Screen.Creator}/$it")
                 }
             )
         }
 
         composable(
-            route = "${Destination.Creator}/{$IdentifierArgumentName}",
+            route = "${Screen.Creator}/{$IdentifierArgumentName}",
             arguments = listOf(
                 navArgument(name = IdentifierArgumentName) {
                     type = IdentifierArgumentType
@@ -101,13 +102,13 @@ fun MainScreen() {
                 state = state,
                 onBackButtonClick = navController::popBackStack,
                 onVideoClick = {
-                    navController.navigate(route = "${Destination.Video}/$it")
+                    navController.navigate(route = "${Screen.Video}/$it")
                 }
             )
         }
 
         composable(
-            route = Destination.CreateVideo,
+            route = Screen.CreateVideo,
             enterTransition = { slideInVertically { it } },
             exitTransition = { slideOutVertically { it } }
         ) {
@@ -144,6 +145,14 @@ fun MainScreen() {
                 onBackButtonClick = navController::popBackStack,
                 onCreateVideoClick = onCreateVideoClick
             )
+        }
+
+        composable(route = Screen.SignIn) {
+            SignInScreen()
+        }
+
+        composable(route = Screen.SignUp) {
+
         }
     }
 }
