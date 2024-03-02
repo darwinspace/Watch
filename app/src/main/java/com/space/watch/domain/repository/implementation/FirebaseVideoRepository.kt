@@ -1,4 +1,4 @@
-package com.space.watch.data.repository
+package com.space.watch.domain.repository.implementation
 
 import android.net.Uri
 import com.google.firebase.firestore.ktx.firestore
@@ -14,8 +14,8 @@ import com.space.watch.domain.repository.CreatorRepository
 import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.tasks.await
 
-class VideoRepositoryFirebaseImplementation(
-    private val creatorRepository: CreatorRepository = CreatorRepositoryFirebaseImplementation()
+class FirebaseVideoRepository(
+    private val creatorRepository: CreatorRepository = FirebaseCreatorRepository()
 ) : VideoRepository {
     private val database = Firebase.firestore
     private val storage = FirebaseStorage.getInstance()

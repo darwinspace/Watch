@@ -1,4 +1,4 @@
-package com.space.watch.data.repository
+package com.space.watch.domain.repository.implementation
 
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
@@ -8,7 +8,7 @@ import com.space.watch.domain.model.Creator
 import com.space.watch.domain.repository.CreatorRepository
 import kotlinx.coroutines.tasks.await
 
-class CreatorRepositoryFirebaseImplementation : CreatorRepository {
+class FirebaseCreatorRepository : CreatorRepository {
     private val database = Firebase.firestore
     private val collection = "users"
 

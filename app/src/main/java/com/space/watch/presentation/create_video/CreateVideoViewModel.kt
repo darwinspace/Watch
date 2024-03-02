@@ -3,7 +3,7 @@ package com.space.watch.presentation.create_video
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.space.watch.data.repository.VideoRepositoryFirebaseImplementation
+import com.space.watch.domain.repository.implementation.FirebaseVideoRepository
 import com.space.watch.domain.model.Size
 import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CreateVideoViewModel(
-    private val repository: VideoRepository = VideoRepositoryFirebaseImplementation()
+    private val repository: VideoRepository = FirebaseVideoRepository()
 ) : ViewModel() {
     private val _videoTitle = MutableStateFlow(String())
     val videoTitle = _videoTitle.asStateFlow()

@@ -20,6 +20,7 @@ import com.space.watch.presentation.creator.CreatorViewModel
 import com.space.watch.presentation.home.HomeScreen
 import com.space.watch.presentation.home.HomeViewModel
 import com.space.watch.presentation.sign_in.SignInScreen
+import com.space.watch.presentation.sign_in.SignInViewModel
 import com.space.watch.presentation.video.VideoScreen
 import com.space.watch.presentation.video.VideoViewModel
 
@@ -29,12 +30,13 @@ val IdentifierArgumentType = NavType.StringType
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.SignIn) {
+    NavHost(navController = navController, startDestination = Screen.Home) {
         composable(
             route = Screen.Home
         ) {
             val viewModel = viewModel<HomeViewModel>()
             val state by viewModel.state.collectAsState()
+
             HomeScreen(
                 state = state,
                 onCreateVideoClick = {
@@ -47,6 +49,10 @@ fun MainScreen() {
                     navController.navigate(route = "${Screen.Video}/$it")
                 }
             )
+
+            LaunchedEffect(viewModel) {
+                viewModel.getContent()
+            }
         }
 
         composable(
@@ -65,10 +71,6 @@ fun MainScreen() {
             val id = requireNotNull(backStackEntry.arguments)
                 .getString(IdentifierArgumentName)!!
 
-            LaunchedEffect(Unit) {
-                viewModel.getContent(id)
-            }
-
             VideoScreen(
                 state = state,
                 onBackButtonClick = navController::popBackStack,
@@ -76,6 +78,10 @@ fun MainScreen() {
                     navController.navigate(route = "${Screen.Creator}/$it")
                 }
             )
+
+            LaunchedEffect(viewModel) {
+                viewModel.getContent(id)
+            }
         }
 
         composable(
@@ -94,10 +100,6 @@ fun MainScreen() {
             val id = requireNotNull(backStackEntry.arguments)
                 .getString(IdentifierArgumentName)!!
 
-            LaunchedEffect(Unit) {
-                viewModel.getContent(id)
-            }
-
             CreatorScreen(
                 state = state,
                 onBackButtonClick = navController::popBackStack,
@@ -105,6 +107,10 @@ fun MainScreen() {
                     navController.navigate(route = "${Screen.Video}/$it")
                 }
             )
+
+            LaunchedEffect(viewModel) {
+                viewModel.getContent(id)
+            }
         }
 
         composable(
@@ -148,7 +154,19 @@ fun MainScreen() {
         }
 
         composable(route = Screen.SignIn) {
-            SignInScreen()
+            val viewModel = viewModel<SignInViewModel>()
+            val email by viewModel.email.collectAsState()
+            val password by viewModel.password.collectAsState()
+            val isSignInButtonEnabled by viewModel.isSignInButtonEnabled.collectAsState()
+
+            SignInScreen(
+                email = { email },
+                onEmailChange = viewModel::onEmailChange,
+                password = { password },
+                onPasswordChange = viewModel::onPasswordChange,
+                isSignInButtonEnabled = { isSignInButtonEnabled },
+                onSignInClick = viewModel::onSignInClick
+            )
         }
 
         composable(route = Screen.SignUp) {

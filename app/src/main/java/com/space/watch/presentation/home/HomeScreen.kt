@@ -48,7 +48,7 @@ import com.space.watch.ui.theme.WatchTheme
 fun HomeScreenPreview() {
     WatchTheme {
         HomeScreen(
-            state = HomeState.Content(
+            state = HomeScreenState.Content(
                 videos = List(10) {
                     Video(
                         id = String(),
@@ -76,7 +76,7 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(
-    state: HomeState,
+    state: HomeScreenState = HomeScreenState.Empty,
     onCreateVideoClick: () -> Unit = { },
     onVideoCreatorClick: (String) -> Unit = { },
     onVideoClick: (String) -> Unit = { }
@@ -90,7 +90,7 @@ fun HomeScreen(
         }
     ) {
         when (state) {
-            is HomeState.Content -> {
+            is HomeScreenState.Content -> {
                 HomeScreenContent(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,7 +101,7 @@ fun HomeScreen(
                 )
             }
 
-            HomeState.Wait -> {
+            HomeScreenState.Wait -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -112,7 +112,7 @@ fun HomeScreen(
                 }
             }
 
-            HomeState.Empty -> Unit
+            HomeScreenState.Empty -> Unit
         }
     }
 }

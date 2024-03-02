@@ -154,10 +154,12 @@ fun CreateVideoScreen(
                 }
             )
 
-            SelectedVideo(
-                videoUri = videoUri,
-                videoSize = videoSize
-            )
+            AnimatedVisibility(visible = videoUri() != null && videoSize() != null) {
+                SelectedVideo(
+                    videoUri = videoUri,
+                    videoSize = videoSize
+                )
+            }
 
             SelectVideoImageButton(
                 onClick = {
@@ -166,10 +168,12 @@ fun CreateVideoScreen(
                 }
             )
 
-            SelectedVideoImage(
-                imageUri = videoImageUri,
-                imageSize = videoImageSize
-            )
+            AnimatedVisibility(visible = videoImageUri() != null && videoImageSize() != null) {
+                SelectedVideoImage(
+                    imageUri = videoImageUri,
+                    imageSize = videoImageSize
+                )
+            }
         }
     }
 }

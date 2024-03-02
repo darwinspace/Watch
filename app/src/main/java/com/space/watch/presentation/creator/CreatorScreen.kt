@@ -50,7 +50,7 @@ import com.space.watch.ui.theme.WatchTheme
 fun CreatorScreenPreview() {
     WatchTheme {
         CreatorScreen(
-            state = CreatorState.Content(
+            state = CreatorScreenState.Content(
                 creator = Creator(
                     id = String(),
                     name = "Creator",
@@ -86,14 +86,14 @@ fun CreatorScreenPreview() {
 
 @Composable
 fun CreatorScreen(
-    state: CreatorState,
+    state: CreatorScreenState = CreatorScreenState.Empty,
     onBackButtonClick: () -> Unit = { },
     onVideoClick: (String) -> Unit = { }
 ) {
     Box {
         Scaffold {
             when (state) {
-                is CreatorState.Content -> {
+                is CreatorScreenState.Content -> {
                     CreatorScreenContent(
                         modifier = Modifier
                             .fillMaxSize()
@@ -104,7 +104,7 @@ fun CreatorScreen(
                     )
                 }
 
-                CreatorState.Wait -> {
+                CreatorScreenState.Wait -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -115,7 +115,7 @@ fun CreatorScreen(
                     }
                 }
 
-                CreatorState.Empty -> Unit
+                CreatorScreenState.Empty -> Unit
             }
         }
 

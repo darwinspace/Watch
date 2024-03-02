@@ -66,7 +66,7 @@ import com.space.watch.ui.theme.WatchTheme
 fun VideoScreenPreview() {
     WatchTheme {
         VideoScreen(
-            state = VideoState.Content(
+            state = VideoScreenState.Content(
                 video = Video(
                     id = String(),
                     title = "Video",
@@ -92,14 +92,14 @@ fun VideoScreenPreview() {
 
 @Composable
 fun VideoScreen(
-    state: VideoState,
+    state: VideoScreenState,
     onBackButtonClick: () -> Unit = { },
     onVideoCreatorClick: (String) -> Unit = { }
 ) {
     Box {
         Scaffold {
             when (state) {
-                is VideoState.Content -> {
+                is VideoScreenState.Content -> {
                     VideoScreenContent(
                         modifier = Modifier
                             .fillMaxSize()
@@ -109,7 +109,7 @@ fun VideoScreen(
                     )
                 }
 
-                VideoState.Wait -> {
+                VideoScreenState.Wait -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -120,7 +120,7 @@ fun VideoScreen(
                     }
                 }
 
-                VideoState.Empty -> Unit
+                VideoScreenState.Empty -> Unit
             }
         }
 

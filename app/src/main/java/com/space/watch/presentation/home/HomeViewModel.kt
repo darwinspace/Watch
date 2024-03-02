@@ -2,23 +2,23 @@ package com.space.watch.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.space.watch.data.repository.VideoRepositoryFirebaseImplementation
 import com.space.watch.domain.repository.VideoRepository
+import com.space.watch.domain.repository.implementation.FirebaseVideoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    repository: VideoRepository = VideoRepositoryFirebaseImplementation()
+    private val repository: VideoRepository = FirebaseVideoRepository()
 ) : ViewModel() {
-    private val _state = MutableStateFlow<HomeState>(HomeState.Empty)
+    private val _state = MutableStateFlow<HomeScreenState>(HomeScreenState.Empty)
     val state = _state.asStateFlow()
 
-    init {
+    fun getContent() {
         viewModelScope.launch {
-            _state.value = HomeState.Wait
+            _state.value = HomeScreenState.Wait
             val content = repository.getAllVideos()
-            _state.value = HomeState.Content(content)
+            _state.value = HomeScreenState.Content(content)
         }
     }
 }
