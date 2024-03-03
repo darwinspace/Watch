@@ -1,7 +1,7 @@
 package com.space.watch.data.model
 
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 
 data class VideoDto(
     val id: String = String(),
@@ -15,8 +15,8 @@ data class VideoDto(
     val creator: CreatorDto = CreatorDto(),
     val duration: Long = 0
 ) {
-    fun toVideo(): Video {
-        return Video(
+    fun toVideo(): VideoInformation {
+        return VideoInformation(
             id = id,
             title = title,
             description = description,

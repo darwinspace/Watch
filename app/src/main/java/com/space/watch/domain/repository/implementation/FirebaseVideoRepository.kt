@@ -9,7 +9,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.space.watch.data.model.CreatorDto
 import com.space.watch.data.model.VideoDto
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 import com.space.watch.domain.repository.CreatorRepository
 import com.space.watch.domain.repository.VideoRepository
 import kotlinx.coroutines.tasks.await
@@ -21,7 +21,7 @@ class FirebaseVideoRepository(
     private val storage = FirebaseStorage.getInstance()
     private val collection = "videos"
 
-    override suspend fun getVideoById(id: String): Video {
+    override suspend fun getVideoById(id: String): VideoInformation {
         return database
             .collection(collection)
             .document(id)
@@ -31,7 +31,7 @@ class FirebaseVideoRepository(
             .toVideo()
     }
 
-    override suspend fun getAllVideos(): List<Video> {
+    override suspend fun getAllVideos(): List<VideoInformation> {
         return database
             .collection(collection)
             .get()
@@ -40,7 +40,7 @@ class FirebaseVideoRepository(
             .map(VideoDto::toVideo)
     }
 
-    override suspend fun getAllVideosByCreatorId(id: String): List<Video> {
+    override suspend fun getAllVideosByCreatorId(id: String): List<VideoInformation> {
         return database
             .collection(collection)
             .whereEqualTo("creatorId", id)

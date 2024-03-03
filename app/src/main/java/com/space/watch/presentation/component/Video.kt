@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 import com.space.watch.ui.theme.WatchTheme
 
 @Preview
@@ -39,7 +39,7 @@ import com.space.watch.ui.theme.WatchTheme
 fun VideoPreview() {
     WatchTheme {
         Video(
-            video = Video(
+            videoInformation = VideoInformation(
                 id = String(),
                 title = "Video",
                 description = "Description",
@@ -65,7 +65,7 @@ fun VideoPreview() {
 
 @Composable
 fun Video(
-    video: Video,
+    videoInformation: VideoInformation,
     onCreatorClick: () -> Unit,
     onClick: () -> Unit
 ) {
@@ -80,8 +80,8 @@ fun Video(
         ) {
             VideoImage(
                 modifier = Modifier.padding(horizontal = 12.dp),
-                videoImage = video.image,
-                videoImageSize = video.imageSize
+                videoImage = videoInformation.image,
+                videoImageSize = videoInformation.imageSize
             )
 
             Row(
@@ -92,11 +92,11 @@ fun Video(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 VideoCreatorImage(
-                    creatorImage = video.creator.image,
+                    creatorImage = videoInformation.creator.image,
                     onClick = onCreatorClick
                 )
 
-                VideoTitle(video.title)
+                VideoTitle(videoInformation.title)
 
                 VideoDuration()
             }

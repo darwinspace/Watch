@@ -41,7 +41,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
@@ -60,7 +60,7 @@ fun CreatorScreenPreview() {
                     verified = true
                 ),
                 videos = List(10) {
-                    Video(
+                    VideoInformation(
                         id = String(),
                         title = "Video",
                         description = "Description",
@@ -145,7 +145,7 @@ private fun CreatorScreenBackButton(onBackButtonClick: () -> Unit) {
 private fun CreatorScreenContent(
     modifier: Modifier,
     creator: Creator,
-    videos: List<Video>,
+    videos: List<VideoInformation>,
     onVideoClick: (String) -> Unit
 ) {
     LazyColumn(
@@ -197,7 +197,7 @@ private fun CreatorScreenContent(
 
         items(videos) { video ->
             Video(
-                video = video,
+                videoInformation = video,
                 onCreatorClick = { /*TODO*/ },
                 onClick = { onVideoClick(video.id) }
             )

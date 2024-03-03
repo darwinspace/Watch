@@ -1,6 +1,6 @@
 package com.space.watch.domain.model
 
-data class Video(
+data class VideoInformation(
     val id: String,
     val title: String,
     val description: String,

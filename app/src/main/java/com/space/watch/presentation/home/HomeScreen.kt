@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
 
@@ -50,7 +50,7 @@ fun HomeScreenPreview() {
         HomeScreen(
             state = HomeScreenState.Content(
                 videos = List(10) {
-                    Video(
+                    VideoInformation(
                         id = String(),
                         title = "Video",
                         description = "Description",
@@ -218,7 +218,7 @@ fun HomeScreenCreateVideoButton(onClick: () -> Unit) {
 @Composable
 fun HomeScreenContent(
     modifier: Modifier,
-    videos: List<Video>,
+    videos: List<VideoInformation>,
     onVideoCreatorClick: (String) -> Unit,
     onVideoClick: (String) -> Unit
 ) {
@@ -235,7 +235,7 @@ fun HomeScreenContent(
     ) {
         items(videos) { video ->
             Video(
-                video = video,
+                videoInformation = video,
                 onCreatorClick = {
                     onVideoCreatorClick(video.creator.id)
                 },

@@ -325,8 +325,8 @@ private fun SelectedVideo(videoUri: () -> Uri?, videoSize: () -> Size?) {
     val size = videoSize() ?: return
 
     val context = LocalContext.current
+    val mediaItem = remember(video) { MediaItem.fromUri(video) }
     val exoPlayer = remember {
-        val mediaItem = MediaItem.fromUri(video)
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(mediaItem)
             prepare()

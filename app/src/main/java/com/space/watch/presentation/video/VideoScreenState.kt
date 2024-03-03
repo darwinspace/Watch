@@ -1,9 +1,9 @@
 package com.space.watch.presentation.video
 
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 
 sealed interface VideoScreenState {
-    data class Content(val video: Video) : VideoScreenState
+    data class Content(val videoInformation: VideoInformation) : VideoScreenState
 
     data object Wait : VideoScreenState
 

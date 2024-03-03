@@ -58,7 +58,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
-import com.space.watch.domain.model.Video
+import com.space.watch.domain.model.VideoInformation
 import com.space.watch.ui.theme.WatchTheme
 
 @Preview
@@ -67,7 +67,7 @@ fun VideoScreenPreview() {
     WatchTheme {
         VideoScreen(
             state = VideoScreenState.Content(
-                video = Video(
+                videoInformation = VideoInformation(
                     id = String(),
                     title = "Video",
                     description = "Description",
@@ -104,7 +104,7 @@ fun VideoScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(it),
-                        video = state.video,
+                        videoInformation = state.videoInformation,
                         onVideoCreatorClick = onVideoCreatorClick
                     )
                 }
@@ -144,15 +144,15 @@ fun VideoScreen(
 @Composable
 private fun VideoScreenContent(
     modifier: Modifier,
-    video: Video,
+    videoInformation: VideoInformation,
     onVideoCreatorClick: (String) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
         item {
             Column {
-                VideoContent(video)
+                VideoContent(videoInformation)
 
-                VideoInformation(video, onVideoCreatorClick)
+                VideoInformation(videoInformation, onVideoCreatorClick)
             }
         }
     }
@@ -160,10 +160,10 @@ private fun VideoScreenContent(
 
 @OptIn(UnstableApi::class)
 @Composable
-fun VideoContent(video: Video) {
+fun VideoContent(videoInformation: VideoInformation) {
     val context = LocalContext.current
     val exoPlayer = remember {
-        val mediaItem = MediaItem.fromUri(video.content)
+        val mediaItem = MediaItem.fromUri(videoInformation.content)
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(mediaItem)
             prepare()
@@ -187,7 +187,7 @@ fun VideoContent(video: Video) {
 
     AndroidView(
         modifier = Modifier
-            .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
+            .aspectRatio(ratio = videoInformation.size.width.toFloat() / videoInformation.size.height.toFloat())
             .fillMaxWidth(),
         factory = {
             PlayerView(it).apply {
@@ -214,22 +214,22 @@ fun VideoContent(video: Video) {
 }
 
 @Composable
-fun VideoInformation(video: Video, onVideoCreatorClick: (String) -> Unit) {
+fun VideoInformation(videoInformation: VideoInformation, onVideoCreatorClick: (String) -> Unit) {
     Column(modifier = Modifier.padding(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            VideoTitle(video.title)
+            VideoTitle(videoInformation.title)
 
             VideoFavoriteButton()
         }
 
         VideoCreator(
-            creator = video.creator,
+            creator = videoInformation.creator,
             onClick = {
-                onVideoCreatorClick(video.creator.id)
+                onVideoCreatorClick(videoInformation.creator.id)
             }
         )
 
-        VideoDescription(video.description)
+        VideoDescription(videoInformation.description)
     }
 }
 
