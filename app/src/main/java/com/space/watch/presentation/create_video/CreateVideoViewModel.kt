@@ -1,11 +1,11 @@
 package com.space.watch.presentation.create_video
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.space.watch.domain.repository.implementation.FirebaseVideoRepository
-import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.Image
+import com.space.watch.domain.model.Video
 import com.space.watch.domain.repository.VideoRepository
+import com.space.watch.domain.repository.implementation.FirebaseVideoRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,22 +24,16 @@ class CreateVideoViewModel(
     private val _videoDescription = MutableStateFlow(String())
     val videoDescription = _videoDescription.asStateFlow()
 
-    private val _videoUri = MutableStateFlow<Uri?>(null)
-    val videoUri = _videoUri.asStateFlow()
+    private val _video = MutableStateFlow<Video?>(null)
+    val video = _video.asStateFlow()
 
-    private val _videoSize = MutableStateFlow<Size?>(null)
-    val videoSize = _videoSize.asStateFlow()
-
-    private val _videoImageUri = MutableStateFlow<Uri?>(null)
-    val videoImageUri = _videoImageUri.asStateFlow()
-
-    private val _videoImageSize = MutableStateFlow<Size?>(null)
-    val videoImageSize = _videoImageSize.asStateFlow()
+    private val _videoImage = MutableStateFlow<Image?>(null)
+    val videoImage = _videoImage.asStateFlow()
 
     val isCreateVideoButtonEnabled = combine(
-        videoTitle, videoUri, videoSize, videoImageUri, videoImageSize
-    ) { videoTitle, video, videoSize, videoImage, videoImageSize ->
-        videoTitle.isNotEmpty() && video != null && videoImage != null && videoSize != null && videoImageSize != null
+        videoTitle, video, videoImage
+    ) { videoTitle, video, videoImage ->
+        videoTitle.isNotEmpty() && video != null && videoImage != null
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -57,20 +51,12 @@ class CreateVideoViewModel(
         _videoDescription.value = value
     }
 
-    fun onVideoSelected(value: Uri?) {
-        _videoUri.value = value
+    fun onVideoChange(value: Video?) {
+        _video.value = value
     }
 
-    fun onVideoSizeChange(value: Size?) {
-        _videoSize.value = value
-    }
-
-    fun onVideoImageSelected(value: Uri?) {
-        _videoImageUri.value = value
-    }
-
-    fun onVideoImageSizeChange(value: Size?) {
-        _videoImageSize.value = value
+    fun onVideoImageChange(value: Image?) {
+        _videoImage.value = value
     }
 
     fun onCreateVideoClick(onSuccess: () -> Unit) {
@@ -79,10 +65,10 @@ class CreateVideoViewModel(
             repository.uploadVideo(
                 videoTitle = videoTitle.value,
                 videoDescription = videoDescription.value,
-                videoUri = videoUri.value!!,
-                videoSize = videoSize.value!!,
-                videoImageUri = videoImageUri.value!!,
-                videoImageSize = videoImageSize.value!!
+                videoUri = video.value?.content!!,
+                videoSize = video.value?.size!!,
+                videoImageUri = videoImage.value?.content!!,
+                videoImageSize = videoImage.value?.size!!
             )
             _isVideoUploading.value = false
             withContext(Dispatchers.Main) {

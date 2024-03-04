@@ -121,10 +121,8 @@ fun MainScreen() {
             val viewModel = viewModel<CreateVideoViewModel>()
             val videoTitle by viewModel.videoTitle.collectAsState()
             val videoDescription by viewModel.videoDescription.collectAsState()
-            val videoUri by viewModel.videoUri.collectAsState()
-            val videoSize by viewModel.videoSize.collectAsState()
-            val videoImageUri by viewModel.videoImageUri.collectAsState()
-            val videoImageSize by viewModel.videoImageSize.collectAsState()
+            val video by viewModel.video.collectAsState()
+            val videoImage by viewModel.videoImage.collectAsState()
             val isCreateVideoButtonEnabled by viewModel.isCreateVideoButtonEnabled.collectAsState()
             val isVideoUploading by viewModel.isVideoUploading.collectAsState()
             val onCreateVideoClick = remember {
@@ -138,14 +136,10 @@ fun MainScreen() {
                 onVideoTitleChange = viewModel::onVideoTitleChange,
                 videoDescription = { videoDescription },
                 onVideoDescriptionChange = viewModel::onVideoDescriptionChange,
-                videoUri = { videoUri },
-                onVideoSelected = viewModel::onVideoSelected,
-                videoSize = { videoSize },
-                onVideoSizeChange = viewModel::onVideoSizeChange,
-                videoImageUri = { videoImageUri },
-                onVideoImageSelected = viewModel::onVideoImageSelected,
-                videoImageSize = { videoImageSize },
-                onVideoImageSizeChange = viewModel::onVideoImageSizeChange,
+                video = { video },
+                onVideoChange = viewModel::onVideoChange,
+                videoImage = { videoImage },
+                onVideoImageChange = viewModel::onVideoImageChange,
                 isCreateVideoButtonEnabled = { isCreateVideoButtonEnabled },
                 isVideoUploading = { isVideoUploading },
                 onBackButtonClick = navController::popBackStack,

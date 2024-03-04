@@ -1,6 +1,5 @@
 package com.space.watch.presentation.create_video
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -61,42 +60,32 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
-import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.Image
+import com.space.watch.domain.model.Video
 import com.space.watch.ui.theme.WatchTheme
-import com.space.watch.util.getImageSize
-import com.space.watch.util.getVideoSize
+import com.space.watch.util.toImage
+import com.space.watch.util.toVideo
 
 @Preview
 @Composable
 fun CreateVideoScreenPreview() {
     WatchTheme {
-        CreateVideoScreen(
-            videoTitle = { String() },
-            onVideoTitleChange = { },
-            videoDescription = { String() },
-            onVideoDescriptionChange = { },
-            isCreateVideoButtonEnabled = { true },
-            isVideoUploading = { true },
-        )
+        CreateVideoScreen()
     }
 }
 
 @Composable
 fun CreateVideoScreen(
-    videoTitle: () -> String,
-    onVideoTitleChange: (String) -> Unit,
-    videoDescription: () -> String,
-    onVideoDescriptionChange: (String) -> Unit,
-    videoUri: () -> Uri? = { null },
-    onVideoSelected: (Uri?) -> Unit = { },
-    videoSize: () -> Size? = { null },
-    onVideoSizeChange: (Size?) -> Unit = { },
-    videoImageUri: () -> Uri? = { null },
-    onVideoImageSelected: (Uri?) -> Unit = { },
-    videoImageSize: () -> Size? = { null },
-    onVideoImageSizeChange: (Size?) -> Unit = { },
-    isCreateVideoButtonEnabled: () -> Boolean,
-    isVideoUploading: () -> Boolean,
+    videoTitle: () -> String = { String() },
+    onVideoTitleChange: (String) -> Unit = { },
+    videoDescription: () -> String = { String() },
+    onVideoDescriptionChange: (String) -> Unit = { },
+    video: () -> Video? = { null },
+    onVideoChange: (Video?) -> Unit = { },
+    videoImage: () -> Image? = { null },
+    onVideoImageChange: (Image?) -> Unit = { },
+    isCreateVideoButtonEnabled: () -> Boolean = { false },
+    isVideoUploading: () -> Boolean = { false },
     onBackButtonClick: () -> Unit = { },
     onCreateVideoClick: () -> Unit = { }
 ) {
@@ -106,16 +95,14 @@ fun CreateVideoScreen(
     val videoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            onVideoSelected(it)
-            onVideoSizeChange(it?.let(context::getVideoSize))
+            onVideoChange(it.toVideo(context))
         }
     )
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
-            onVideoImageSelected(it)
-            onVideoImageSizeChange(it?.let(context::getImageSize))
+            onVideoImageChange(it.toImage(context))
         }
     )
 
@@ -154,10 +141,10 @@ fun CreateVideoScreen(
                 }
             )
 
-            AnimatedVisibility(visible = videoUri() != null && videoSize() != null) {
+            val videoData = video()
+            AnimatedVisibility(visible = videoData != null) {
                 SelectedVideo(
-                    videoUri = videoUri,
-                    videoSize = videoSize
+                    video = videoData!!
                 )
             }
 
@@ -168,10 +155,10 @@ fun CreateVideoScreen(
                 }
             )
 
-            AnimatedVisibility(visible = videoImageUri() != null && videoImageSize() != null) {
+            val imageData = videoImage()
+            AnimatedVisibility(visible = imageData != null) {
                 SelectedVideoImage(
-                    imageUri = videoImageUri,
-                    imageSize = videoImageSize
+                    image = imageData!!
                 )
             }
         }
@@ -320,12 +307,9 @@ private fun SelectVideoButton(onClick: () -> Unit) {
 
 @OptIn(UnstableApi::class)
 @Composable
-private fun SelectedVideo(videoUri: () -> Uri?, videoSize: () -> Size?) {
-    val video = videoUri() ?: return
-    val size = videoSize() ?: return
-
+private fun SelectedVideo(video: Video) {
     val context = LocalContext.current
-    val mediaItem = remember(video) { MediaItem.fromUri(video) }
+    val mediaItem = remember(video.content) { MediaItem.fromUri(video.content) }
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(mediaItem)
@@ -358,7 +342,7 @@ private fun SelectedVideo(videoUri: () -> Uri?, videoSize: () -> Size?) {
         Column {
             AndroidView(
                 modifier = Modifier
-                    .aspectRatio(ratio = size.width.toFloat() / size.height.toFloat())
+                    .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
                     .fillMaxWidth(),
                 factory = {
                     PlayerView(it).apply {
@@ -385,7 +369,7 @@ private fun SelectedVideo(videoUri: () -> Uri?, videoSize: () -> Size?) {
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "${size.width} x ${size.height}",
+                text = "${video.size.width} x ${video.size.height}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -422,9 +406,7 @@ private fun SelectVideoImageButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun SelectedVideoImage(imageUri: () -> Uri?, imageSize: () -> Size?) {
-    val image = imageUri() ?: return
-    val size = imageSize() ?: return
+private fun SelectedVideoImage(image: Image) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
@@ -435,14 +417,14 @@ private fun SelectedVideoImage(imageUri: () -> Uri?, imageSize: () -> Size?) {
         Column {
             AsyncImage(
                 modifier = Modifier.fillMaxWidth(),
-                model = image,
+                model = image.content,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "${size.width} x ${size.height}",
+                text = "${image.size.width} x ${image.size.height}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
