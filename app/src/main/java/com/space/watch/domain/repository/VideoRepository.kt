@@ -13,6 +13,7 @@ interface VideoRepository {
         videoDescription: String,
         videoUri: Uri,
         videoSize: Size,
+        videoDuration: Long,
         videoImageUri: Uri,
         videoImageSize: Size
     )

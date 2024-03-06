@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -41,6 +42,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
@@ -76,7 +78,7 @@ fun CreatorScreenPreview() {
                             cover = String(),
                             verified = true,
                         ),
-                        duration = 0
+                        duration = VideoDuration(0, 0, 0)
                     )
                 }
             )
@@ -238,7 +240,8 @@ private fun CreatorCover(cover: String?) {
                 .aspectRatio(ratio = 2f)
                 .fillMaxWidth(),
             model = cover,
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -257,7 +260,8 @@ private fun CreatorImage(image: String?) {
                 .clip(shape = CircleShape)
                 .size(96.dp),
             model = image,
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop
         )
     }
 }

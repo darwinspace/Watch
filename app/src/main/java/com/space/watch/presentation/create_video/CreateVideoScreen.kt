@@ -62,9 +62,9 @@ import androidx.media3.ui.PlayerView
 import coil.compose.AsyncImage
 import com.space.watch.domain.model.Image
 import com.space.watch.domain.model.Video
+import com.space.watch.extension.toImage
+import com.space.watch.extension.toVideo
 import com.space.watch.ui.theme.WatchTheme
-import com.space.watch.util.toImage
-import com.space.watch.util.toVideo
 
 @Preview
 @Composable

@@ -58,6 +58,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
 import com.space.watch.ui.theme.WatchTheme
 
@@ -83,7 +84,7 @@ fun VideoScreenPreview() {
                         cover = String(),
                         verified = true
                     ),
-                    duration = 0
+                    duration = VideoDuration(0, 0, 0)
                 )
             )
         )

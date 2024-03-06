@@ -2,6 +2,8 @@ package com.space.watch.data.model
 
 import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.VideoInformation
+import com.space.watch.extension.toVideoDuration
+import kotlin.time.Duration.Companion.milliseconds
 
 data class VideoDto(
     val id: String = String(),
@@ -9,11 +11,11 @@ data class VideoDto(
     val description: String = String(),
     val content: String = String(),
     val size: Size = Size(),
+    val duration: Long = 0,
     val image: String = String(),
     val imageSize: Size = Size(),
     val creatorId: String = String(),
-    val creator: CreatorDto = CreatorDto(),
-    val duration: Long = 0
+    val creator: CreatorDto = CreatorDto()
 ) {
     fun toVideo(): VideoInformation {
         return VideoInformation(
@@ -25,7 +27,7 @@ data class VideoDto(
             image = image,
             imageSize = imageSize,
             creator = creator.toCreator(),
-            duration = duration
+            duration = duration.milliseconds.toVideoDuration()
         )
     }
 }

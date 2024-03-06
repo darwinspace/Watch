@@ -55,6 +55,7 @@ class FirebaseVideoRepository(
         videoDescription: String,
         videoUri: Uri,
         videoSize: Size,
+        videoDuration: Long,
         videoImageUri: Uri,
         videoImageSize: Size
     ) {
@@ -68,7 +69,7 @@ class FirebaseVideoRepository(
         videoImageRef.putFile(videoImageUri).await()
         val videoUrl = videoStorageRef.downloadUrl.await()
         val videoImageUrl = videoImageRef.downloadUrl.await()
-        val creator = creatorRepository.getCreatorById("NnbXZGVizfoTdos4HCdh")
+        val creator = creatorRepository.getCreatorById("aqM8nzIDe7caBRQRblJNyNZwBXC3")
         val creatorDto = CreatorDto(
             id = creator.id,
             name = creator.name,
@@ -83,6 +84,7 @@ class FirebaseVideoRepository(
             description = videoDescription,
             content = videoUrl.toString(),
             size = videoSize,
+            duration = videoDuration,
             image = videoImageUrl.toString(),
             imageSize = videoImageSize,
             creatorId = creator.id,

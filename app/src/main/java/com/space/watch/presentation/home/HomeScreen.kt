@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
 import com.space.watch.presentation.component.Video
 import com.space.watch.ui.theme.WatchTheme
@@ -66,7 +67,7 @@ fun HomeScreenPreview() {
                             cover = String(),
                             verified = true
                         ),
-                        duration = 0
+                        duration = VideoDuration(0, 0, 0)
                     )
                 }
             )

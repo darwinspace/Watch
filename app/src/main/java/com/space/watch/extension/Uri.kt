@@ -1,4 +1,4 @@
-package com.space.watch.util
+package com.space.watch.extension
 
 import android.content.Context
 import android.net.Uri
@@ -9,7 +9,8 @@ fun Uri?.toVideo(context: Context): Video? {
     return this?.let {
         Video(
             content = it,
-            size = context.getVideoSize(it)
+            size = context.getVideoSize(it),
+            duration = context.getVideoDuration(it)
         )
     }
 }
@@ -22,4 +23,3 @@ fun Uri?.toImage(context: Context): Image? {
         )
     }
 }
-

@@ -4,5 +4,6 @@ import android.net.Uri
 
 data class Video(
     val content: Uri,
-    val size: Size
+    val size: Size,
+    val duration: Long
 )

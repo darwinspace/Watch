@@ -9,5 +9,5 @@ data class VideoInformation(
     val image: String,
     val imageSize: Size,
     val creator: Creator,
-    val duration: Long
+    val duration: VideoDuration
 )

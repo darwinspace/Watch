@@ -31,6 +31,7 @@ import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
+import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
 import com.space.watch.ui.theme.WatchTheme
 
@@ -55,7 +56,7 @@ fun VideoPreview() {
                     cover = String(),
                     verified = true
                 ),
-                duration = 0
+                duration = VideoDuration(0, 0, 0)
             ),
             onCreatorClick = { throw NotImplementedError() },
             onClick = { throw NotImplementedError() }
@@ -92,13 +93,13 @@ fun Video(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 VideoCreatorImage(
-                    creatorImage = videoInformation.creator.image,
+                    image = videoInformation.creator.image,
                     onClick = onCreatorClick
                 )
 
-                VideoTitle(videoInformation.title)
+                VideoTitle(title = videoInformation.title)
 
-                VideoDuration()
+                VideoDuration(duration = videoInformation.duration)
             }
         }
     }
@@ -126,7 +127,7 @@ private fun VideoImage(modifier: Modifier, videoImage: String, videoImageSize: S
 }
 
 @Composable
-private fun VideoCreatorImage(creatorImage: String?, onClick: () -> Unit) {
+private fun VideoCreatorImage(image: String?, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -143,7 +144,7 @@ private fun VideoCreatorImage(creatorImage: String?, onClick: () -> Unit) {
             modifier = Modifier
                 .clip(shape = CircleShape)
                 .size(32.dp),
-            model = creatorImage,
+            model = image,
             contentDescription = null
         )
     }
@@ -165,7 +166,7 @@ private fun RowScope.VideoTitle(title: String) {
 }
 
 @Composable
-private fun VideoDuration() {
+private fun VideoDuration(duration: VideoDuration) {
     Surface(
         shape = MaterialTheme.shapes.small,
         border = BorderStroke(
@@ -175,13 +176,8 @@ private fun VideoDuration() {
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-            text = "10:00",
-            style = TextStyle(
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                fontFamily = FontFamily(Font(R.font.mono_medium)),
-                fontWeight = FontWeight(500)
-            )
+            text = duration.toString(),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }

@@ -67,6 +67,7 @@ class CreateVideoViewModel(
                 videoDescription = videoDescription.value,
                 videoUri = video.value?.content!!,
                 videoSize = video.value?.size!!,
+                videoDuration = video.value?.duration!!,
                 videoImageUri = videoImage.value?.content!!,
                 videoImageSize = videoImage.value?.size!!
             )
