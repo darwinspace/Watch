@@ -17,8 +17,8 @@ class HomeViewModel(
     fun getContent() {
         viewModelScope.launch {
             _state.value = HomeScreenState.Wait
-            val content = repository.getAllVideos()
-            _state.value = HomeScreenState.Content(content)
+            val videos = repository.getAllVideos()
+            _state.value = HomeScreenState.Content(videos)
         }
     }
 }

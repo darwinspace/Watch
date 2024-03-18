@@ -1,5 +1,6 @@
 package com.space.watch.presentation.creator
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -93,31 +94,33 @@ fun CreatorScreen(
     onVideoClick: (String) -> Unit = { }
 ) {
     Box {
-        Scaffold {
-            when (state) {
-                is CreatorScreenState.Content -> {
-                    CreatorScreenContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        creator = state.creator,
-                        videos = state.videos,
-                        onVideoClick = onVideoClick
-                    )
-                }
-
-                CreatorScreenState.Wait -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+        Scaffold { padding ->
+            AnimatedContent(targetState = state, label = "CreatorScreenAnimation") { state ->
+                when (state) {
+                    is CreatorScreenState.Content -> {
+                        CreatorScreenContent(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            creator = state.creator,
+                            videos = state.videos,
+                            onVideoClick = onVideoClick
+                        )
                     }
-                }
 
-                CreatorScreenState.Empty -> Unit
+                    CreatorScreenState.Wait -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    CreatorScreenState.Empty -> Unit
+                }
             }
         }
 

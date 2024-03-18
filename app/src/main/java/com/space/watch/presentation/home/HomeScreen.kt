@@ -1,5 +1,6 @@
 package com.space.watch.presentation.home
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -89,31 +90,33 @@ fun HomeScreen(
         floatingActionButton = {
             HomeScreenCreateVideoButton(onCreateVideoClick)
         }
-    ) {
-        when (state) {
-            is HomeScreenState.Content -> {
-                HomeScreenContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it),
-                    videos = state.videos,
-                    onVideoCreatorClick = onVideoCreatorClick,
-                    onVideoClick = onVideoClick
-                )
-            }
-
-            HomeScreenState.Wait -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+    ) { padding ->
+        AnimatedContent(targetState = state, label = "HomeScreenAnimation") { state ->
+            when (state) {
+                is HomeScreenState.Content -> {
+                    HomeScreenContent(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding),
+                        videos = state.videos,
+                        onVideoCreatorClick = onVideoCreatorClick,
+                        onVideoClick = onVideoClick
+                    )
                 }
-            }
 
-            HomeScreenState.Empty -> Unit
+                HomeScreenState.Wait -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                HomeScreenState.Empty -> Unit
+            }
         }
     }
 }

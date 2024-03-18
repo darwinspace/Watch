@@ -1,6 +1,7 @@
 package com.space.watch.presentation.video
 
 import androidx.annotation.OptIn
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -98,30 +99,32 @@ fun VideoScreen(
     onVideoCreatorClick: (String) -> Unit = { }
 ) {
     Box {
-        Scaffold {
-            when (state) {
-                is VideoScreenState.Content -> {
-                    VideoScreenContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        videoInformation = state.videoInformation,
-                        onVideoCreatorClick = onVideoCreatorClick
-                    )
-                }
-
-                VideoScreenState.Wait -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+        Scaffold { padding ->
+            AnimatedContent(targetState = state, label = "VideoScreenAnimation") { state ->
+                when (state) {
+                    is VideoScreenState.Content -> {
+                        VideoScreenContent(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            videoInformation = state.videoInformation,
+                            onVideoCreatorClick = onVideoCreatorClick
+                        )
                     }
-                }
 
-                VideoScreenState.Empty -> Unit
+                    VideoScreenState.Wait -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    VideoScreenState.Empty -> Unit
+                }
             }
         }
 
