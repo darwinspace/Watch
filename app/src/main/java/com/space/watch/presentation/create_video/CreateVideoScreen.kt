@@ -64,7 +64,7 @@ import com.space.watch.domain.model.Image
 import com.space.watch.domain.model.Video
 import com.space.watch.extension.toImage
 import com.space.watch.extension.toVideo
-import com.space.watch.ui.theme.WatchTheme
+import com.space.watch.presentation.`interface`.theme.WatchTheme
 
 @Preview
 @Composable

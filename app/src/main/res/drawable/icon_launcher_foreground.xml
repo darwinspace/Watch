@@ -11,9 +11,11 @@
         <path
             android:fillAlpha="0.2"
             android:fillColor="#FF1744"
-            android:pathData="M32,17C23.719,17 17,23.719 17,32C17,40.281 23.719,47 32,47C40.281,47 47,40.281 47,32C47,23.719 40.281,17 32,17Z" />
+            android:pathData="M17,17h30v30h-30z" />
         <path
-            android:fillColor="#FF1744"
-            android:pathData="M32,17C23.719,17 17,23.719 17,32C17,40.281 23.719,47 32,47C40.281,47 47,40.281 47,32C47,23.719 40.281,17 32,17ZM32,43.25C25.788,43.25 20.75,38.213 20.75,32C20.75,25.788 25.788,20.75 32,20.75C38.213,20.75 43.25,25.788 43.25,32C43.25,38.213 38.213,43.25 32,43.25Z" />
+            android:fillColor="#00000000"
+            android:pathData="M18.875,18.875h26.25v26.25h-26.25z"
+            android:strokeColor="#FF1744"
+            android:strokeWidth="3.75" />
     </group>
 </vector>

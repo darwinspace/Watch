@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.space.watch.ui.theme.WatchTheme
+import com.space.watch.presentation.`interface`.theme.WatchTheme
 
 @Preview
 @Composable

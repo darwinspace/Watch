@@ -1,4 +1,4 @@
-package com.space.watch.ui.theme
+package com.space.watch.presentation.`interface`.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
