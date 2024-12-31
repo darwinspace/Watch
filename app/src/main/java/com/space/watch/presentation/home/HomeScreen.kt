@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -48,205 +49,209 @@ import com.space.watch.presentation.`interface`.theme.WatchTheme
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    WatchTheme {
-        HomeScreen(
-            state = HomeScreenState.Content(
-                videos = List(10) {
-                    VideoInformation(
-                        id = String(),
-                        title = "Video",
-                        description = "Description",
-                        content = String(),
-                        size = Size(1920, 1080),
-                        image = String(),
-                        imageSize = Size(1920, 1080),
-                        creator = Creator(
-                            id = String(),
-                            name = "Creator",
-                            description = String(),
-                            image = String(),
-                            cover = String(),
-                            verified = true
-                        ),
-                        duration = VideoDuration(0, 0, 0)
-                    )
-                }
-            )
-        )
-    }
+	WatchTheme {
+		HomeScreen(
+			state = HomeScreenState.Content(
+				videos = List(10) {
+					VideoInformation(
+						id = String(),
+						title = "Video",
+						description = "Description",
+						content = String(),
+						size = Size(1920, 1080),
+						image = String(),
+						imageSize = Size(1920, 1080),
+						creator = Creator(
+							id = String(),
+							name = "Creator",
+							description = String(),
+							image = String(),
+							cover = String(),
+							verified = true
+						),
+						duration = VideoDuration(0, 0, 0)
+					)
+				}
+			)
+		)
+	}
 }
 
 @Composable
 fun HomeScreen(
-    state: HomeScreenState = HomeScreenState.Empty,
-    onCreateVideoClick: () -> Unit = { },
-    onVideoCreatorClick: (String) -> Unit = { },
-    onVideoClick: (String) -> Unit = { }
+	state: HomeScreenState = HomeScreenState.Empty,
+	onCreateVideoClick: () -> Unit = { },
+	onVideoCreatorClick: (String) -> Unit = { },
+	onVideoClick: (String) -> Unit = { }
 ) {
-    Scaffold(
-        topBar = {
-            HomeScreenTopBar()
-        },
-        floatingActionButton = {
-            HomeScreenCreateVideoButton(onCreateVideoClick)
-        }
-    ) { padding ->
-        AnimatedContent(targetState = state, label = "HomeScreenAnimation") { state ->
-            when (state) {
-                is HomeScreenState.Content -> {
-                    HomeScreenContent(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        videos = state.videos,
-                        onVideoCreatorClick = onVideoCreatorClick,
-                        onVideoClick = onVideoClick
-                    )
-                }
+	Scaffold(
+		topBar = {
+			HomeScreenTopBar()
+		},
+		floatingActionButton = {
+			HomeScreenCreateVideoButton(onCreateVideoClick)
+		}
+	) { padding ->
+		AnimatedContent(
+			targetState = state,
+			label = "HomeScreen"
+		) { state ->
+			when (state) {
+				is HomeScreenState.Content -> {
+					HomeScreenContent(
+						modifier = Modifier
+							.fillMaxSize()
+							.padding(padding),
+						videos = state.videos,
+						onVideoCreatorClick = onVideoCreatorClick,
+						onVideoClick = onVideoClick
+					)
+				}
 
-                HomeScreenState.Wait -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
+				HomeScreenState.Wait -> {
+					Box(
+						modifier = Modifier
+							.fillMaxSize()
+							.padding(padding),
+						contentAlignment = Alignment.Center
+					) {
+						CircularProgressIndicator()
+					}
+				}
 
-                HomeScreenState.Empty -> Unit
-            }
-        }
-    }
+				HomeScreenState.Empty -> Unit
+			}
+		}
+	}
 }
 
 @Composable
 private fun HomeScreenTopBar() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Surface {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    HomeScreenTopBarLogo()
+	Column(
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.Center
+	) {
+		Surface {
+			Row(
+				modifier = Modifier
+					.statusBarsPadding()
+					.fillMaxWidth()
+					.padding(16.dp),
+				horizontalArrangement = Arrangement.SpaceBetween,
+				verticalAlignment = Alignment.CenterVertically
+			) {
+				Row(
+					horizontalArrangement = Arrangement.Center,
+					verticalAlignment = Alignment.CenterVertically
+				) {
+					HomeScreenTopBarLogo()
 
-                    HomeScreenTopBarTitle()
-                }
+					HomeScreenTopBarTitle()
+				}
 
-                Row {
-                    HomeScreenTopBarSearchButton()
+				Row {
+					HomeScreenTopBarSearchButton()
 
-                    HomeScreenTopBarUserButton()
-                }
-            }
-        }
+					HomeScreenTopBarUserButton()
+				}
+			}
+		}
 
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-        )
-    }
+		HorizontalDivider(
+			thickness = 2.dp,
+			color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+		)
+	}
 }
 
 @Composable
 private fun HomeScreenTopBarLogo() {
-    Image(
-        modifier = Modifier.size(48.dp),
-        painter = painterResource(R.drawable.icon_launcher_foreground),
-        contentDescription = null
-    )
+	Image(
+		modifier = Modifier.size(48.dp),
+		painter = painterResource(R.drawable.icon_launcher_foreground),
+		contentDescription = null
+	)
 }
 
 @Composable
 private fun HomeScreenTopBarTitle() {
-    Text(
-        text = stringResource(id = R.string.application_name),
-        style = MaterialTheme.typography.bodyMedium
-    )
+	Text(
+		text = stringResource(id = R.string.application_name),
+		style = MaterialTheme.typography.bodyMedium
+	)
 }
 
 @Composable
 private fun HomeScreenTopBarSearchButton() {
-    IconButton(
-        onClick = { /*TODO*/ }
-    ) {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = null
-        )
-    }
+	IconButton(
+		onClick = { /*TODO*/ }
+	) {
+		Icon(
+			imageVector = Icons.Default.Search,
+			contentDescription = null
+		)
+	}
 }
 
 @Composable
 private fun HomeScreenTopBarUserButton() {
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .clip(shape = CircleShape)
-            .clickable { /*TODO*/ }
-            .padding(4.dp)
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                shape = CircleShape
-            )
-            .size(32.dp)
-    )
+	Box(
+		modifier = Modifier
+			.padding(4.dp)
+			.clip(shape = CircleShape)
+			.clickable { /*TODO*/ }
+			.padding(4.dp)
+			.border(
+				width = 2.dp,
+				color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+				shape = CircleShape
+			)
+			.size(32.dp)
+	)
 }
 
 @Composable
 fun HomeScreenCreateVideoButton(onClick: () -> Unit) {
-    FloatingActionButton(
-        modifier = Modifier.padding(8.dp),
-        containerColor = MaterialTheme.colorScheme.primary,
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = 0.dp
-        ),
-        onClick = onClick
-    ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-    }
+	FloatingActionButton(
+		modifier = Modifier.padding(8.dp),
+		containerColor = MaterialTheme.colorScheme.primary,
+		elevation = FloatingActionButtonDefaults.elevation(
+			defaultElevation = 0.dp
+		),
+		onClick = onClick
+	) {
+		Icon(imageVector = Icons.Default.Add, contentDescription = null)
+	}
 }
 
 @Composable
 fun HomeScreenContent(
-    modifier: Modifier,
-    videos: List<VideoInformation>,
-    onVideoCreatorClick: (String) -> Unit,
-    onVideoClick: (String) -> Unit
+	modifier: Modifier,
+	videos: List<VideoInformation>,
+	onVideoCreatorClick: (String) -> Unit,
+	onVideoClick: (String) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 12.dp,
-            top = 12.dp,
-            end = 12.dp,
-            bottom = 92.dp
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(videos) { video ->
-            Video(
-                videoInformation = video,
-                onCreatorClick = {
-                    onVideoCreatorClick(video.creator.id)
-                },
-                onClick = {
-                    onVideoClick(video.id)
-                }
-            )
-        }
-    }
+	LazyColumn(
+		modifier = modifier,
+		contentPadding = PaddingValues(
+			start = 12.dp,
+			top = 12.dp,
+			end = 12.dp,
+			bottom = 92.dp
+		),
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(12.dp)
+	) {
+		items(videos) { video ->
+			Video(
+				videoInformation = video,
+				onCreatorClick = {
+					onVideoCreatorClick(video.creator.id)
+				},
+				onClick = {
+					onVideoClick(video.id)
+				}
+			)
+		}
+	}
 }
