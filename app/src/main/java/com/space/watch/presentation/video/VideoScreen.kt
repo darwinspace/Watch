@@ -14,29 +14,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.outlined.Pause
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,9 +46,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -102,14 +96,17 @@ fun VideoScreen(
 	onVideoCreatorClick: (String) -> Unit = { }
 ) {
 	Box {
-		Scaffold { padding ->
-			AnimatedContent(targetState = state, label = "VideoScreenAnimation") { state ->
+		Surface {
+			AnimatedContent(
+				targetState = state,
+				label = "VideoScreenAnimation"
+			) { state ->
 				when (state) {
 					is VideoScreenState.Content -> {
 						VideoScreenContent(
 							modifier = Modifier
-								.fillMaxSize()
-								.padding(padding),
+								.statusBarsPadding()
+								.fillMaxSize(),
 							videoInformation = state.videoInformation,
 							onVideoCreatorClick = onVideoCreatorClick
 						)
@@ -117,9 +114,7 @@ fun VideoScreen(
 
 					VideoScreenState.Wait -> {
 						Box(
-							modifier = Modifier
-								.fillMaxSize()
-								.padding(padding),
+							modifier = Modifier.fillMaxSize(),
 							contentAlignment = Alignment.Center
 						) {
 							CircularProgressIndicator()
@@ -132,7 +127,9 @@ fun VideoScreen(
 		}
 
 		OutlinedIconButton(
-			modifier = Modifier.padding(16.dp),
+			modifier = Modifier
+				.statusBarsPadding()
+				.padding(16.dp),
 			colors = IconButtonDefaults.outlinedIconButtonColors(
 				containerColor = Color.Black.copy(alpha = 0.2f),
 				contentColor = Color.White
@@ -176,21 +173,6 @@ fun VideoContent(videoInformation: VideoInformation) {
 		}
 	}
 
-	var lifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
-	val lifecycleOwner = LocalLifecycleOwner.current
-	DisposableEffect(lifecycleOwner) {
-		val observer = LifecycleEventObserver { _, event ->
-			lifecycleEvent = event
-		}
-
-		lifecycleOwner.lifecycle.addObserver(observer)
-
-		onDispose {
-			player.release()
-			lifecycleOwner.lifecycle.removeObserver(observer)
-		}
-	}
-
 	Box(
 		contentAlignment = Alignment.Center
 	) {
@@ -202,6 +184,7 @@ fun VideoContent(videoInformation: VideoInformation) {
 		)
 
 		PlayPauseButton(
+			modifier = Modifier.size(64.dp),
 			player = player
 		)
 	}
@@ -215,9 +198,17 @@ fun PlayPauseButton(
 ) {
 	val state = rememberPlayPauseButtonState(player)
 
-	IconButton(onClick = state::onClick, modifier = modifier, enabled = state.isEnabled) {
+	FilledIconButton(
+		modifier = modifier,
+		enabled = state.isEnabled,
+		colors = IconButtonDefaults.filledIconButtonColors(
+			containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+			contentColor = MaterialTheme.colorScheme.onSurface
+		),
+		onClick = state::onClick
+	) {
 		Icon(
-			imageVector = if (state.showPlay) Icons.Default.PlayArrow else Icons.Default.Pause,
+			imageVector = if (state.showPlay) Icons.Outlined.PlayArrow else Icons.Outlined.Pause,
 			contentDescription = null
 		)
 	}
