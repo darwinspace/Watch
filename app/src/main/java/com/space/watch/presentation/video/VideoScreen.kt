@@ -1,5 +1,6 @@
 package com.space.watch.presentation.video
 
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -18,6 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -46,13 +49,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.PlayerView
+import androidx.media3.ui.compose.PlayerSurface
+import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
@@ -186,31 +191,39 @@ fun VideoContent(videoInformation: VideoInformation) {
 		}
 	}
 
-	AndroidView(
-		modifier = Modifier
-			.aspectRatio(ratio = videoInformation.size.width.toFloat() / videoInformation.size.height.toFloat())
-			.fillMaxWidth(),
-		factory = {
-			PlayerView(it).apply {
-				this.player = player
-			}
-		},
-		update = {
-			when (lifecycleEvent) {
-				Lifecycle.Event.ON_RESUME -> {
-					it.onResume()
-				}
+	Box(
+		contentAlignment = Alignment.Center
+	) {
+		PlayerSurface(
+			modifier = Modifier
+				.aspectRatio(ratio = videoInformation.ratio())
+				.fillMaxWidth(),
+			player = player
+		)
 
-				Lifecycle.Event.ON_PAUSE -> {
-					it.onPause()
-					it.player?.pause()
-				}
-
-				else -> Unit
-			}
-		}
-	)
+		PlayPauseButton(
+			player = player
+		)
+	}
 }
+
+@OptIn(UnstableApi::class)
+@Composable
+fun PlayPauseButton(
+	modifier: Modifier = Modifier,
+	player: Player
+) {
+	val state = rememberPlayPauseButtonState(player)
+
+	IconButton(onClick = state::onClick, modifier = modifier, enabled = state.isEnabled) {
+		Icon(
+			imageVector = if (state.showPlay) Icons.Default.PlayArrow else Icons.Default.Pause,
+			contentDescription = null
+		)
+	}
+}
+
+fun VideoInformation.ratio() = size.width.toFloat() / size.height.toFloat()
 
 @Composable
 fun VideoInformation(videoInformation: VideoInformation, onVideoCreatorClick: (String) -> Unit) {
