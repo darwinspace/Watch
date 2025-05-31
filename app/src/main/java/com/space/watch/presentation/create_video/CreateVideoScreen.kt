@@ -9,6 +9,7 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -59,12 +61,15 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.compose.PlayerSurface
 import coil.compose.AsyncImage
 import com.space.watch.domain.model.Image
 import com.space.watch.domain.model.Video
 import com.space.watch.extension.toImage
 import com.space.watch.extension.toVideo
-import com.space.watch.presentation.`interface`.theme.WatchTheme
+import com.space.watch.presentation.core.theme.WatchTheme
+import com.space.watch.presentation.video.PlayPauseButton
+import com.space.watch.presentation.video.ratio
 
 @Preview
 @Composable
@@ -179,6 +184,7 @@ private fun CreateVideoScreenTopBar(
         Surface {
             Row(
                 modifier = Modifier
+                    .statusBarsPadding()
                     .fillMaxWidth()
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -309,26 +315,11 @@ private fun SelectVideoButton(onClick: () -> Unit) {
 @Composable
 private fun SelectedVideo(video: Video) {
     val context = LocalContext.current
-    val mediaItem = remember(video.content) { MediaItem.fromUri(video.content) }
-    val exoPlayer = remember {
+    val player = remember {
+        val mediaItem = MediaItem.fromUri(video.content)
         ExoPlayer.Builder(context).build().apply {
             setMediaItem(mediaItem)
             prepare()
-        }
-    }
-
-    var lifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            lifecycleEvent = event
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            exoPlayer.release()
-            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -340,32 +331,21 @@ private fun SelectedVideo(video: Video) {
         )
     ) {
         Column {
-            AndroidView(
-                modifier = Modifier
-                    .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
-                    .fillMaxWidth(),
-                factory = {
-                    PlayerView(it).apply {
-                        player = exoPlayer
-                        setShowRewindButton(false)
-                        setShowFastForwardButton(false)
-                    }
-                },
-                update = {
-                    when (lifecycleEvent) {
-                        Lifecycle.Event.ON_RESUME -> {
-                            it.onResume()
-                        }
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                PlayerSurface(
+                    modifier = Modifier
+                        .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
+                        .fillMaxWidth(),
+                    player = player
+                )
 
-                        Lifecycle.Event.ON_PAUSE -> {
-                            it.onPause()
-                            it.player?.pause()
-                        }
-
-                        else -> Unit
-                    }
-                }
-            )
+                PlayPauseButton(
+                    modifier = Modifier.size(64.dp),
+                    player = player
+                )
+            }
 
             Text(
                 modifier = Modifier.padding(16.dp),

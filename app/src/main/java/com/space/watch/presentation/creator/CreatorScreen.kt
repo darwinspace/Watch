@@ -49,7 +49,7 @@ import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
 import com.space.watch.presentation.component.Video
-import com.space.watch.presentation.`interface`.theme.WatchTheme
+import com.space.watch.presentation.core.theme.WatchTheme
 
 @Preview
 @Composable
