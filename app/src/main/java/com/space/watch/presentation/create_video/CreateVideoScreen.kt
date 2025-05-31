@@ -9,7 +9,6 @@ import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -52,14 +51,14 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.compose.PlayerSurface
 import coil.compose.AsyncImage
 import com.space.watch.domain.model.Image
 import com.space.watch.domain.model.Video
 import com.space.watch.extension.toImage
 import com.space.watch.extension.toVideo
+import com.space.watch.presentation.component.VideoPlayer
 import com.space.watch.presentation.core.theme.WatchTheme
-import com.space.watch.presentation.video.PlayPauseButton
+import com.space.watch.presentation.video.ratio
 
 @Preview
 @Composable
@@ -115,10 +114,10 @@ fun CreateVideoScreen(
 	) { padding ->
 		Column(
 			modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxSize()
-                .padding(24.dp)
-                .padding(padding),
+				.verticalScroll(scrollState)
+				.fillMaxSize()
+				.padding(24.dp)
+				.padding(padding),
 			verticalArrangement = Arrangement.spacedBy(24.dp)
 		) {
 			VideoTitleTextField(
@@ -176,9 +175,9 @@ private fun CreateVideoScreenTopBar(
 		Surface {
 			Row(
 				modifier = Modifier
-                    .statusBarsPadding()
-                    .fillMaxWidth()
-                    .padding(16.dp),
+					.statusBarsPadding()
+					.fillMaxWidth()
+					.padding(16.dp),
 				horizontalArrangement = Arrangement.SpaceBetween,
 				verticalAlignment = Alignment.CenterVertically
 			) {
@@ -278,8 +277,8 @@ private fun VideoDescriptionTextField(
 private fun SelectVideoButton(onClick: () -> Unit) {
 	Button(
 		modifier = Modifier
-            .heightIn(48.dp)
-            .fillMaxWidth(),
+			.heightIn(48.dp)
+			.fillMaxWidth(),
 		shape = MaterialTheme.shapes.small,
 		colors = ButtonDefaults.buttonColors(
 			containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
@@ -323,21 +322,12 @@ private fun SelectedVideo(video: Video) {
 		)
 	) {
 		Column {
-			Box(
-				contentAlignment = Alignment.Center
-			) {
-				PlayerSurface(
-					modifier = Modifier
-                        .aspectRatio(ratio = video.size.width.toFloat() / video.size.height.toFloat())
-                        .fillMaxWidth(),
-					player = player
-				)
-
-				PlayPauseButton(
-					modifier = Modifier.size(64.dp),
-					player = player
-				)
-			}
+			VideoPlayer(
+				modifier = Modifier
+					.aspectRatio(ratio = video.size.ratio())
+					.fillMaxWidth(),
+				player = player
+			)
 
 			Text(
 				modifier = Modifier.padding(16.dp),
@@ -352,8 +342,8 @@ private fun SelectedVideo(video: Video) {
 private fun SelectVideoImageButton(onClick: () -> Unit) {
 	Button(
 		modifier = Modifier
-            .heightIn(48.dp)
-            .fillMaxWidth(),
+			.heightIn(48.dp)
+			.fillMaxWidth(),
 		shape = MaterialTheme.shapes.small,
 		colors = ButtonDefaults.buttonColors(
 			containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),

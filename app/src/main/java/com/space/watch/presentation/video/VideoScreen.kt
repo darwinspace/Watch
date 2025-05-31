@@ -1,6 +1,5 @@
 package com.space.watch.presentation.video
 
-import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -20,11 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.Pause
-import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -37,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -47,17 +42,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.ui.compose.PlayerSurface
-import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import coil.compose.AsyncImage
 import com.space.watch.R
 import com.space.watch.domain.model.Creator
 import com.space.watch.domain.model.Size
 import com.space.watch.domain.model.VideoDuration
 import com.space.watch.domain.model.VideoInformation
+import com.space.watch.presentation.component.VideoPlayer
 import com.space.watch.presentation.core.theme.WatchTheme
 
 @Preview
@@ -96,7 +88,9 @@ fun VideoScreen(
 	onVideoCreatorClick: (String) -> Unit = { }
 ) {
 	Box {
-		Surface {
+		Surface(
+			modifier = Modifier.fillMaxSize()
+		) {
 			AnimatedContent(
 				targetState = state,
 				label = "VideoScreenAnimation"
@@ -104,9 +98,7 @@ fun VideoScreen(
 				when (state) {
 					is VideoScreenState.Content -> {
 						VideoScreenContent(
-							modifier = Modifier
-								.statusBarsPadding()
-								.fillMaxSize(),
+							modifier = Modifier.statusBarsPadding(),
 							videoInformation = state.videoInformation,
 							onVideoCreatorClick = onVideoCreatorClick
 						)
@@ -131,12 +123,12 @@ fun VideoScreen(
 				.statusBarsPadding()
 				.padding(16.dp),
 			colors = IconButtonDefaults.outlinedIconButtonColors(
-				containerColor = Color.Black.copy(alpha = 0.2f),
-				contentColor = Color.White
+				containerColor = MaterialTheme.colorScheme.surface,
+				contentColor = MaterialTheme.colorScheme.onSurface
 			),
 			border = BorderStroke(
 				width = 2.dp,
-				color = Color.White.copy(alpha = 0.1f),
+				color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
 			),
 			onClick = onBackButtonClick
 		) {
@@ -176,45 +168,16 @@ fun VideoContent(videoInformation: VideoInformation) {
 	Box(
 		contentAlignment = Alignment.Center
 	) {
-		PlayerSurface(
+		VideoPlayer(
 			modifier = Modifier
-				.aspectRatio(ratio = videoInformation.ratio())
+				.aspectRatio(ratio = videoInformation.size.ratio())
 				.fillMaxWidth(),
 			player = player
 		)
-
-		PlayPauseButton(
-			modifier = Modifier.size(64.dp),
-			player = player
-		)
 	}
 }
 
-@OptIn(UnstableApi::class)
-@Composable
-fun PlayPauseButton(
-	modifier: Modifier = Modifier,
-	player: Player
-) {
-	val state = rememberPlayPauseButtonState(player)
-
-	FilledIconButton(
-		modifier = modifier,
-		enabled = state.isEnabled,
-		colors = IconButtonDefaults.filledIconButtonColors(
-			containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
-			contentColor = MaterialTheme.colorScheme.onSurface
-		),
-		onClick = state::onClick
-	) {
-		Icon(
-			imageVector = if (state.showPlay) Icons.Outlined.PlayArrow else Icons.Outlined.Pause,
-			contentDescription = null
-		)
-	}
-}
-
-fun VideoInformation.ratio() = size.width.toFloat() / size.height.toFloat()
+fun Size.ratio() = width.toFloat() / height.toFloat()
 
 @Composable
 fun VideoInformation(videoInformation: VideoInformation, onVideoCreatorClick: (String) -> Unit) {
