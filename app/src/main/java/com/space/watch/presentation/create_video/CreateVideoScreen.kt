@@ -1,14 +1,15 @@
 package com.space.watch.presentation.create_video
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.VideoOnly
-import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
@@ -49,7 +51,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import coil.compose.AsyncImage
 import com.space.watch.domain.model.Image
@@ -120,6 +121,14 @@ fun CreateVideoScreen(
 				.padding(padding),
 			verticalArrangement = Arrangement.spacedBy(24.dp)
 		) {
+			SelectVideo(
+				video = video(),
+				onClick = {
+					val input = PickVisualMediaRequest(VideoOnly)
+					videoPickerLauncher.launch(input)
+				}
+			)
+
 			VideoTitleTextField(
 				videoTitle = videoTitle,
 				onVideoTitleChange = onVideoTitleChange
@@ -129,20 +138,6 @@ fun CreateVideoScreen(
 				videoDescription = videoDescription,
 				onVideoDescriptionChange = onVideoDescriptionChange
 			)
-
-			SelectVideoButton(
-				onClick = {
-					val input = PickVisualMediaRequest(VideoOnly)
-					videoPickerLauncher.launch(input)
-				}
-			)
-
-			val videoData = video()
-			AnimatedVisibility(visible = videoData != null) {
-				SelectedVideo(
-					video = videoData!!
-				)
-			}
 
 			SelectVideoImageButton(
 				onClick = {
@@ -274,40 +269,10 @@ private fun VideoDescriptionTextField(
 }
 
 @Composable
-private fun SelectVideoButton(onClick: () -> Unit) {
-	Button(
-		modifier = Modifier
-			.heightIn(48.dp)
-			.fillMaxWidth(),
-		shape = MaterialTheme.shapes.small,
-		colors = ButtonDefaults.buttonColors(
-			containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-			contentColor = MaterialTheme.colorScheme.onSurface
-		),
-		border = BorderStroke(
-			width = 2.dp,
-			color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-		),
-		onClick = onClick
-	) {
-		Icon(
-			modifier = Modifier.size(18.dp),
-			imageVector = Icons.Outlined.Videocam,
-			contentDescription = null
-		)
-
-		Spacer(modifier = Modifier.width(8.dp))
-
-		Text(text = "Select video")
-	}
-}
-
-@OptIn(UnstableApi::class)
-@Composable
-private fun SelectedVideo(video: Video) {
+private fun SelectVideo(video: Video?, onClick: () -> Unit) {
 	val context = LocalContext.current
-	val player = remember {
-		val mediaItem = MediaItem.fromUri(video.content)
+	val player = remember(video) {
+		val mediaItem = MediaItem.fromUri(video?.content ?: Uri.EMPTY)
 		ExoPlayer.Builder(context).build().apply {
 			setMediaItem(mediaItem)
 			prepare()
@@ -318,22 +283,53 @@ private fun SelectedVideo(video: Video) {
 		shape = MaterialTheme.shapes.medium,
 		border = BorderStroke(
 			width = 2.dp,
-			color = MaterialTheme.colorScheme.onSurface.copy(0.2f)
-		)
+			color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+		),
+		onClick = onClick
 	) {
-		Column {
-			VideoPlayer(
-				modifier = Modifier
-					.aspectRatio(ratio = video.size.ratio())
-					.fillMaxWidth(),
-				player = player
-			)
+		AnimatedVisibility(visible = video != null) {
+			Box {
+				VideoPlayer(
+					modifier = Modifier
+						.aspectRatio(ratio = video!!.size.ratio())
+						.fillMaxWidth(),
+					player = player
+				)
 
-			Text(
-				modifier = Modifier.padding(16.dp),
-				text = "${video.size.width} x ${video.size.height}",
-				style = MaterialTheme.typography.bodyMedium
-			)
+				OutlinedIconButton(
+					modifier = Modifier
+						.align(Alignment.TopEnd)
+						.padding(8.dp),
+					colors = IconButtonDefaults.outlinedIconButtonColors(
+						containerColor = MaterialTheme.colorScheme.surface,
+						contentColor = MaterialTheme.colorScheme.onSurface
+					),
+					border = BorderStroke(
+						width = 2.dp,
+						color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+					),
+					onClick = onClick
+				) {
+					Icon(
+						imageVector = Icons.Outlined.Videocam,
+						contentDescription = null
+					)
+				}
+			}
+		}
+
+		AnimatedVisibility(visible = video == null) {
+			Box(
+				modifier = Modifier
+					.aspectRatio(ratio = 16f / 9f)
+					.fillMaxWidth(),
+				contentAlignment = Alignment.Center
+			) {
+				Icon(
+					imageVector = Icons.Outlined.Videocam,
+					contentDescription = null
+				)
+			}
 		}
 	}
 }
